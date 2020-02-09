@@ -9,10 +9,7 @@ if (!storage.getData()) {
 
 var data = storage.getData()
 
-console.log(data.records)
-
-// var firstRecordBeginDate = new Date(data.records[0].begin);
-// console.log(firstRecordBeginDate.toLocaleString("de-DE"));
+// console.log(data.records)
 
 if (!data) {
 } else {
@@ -23,7 +20,7 @@ if (!data) {
 
   data.records.forEach(function insertEntriesToDom(record) {
     // console.log(record);
-    // Todo: Refactor DateFmt to Helper
+
     var markup = `
       <li class="">
         <p><b>ID: ${record.id}</b>:<br>
