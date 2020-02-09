@@ -8,8 +8,30 @@
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-  <h1>Salary plus</h1>
+
+<div class="container">
+  <h1 class="app-branding">Salary Plus</h1>
   
-  <script src="assets/js/main.js"></script>
+  <section class="data-list">
+  <h2>All Records</h2>
+  </section>
+
+  <section class="data-insert">
+    <h2>Add Record</h2>
+    <form class="pure-form pure-form-stacked" action="">
+
+    <div class="form-el">
+      <label for="entry-begin">Begin</label>
+      <input id="entry-begin" type="date"><input id="entry-begin" type="time">
+    </div>
+    <div class="form-el">
+      <label for="entry-begin">End</label>
+      <input id="entry-begin" type="date"><input id="entry-end" type="time">
+    </div>
+    </form>
+  </section>
+</div>
+
+  <script src="assets/js/main.js" type="module"></script>
 </body>
 </html>
