@@ -26,9 +26,9 @@ if (!data) {
     // Todo: Refactor DateFmt to Helper
     var markup = `
       <li class="">
-        <p><b>${record.id}</b>:
-        
-        ${helpers.formatDate(record.begin)} - ${helpers.formatDate(record.end)}</p>
+        <p><b>ID: ${record.id}</b>:<br>
+        ${helpers.formatDate(record.begin)}<br>        
+        ${helpers.formatTime(record.begin)} - ${helpers.formatTime(record.end)}</p>
       </li>
     `
     dataList.insertAdjacentHTML('beforeEnd', markup)
