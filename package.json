@@ -1,0 +1,16 @@
+{
+  "name": "salary-plus",
+  "version": "0.0.1",
+  "description": "App to record working sessions",
+  "main": "src/index.js",
+  "scripts": {
+    "serve": "light-server -c .lightserverrc"
+  },
+  "keywords": [],
+  "author": "Benedikt Gregor",
+  "license": "ISC",
+  "devDependencies": {
+    "light-server": "^2.6.4",
+    "papaparse": "^5.1.1"
+  }
+}
