@@ -1,6 +1,8 @@
 import sampleData from './../../data/sample-data.js'
 
 function Model() {
+  this.records = []
+  //  SEED
   this.records = sampleData.records
 
   this.addRecord = function(obj) {
@@ -11,17 +13,26 @@ function Model() {
       begin: obj.begin,
       end: obj.end
     })
+
+    this.onRecordsListChanged(this.records)
   }
 
   this.editRecord = {}
 
   this.deleteRecord = function(id) {
+    console.log('executing app.model.deleteRecord', id)
+
     this.records = this.records.filter(function deleteRecord(record) {
-      return record.id !== id
+      console.log(typeof record.id)
+      return record.id != id
     })
+    console.log(this.records)
+    this.onRecordsListChanged(this.records)
   }
 
-  this.bindRecordsListChanged = function(callback) {}
+  this.bindRecordsListChanged = function(callback) {
+    this.onRecordsListChanged = callback
+  }
 }
 
 function View() {
@@ -39,11 +50,12 @@ function View() {
 
     // Insert Records to Dom
     if (records.length == 0) {
-      this.recordsSection.append(document.createElement('p').textContent('records are empty, add record?'))
+      this.recordsSection.append((document.createElement('p').textContent = 'records are empty, add record?'))
     } else {
       records.forEach(record => {
         var li = document.createElement('li')
         li.id = 'record-' + record.id
+        li.dataset.id = record.id
 
         li.innerHTML = `
           Record #${record.id} - Begin: ${record.begin} <button class="record-delete">X</button>
@@ -54,10 +66,20 @@ function View() {
   }
 
   this.bindAddRecord = function(handler) {
-    this.form.addEventListener('submit', function handleEvent(event) {
+    this.form.addEventListener('submit', event => {
       event.preventDefault()
-      console.log('calling handler for form submit event: ', handler)
-      // handler( {newRecordObj} )
+
+      var inputBeginDate = this.form.querySelector('#entry-begin-date')
+      var inputBeginTime = this.form.querySelector('#entry-begin-time')
+      var inputEndDate = this.form.querySelector('#entry-end-date')
+      var inputEndTime = this.form.querySelector('#entry-end-time')
+
+      var record = {}
+      record.begin = `${inputBeginDate.value} ${inputBeginTime.value}`
+      record.end = `${inputEndDate.value} ${inputEndTime.value}`
+
+      // Todo pass form data to handler fn
+      handler(record)
     })
   }
 
@@ -67,7 +89,7 @@ function View() {
         console.log('calling handler for click on records list event if is button: ', handler)
       }
 
-      // handler( {newRecordObj} )
+      handler(event.target.parentElement.dataset.id)
     })
   }
 }
@@ -77,21 +99,29 @@ function Controller(model, view) {
   this.view = view
 
   this.init = function() {
-    // this.onRecordsListChanged(this.model.records)
-    this.view.displayRecords(this.model.records)
+    this.onRecordsListChanged(this.model.records)
+    // this.view.displayRecords(this.model.records)
   }
 
-  this.handleAddRecord = function(record) {
+  this.handleAddRecord = record => {
+    console.log('executing app.handleAddRecord')
+
     this.model.addRecord(record)
   }
 
-  this.handleDeleteRecord = function(id) {
+  this.handleDeleteRecord = id => {
+    console.log('executing app.deleteRecord')
+
     this.model.deleteRecord(id)
   }
 
-  this.onRecordsListChanged = function(records) {
+  this.onRecordsListChanged = records => {
+    console.log('executing app.onRecordslistChanged')
+
     this.view.displayRecords(records)
   }
+
+  this.model.bindRecordsListChanged(this.onRecordsListChanged)
 
   // Bind Evenet Listeners To Handlers
   this.view.bindAddRecord(this.handleAddRecord)
