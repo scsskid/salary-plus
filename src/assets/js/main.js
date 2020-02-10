@@ -1,8 +1,8 @@
 import sampleData from './../../data/sample-data.js'
 
 function Model() {
-  // var seed = sampleData.records
-  var seed = []
+  var seed = sampleData.records
+  // var seed = []
   this.records = JSON.parse(localStorage.getItem('appData')) || seed
 
   this._commitRecord = function(records) {
@@ -25,13 +25,9 @@ function Model() {
   this.editRecord = {}
 
   this.deleteRecord = function(id) {
-    console.log('executing app.model.deleteRecord', id)
-
     this.records = this.records.filter(function deleteRecord(record) {
-      console.log(typeof record.id)
       return record.id != id
     })
-    console.log(this.records)
     this._commitRecord(this.records)
   }
 
@@ -61,7 +57,6 @@ function View() {
         var li = document.createElement('li')
         li.id = 'record-' + record.id
         li.dataset.id = record.id
-
         li.innerHTML = `
           Record #${record.id} - Begin: ${record.begin} <button class="record-delete">X</button>
         `
@@ -92,9 +87,8 @@ function View() {
     this.recordsList.addEventListener('click', function handleEvent(event) {
       if (event.target.className == 'record-delete') {
         console.log('calling handler for click on records list event if is button: ', handler)
+        handler(event.target.parentElement.dataset.id)
       }
-
-      handler(event.target.parentElement.dataset.id)
     })
   }
 }
@@ -105,30 +99,21 @@ function Controller(model, view) {
 
   this.init = function() {
     this.onRecordsListChanged(this.model.records)
-    // this.view.displayRecords(this.model.records)
   }
 
   this.handleAddRecord = record => {
-    console.log('executing app.handleAddRecord')
-
     this.model.addRecord(record)
   }
 
   this.handleDeleteRecord = id => {
-    console.log('executing app.deleteRecord')
-
     this.model.deleteRecord(id)
   }
 
   this.onRecordsListChanged = records => {
-    console.log('executing app.onRecordslistChanged')
-
     this.view.displayRecords(records)
   }
 
   this.model.bindRecordsListChanged(this.onRecordsListChanged)
-
-  // Bind Evenet Listeners To Handlers
   this.view.bindAddRecord(this.handleAddRecord)
   this.view.bindDeleteRecord(this.handleDeleteRecord)
 }
