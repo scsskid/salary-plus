@@ -1,9 +1,14 @@
 import sampleData from './../../data/sample-data.js'
 
 function Model() {
-  this.records = []
-  //  SEED
-  this.records = sampleData.records
+  // var seed = sampleData.records
+  var seed = []
+  this.records = JSON.parse(localStorage.getItem('appData')) || seed
+
+  this._commitRecord = function(records) {
+    this.onRecordsListChanged(records)
+    localStorage.setItem('appData', JSON.stringify(records))
+  }
 
   this.addRecord = function(obj) {
     this.records.push({
@@ -14,7 +19,7 @@ function Model() {
       end: obj.end
     })
 
-    this.onRecordsListChanged(this.records)
+    this._commitRecord(this.records)
   }
 
   this.editRecord = {}
@@ -27,7 +32,7 @@ function Model() {
       return record.id != id
     })
     console.log(this.records)
-    this.onRecordsListChanged(this.records)
+    this._commitRecord(this.records)
   }
 
   this.bindRecordsListChanged = function(callback) {
