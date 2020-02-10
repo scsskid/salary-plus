@@ -41,7 +41,7 @@ function View() {
     if (records.length == 0) {
       this.recordsSection.append(document.createElement('p').textContent('records are empty, add record?'))
     } else {
-      records.forEach(function insertRecordToDom(record) {
+      records.forEach(record => {
         var li = document.createElement('li')
         li.id = 'record-' + record.id
 
@@ -49,6 +49,14 @@ function View() {
         this.recordsList.append(li)
       })
     }
+  }
+
+  this.bindAddRecord = function(handler) {
+    this.form.addEventlistener('submit', function handleEvent(event) {
+      event.preventDefault()
+      console.log('calling handler for event: ', handler)
+      // handler( {newRecordObj} )
+    })
   }
 }
 
@@ -63,6 +71,9 @@ function Controller(model, view) {
   this.handleDeleteRecord = function(id) {
     this.model.deleteRecord(id)
   }
+
+  //Display initial Records
+  this.view.displayRecords(this.model.records)
 }
 
 app = new Controller(new Model(), new View())
