@@ -1,4 +1,4 @@
-export default function View() {
+function View() {
   this.recordsSection = document.querySelector('[data-records]')
   this.recordsList = document.createElement('ul')
   this.recordsList.classList.add('records-list')
@@ -26,8 +26,10 @@ export default function View() {
       })
     }
   }
+}
 
-  this.bindAddRecord = function(handler) {
+View.prototype = {
+  bindAddRecord: function(handler) {
     this.form.addEventListener('submit', event => {
       event.preventDefault()
 
@@ -40,12 +42,10 @@ export default function View() {
       record.begin = `${inputBeginDate.value} ${inputBeginTime.value}`
       record.end = `${inputEndDate.value} ${inputEndTime.value}`
 
-      // Todo pass form data to handler fn
       handler(record)
     })
-  }
-
-  this.bindDeleteRecord = function(handler) {
+  },
+  bindDeleteRecord: function(handler) {
     this.recordsList.addEventListener('click', function handleEvent(event) {
       if (event.target.className == 'record-delete') {
         handler(event.target.parentElement.dataset.id)
@@ -53,3 +53,5 @@ export default function View() {
     })
   }
 }
+
+export default View
