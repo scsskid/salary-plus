@@ -1,5 +1,5 @@
 import sampleData from './../../../data/sample-data.js'
-
+import utils from './../helpers.js'
 function Model() {
   this.records = JSON.parse(localStorage.getItem('appData')) || []
 }
@@ -9,14 +9,25 @@ Model.prototype = {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
   },
-  addRecord: function(obj) {
-    this.records.push({
+  addRecord: function(submittedRecord) {
+    if (submittedRecord.timeBegin <= submittedRecord.timeEnd) {
+      submittedRecord.dateEnd = submittedRecord.date
+    } else {
+      var recordedDate = new Date(submittedRecord.date)
+      var recordedDay = recordedDate.getDate()
+      recordedDate.setDate(recordedDay + 1)
+      submittedRecord.dateEnd = utils.getTimeZoneAwareIsoString(recordedDate)
+    }
+
+    var newRecord = {
       // todo: get max id with reduce()?
       id: this.records.length > 0 ? this.records[this.records.length - 1].id + 1 : 1,
       rate_id: 1,
-      begin: obj.begin,
-      end: obj.end
-    })
+      begin: `${submittedRecord.date} ${submittedRecord.timeBegin}`,
+      end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
+    }
+
+    this.records.push(newRecord)
 
     this._commitRecords(this.records)
   },
