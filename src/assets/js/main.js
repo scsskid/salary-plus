@@ -4,6 +4,6 @@ import Controller from './modules/controller.js'
 
 var app = new Controller(new Model(), new View())
 
-app.init()
+// app.init()
 
-window.app = app
+// window.app = app
