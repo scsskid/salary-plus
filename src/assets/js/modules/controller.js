@@ -8,11 +8,14 @@ export default function Controller(model, view) {
   this.view.bindAddRecord(this.handleAddRecord.bind(this))
   this.view.bindDeleteRecord(this.handleDeleteRecord.bind(this))
   this.view.bindSeedRecords(this.handleSeedRecords.bind(this))
+
+  // this.view.populateForm()
 }
 
 Controller.prototype = {
   init: function() {
     this.onRecordsListChanged(this.model.records)
+    this.view.populateForm()
   },
   onRecordsListChanged: function(records) {
     this.view.displayRecords(records)

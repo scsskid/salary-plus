@@ -4,6 +4,13 @@ function View() {
   this.recordsList = document.createElement('ul')
   this.recordsList.classList.add('records-list')
   this.recordsSection.append(this.recordsList)
+
+  this.form = document.querySelector('.data-insert form')
+
+  this.inputBeginDate = this.form.querySelector('#entry-begin-date')
+  this.inputBeginTime = this.form.querySelector('#entry-begin-time')
+  this.inputEndDate = this.form.querySelector('#entry-end-date')
+  this.inputEndTime = this.form.querySelector('#entry-end-time')
 }
 
 View.prototype = {
@@ -30,7 +37,7 @@ View.prototype = {
         li.innerHTML = `
           <div class="record-date">${utils.formatDate.short(record.begin)}</div>
           <div class="record-time">${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)}</div>
-          <button class="record-delete">X</button>
+          <button class="record-delete">Delete</button>
         `
         this.recordsList.append(li)
       })
@@ -43,19 +50,30 @@ View.prototype = {
       }
     })
   },
+  /**
+   * Populate Add Form With Helpful Defaults
+   */
+
+  populateForm: function() {
+    document.addEventListener(
+      'DOMContentLoaded',
+      function() {
+        this.inputBeginDate.value = utils.getTimeZoneAwareIsoString()
+        this.inputEndDate.value = utils.getTimeZoneAwareIsoString()
+        this.inputBeginTime.value = utils.formatTime(new Date())
+        this.inputEndTime.value = utils.formatTime(new Date())
+      }.bind(this)
+    )
+  },
   bindAddRecord: function(addRecordHandler) {
-    this.form = document.querySelector('.data-insert form')
     this.form.addEventListener('submit', event => {
       event.preventDefault()
 
-      var inputBeginDate = this.form.querySelector('#entry-begin-date')
-      var inputBeginTime = this.form.querySelector('#entry-begin-time')
-      var inputEndDate = this.form.querySelector('#entry-end-date')
-      var inputEndTime = this.form.querySelector('#entry-end-time')
+      // Auto Populate
 
       var record = {}
-      record.begin = `${inputBeginDate.value} ${inputBeginTime.value}`
-      record.end = `${inputEndDate.value} ${inputEndTime.value}`
+      record.begin = `${this.inputBeginDate.value} ${this.inputBeginTime.value}`
+      record.end = `${this.inputEndDate.value} ${this.inputEndTime.value}`
 
       addRecordHandler(record)
     })

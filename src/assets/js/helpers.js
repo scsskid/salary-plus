@@ -17,5 +17,10 @@ export default {
   },
   getData: function() {
     return JSON.parse(localStorage.getItem('appData'))
+  },
+  getTimeZoneAwareIsoString: function() {
+    var date = new Date()
+    var dateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0]
+    return dateString
   }
 }
