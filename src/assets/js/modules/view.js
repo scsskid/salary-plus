@@ -1,3 +1,4 @@
+import utils from './../helpers.js'
 function View() {
   this.recordsSection = document.querySelector('[data-records]')
   this.recordsList = document.createElement('ul')
@@ -20,7 +21,7 @@ function View() {
         li.id = 'record-' + record.id
         li.dataset.id = record.id
         li.innerHTML = `
-          Record #${record.id} - Begin: ${record.begin} <button class="record-delete">X</button>
+          ${utils.formatDate(record.begin)} ( ${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)} ) <button class="record-delete">X</button>
         `
         this.recordsList.append(li)
       })
@@ -29,7 +30,7 @@ function View() {
 }
 
 View.prototype = {
-  bindAddRecord: function(handler) {
+  bindAddRecord: function(addRecordHandler) {
     this.form.addEventListener('submit', event => {
       event.preventDefault()
 
@@ -42,13 +43,13 @@ View.prototype = {
       record.begin = `${inputBeginDate.value} ${inputBeginTime.value}`
       record.end = `${inputEndDate.value} ${inputEndTime.value}`
 
-      handler(record)
+      addRecordHandler(record)
     })
   },
-  bindDeleteRecord: function(handler) {
+  bindDeleteRecord: function(deleteRecordHandler) {
     this.recordsList.addEventListener('click', function handleEvent(event) {
       if (event.target.className == 'record-delete') {
-        handler(event.target.parentElement.dataset.id)
+        deleteRecordHandler(event.target.parentElement.dataset.id)
       }
     })
   }

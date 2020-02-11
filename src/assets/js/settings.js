@@ -1,8 +1,8 @@
 export default {
   dateFormatOptions: {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric"
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit'
   }
-};
+}
