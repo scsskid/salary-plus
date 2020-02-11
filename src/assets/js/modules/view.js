@@ -21,7 +21,7 @@ function View() {
         li.id = 'record-' + record.id
         li.dataset.id = record.id
         li.innerHTML = `
-          ${utils.formatDate(record.begin)} ( ${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)} ) <button class="record-delete">X</button>
+          ${utils.formatDate.short(record.begin)} ( ${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)} ) <button class="record-delete">X</button>
         `
         this.recordsList.append(li)
       })
