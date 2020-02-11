@@ -1,13 +1,11 @@
 import sampleData from './../../../data/sample-data.js'
 
 function Model() {
-  var seed = sampleData.records
-  // var seed = []
-  this.records = JSON.parse(localStorage.getItem('appData')) || seed
+  this.records = JSON.parse(localStorage.getItem('appData')) || []
 }
 
 Model.prototype = {
-  _commitRecord: function(records) {
+  _commitRecords: function(records) {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
   },
@@ -20,17 +18,21 @@ Model.prototype = {
       end: obj.end
     })
 
-    this._commitRecord(this.records)
+    this._commitRecords(this.records)
   },
   editRecord: function(id) {},
   deleteRecord: function(id) {
     this.records = this.records.filter(function deleteRecord(record) {
       return record.id != id
     })
-    this._commitRecord(this.records)
+    this._commitRecords(this.records)
   },
   bindRecordsListChanged: function(callback) {
     this.onRecordsListChanged = callback
+  },
+  seedRecords: function() {
+    this.records = sampleData.records
+    this._commitRecords(sampleData.records)
   }
 }
 

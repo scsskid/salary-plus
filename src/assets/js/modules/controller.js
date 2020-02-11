@@ -7,6 +7,7 @@ export default function Controller(model, view) {
   this.model.bindRecordsListChanged(this.onRecordsListChanged.bind(this))
   this.view.bindAddRecord(this.handleAddRecord.bind(this))
   this.view.bindDeleteRecord(this.handleDeleteRecord.bind(this))
+  this.view.bindSeedRecords(this.handleSeedRecords.bind(this))
 }
 
 Controller.prototype = {
@@ -21,5 +22,8 @@ Controller.prototype = {
   },
   handleDeleteRecord: function(id) {
     this.model.deleteRecord(id)
+  },
+  handleSeedRecords: function() {
+    this.model.seedRecords()
   }
 }
