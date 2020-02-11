@@ -1,0 +1,12 @@
+module.exports = {
+  parserOptions: {
+    sourceType: 'module'
+  },
+  env: {
+    node: true,
+    browser: true,
+    es6: true
+  },
+  rules: {},
+  extends: ['airbnb', 'prettier']
+}

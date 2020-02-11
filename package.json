@@ -10,14 +10,11 @@
   "author": "Benedikt Gregor",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
     "light-server": "^2.6.4",
     "papaparse": "^5.1.1"
-  },
-  "prettier": {
-    "parser": "babel",
-    "useTabs": false,
-    "printWidth": 120,
-    "singleQuote": true,
-    "semi": false
   }
 }
