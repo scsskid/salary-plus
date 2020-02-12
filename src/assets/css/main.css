@@ -109,6 +109,14 @@ label {
   box-shadow: none;
 }
 
+.records h2 {
+  display: flex;
+}
+
+[data-records-list-count] {
+  margin-left: auto;
+}
+
 .record-date {
   margin-right: .5rem;
   flex: 0 0 8rem;

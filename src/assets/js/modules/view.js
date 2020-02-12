@@ -18,6 +18,8 @@ View.prototype = {
    */
 
   displayRecords: function(records) {
+    var recordsListCount = document.querySelector('[data-records-list-count]')
+    recordsListCount.innerHTML = records.length
     // Empty Records List
     while (this.recordsList.firstChild) {
       this.recordsList.removeChild(this.recordsList.firstChild)
