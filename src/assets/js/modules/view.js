@@ -1,4 +1,4 @@
-import utils from './../helpers.js'
+import utils from '../utils.js'
 function View() {
   this.recordsSection = document.querySelector('[data-records]')
   this.recordsList = document.createElement('ul')
@@ -13,6 +13,10 @@ function View() {
 }
 
 View.prototype = {
+  /**
+   * Display Records To Screen
+   */
+
   displayRecords: function(records) {
     // Empty Records List
     while (this.recordsList.firstChild) {
@@ -36,6 +40,7 @@ View.prototype = {
         li.innerHTML = `
           <div class="record-date">${utils.formatDate.short(record.begin)}</div>
           <div class="record-time">${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)}</div>
+          <div class="record-time-elapsed">${utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))}</div>
           <button class="record-delete">Delete</button>
         `
         this.recordsList.append(li)

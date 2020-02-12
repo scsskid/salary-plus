@@ -1,5 +1,5 @@
 import sampleData from './../../../data/sample-data.js'
-import utils from './../helpers.js'
+import utils from '../utils.js'
 function Model() {
   this.records = JSON.parse(localStorage.getItem('appData')) || []
 }

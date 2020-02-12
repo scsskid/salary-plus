@@ -117,6 +117,9 @@ label {
   margin-right: .5rem;
   flex: 0 0 8rem;
 }
+.record-time-elapsed {
+  opacity: .5;
+}
 .record-delete {
   margin-left: auto;
 }
