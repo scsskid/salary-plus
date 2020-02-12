@@ -38,8 +38,8 @@ var records = [
   {
     id: 2,
     rate_id: 1,
-    begin: '2020-01-31 12:00 UTC',
-    end: '2020-01-31 22:00 UTC'
+    begin: '2020-01-31 16:00 UTC',
+    end: '2020-02-01 01:00 UTC'
   },
   {
     id: 3,
