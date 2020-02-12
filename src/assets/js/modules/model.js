@@ -5,6 +5,11 @@ function Model() {
 }
 
 Model.prototype = {
+  /**
+   *
+   * @param {Object} records
+   */
+
   _commitRecords: function(records) {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
@@ -13,6 +18,7 @@ Model.prototype = {
    * if timeBegin is gt timeEnd assuming endDate to be next day
    * @param {Object} record
    */
+
   _sanitizeRecordEndDate: function todo(record) {
     if (record.timeBegin <= record.timeEnd) {
       record.dateEnd = record.date
@@ -24,6 +30,10 @@ Model.prototype = {
     }
     return record
   },
+  /**
+   *
+   * @param {int} id
+   */
   getRecordById: function(id) {
     var requestedRecord = this.records.filter(
       function recordIdMatches(record) {
