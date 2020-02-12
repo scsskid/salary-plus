@@ -13,13 +13,11 @@ export default function Controller(model, view) {
 }
 
 Controller.prototype = {
-  getSingle: function(id) {
-    return this.model.getSingle(id)
-  },
   init: function() {
     this.onRecordsListChanged(this.model.records)
     this.view.populateForm()
   },
+
   onRecordsListChanged: function(records) {
     this.view.displayRecords(records)
   },
@@ -31,5 +29,16 @@ Controller.prototype = {
   },
   handleSeedRecords: function() {
     this.model.seedRecords()
+  },
+  /*
+   * CLI *
+   */
+  logRecords: function() {
+    this.model.records.forEach(function(record) {
+      console.log(record)
+    })
+  },
+  getRecordById: function(id) {
+    return this.model.getRecordById(id)
   }
 }
