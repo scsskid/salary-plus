@@ -9,14 +9,26 @@ Model.prototype = {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
   },
-  getSingle: function(id) {
-    var single = this.records.filter(
+  getRecordById: function(id) {
+    var requestedRecord = this.records.filter(
       function recordIdMatches(record) {
         return record.id == id
       }.bind(this)
     )
-    return single
+    return requestedRecord
   },
+
+  editRecord: function(id, submittedData) {
+    this.records.filter(function(record) {
+      if (record.id == id) {
+        record.begin = submittedData.begin
+        record.end = submittedData.end
+      }
+      return record
+    })
+    this._commitRecords(this.records)
+  },
+
   addRecord: function(submittedRecord) {
     if (submittedRecord.timeBegin <= submittedRecord.timeEnd) {
       submittedRecord.dateEnd = submittedRecord.date
@@ -26,7 +38,6 @@ Model.prototype = {
       recordedDate.setDate(recordedDay + 1)
       submittedRecord.dateEnd = utils.getTimeZoneAwareIsoString(recordedDate)
     }
-
     var newRecord = {
       // todo: get max id with reduce()?
       id: this.records.length > 0 ? this.records[this.records.length - 1].id + 1 : 1,
@@ -34,12 +45,10 @@ Model.prototype = {
       begin: `${submittedRecord.date} ${submittedRecord.timeBegin}`,
       end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
     }
-
     this.records.push(newRecord)
-
     this._commitRecords(this.records)
   },
-  editRecord: function(id) {},
+
   deleteRecord: function(id) {
     this.records = this.records.filter(function deleteRecord(record) {
       return record.id != id
