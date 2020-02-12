@@ -9,6 +9,14 @@ Model.prototype = {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
   },
+  getSingle: function(id) {
+    var single = this.records.filter(
+      function recordIdMatches(record) {
+        return record.id == id
+      }.bind(this)
+    )
+    return single
+  },
   addRecord: function(submittedRecord) {
     if (submittedRecord.timeBegin <= submittedRecord.timeEnd) {
       submittedRecord.dateEnd = submittedRecord.date

@@ -13,6 +13,9 @@ export default function Controller(model, view) {
 }
 
 Controller.prototype = {
+  getSingle: function(id) {
+    return this.model.getSingle(id)
+  },
   init: function() {
     this.onRecordsListChanged(this.model.records)
     this.view.populateForm()
