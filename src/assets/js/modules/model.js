@@ -9,6 +9,21 @@ Model.prototype = {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
   },
+  /**
+   * if timeBegin is gt timeEnd assuming endDate to be next day
+   * @param {Object} record
+   */
+  _sanitizeRecordEndDate: function todo(record) {
+    if (record.timeBegin <= record.timeEnd) {
+      record.dateEnd = record.date
+    } else {
+      var recordedDate = new Date(record.date)
+      var recordedDay = recordedDate.getDate()
+      recordedDate.setDate(recordedDay + 1)
+      record.dateEnd = utils.getTimeZoneAwareIsoString(recordedDate)
+    }
+    return record
+  },
   getRecordById: function(id) {
     var requestedRecord = this.records.filter(
       function recordIdMatches(record) {
@@ -18,11 +33,13 @@ Model.prototype = {
     return requestedRecord
   },
 
-  editRecord: function(id, submittedData) {
+  editRecord: function(submittedRecord) {
+    submittedRecord = this._sanitizeRecordEndDate(submittedRecord)
+
     this.records.filter(function(record) {
-      if (record.id == id) {
-        record.begin = submittedData.begin
-        record.end = submittedData.end
+      if (record.id == submittedRecord.id) {
+        record.begin = `${submittedRecord.date} ${submittedRecord.timeBegin}`
+        record.end = `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
       }
       return record
     })
@@ -30,14 +47,8 @@ Model.prototype = {
   },
 
   addRecord: function(submittedRecord) {
-    if (submittedRecord.timeBegin <= submittedRecord.timeEnd) {
-      submittedRecord.dateEnd = submittedRecord.date
-    } else {
-      var recordedDate = new Date(submittedRecord.date)
-      var recordedDay = recordedDate.getDate()
-      recordedDate.setDate(recordedDay + 1)
-      submittedRecord.dateEnd = utils.getTimeZoneAwareIsoString(recordedDate)
-    }
+    submittedRecord = this._sanitizeRecordEndDate(submittedRecord)
+
     var newRecord = {
       // todo: get max id with reduce()?
       id: this.records.length > 0 ? this.records[this.records.length - 1].id + 1 : 1,
