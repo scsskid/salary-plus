@@ -11,6 +11,7 @@
 
   <div class="container">
     <h1 class="app-branding">Salary Plus</h1>
+
     <section class="data-insert">
       <h2>Add Record</h2>
       <form class="" action="">
@@ -29,15 +30,39 @@
         </div>
 
         <div class="form-el">
-          <button type="" class="">Add</button>
+          <button type="" class="">Save New</button>
         </div>
       </form>
     </section>    
+
     <section class="records" data-records>
     <h2>All Records <span data-records-list-count /></h2>
     </section>
 
-    
+    <section class="data-modify" style="opacity: .2">
+      <h2>Edit Record</h2>
+      <form class="" action="">
+
+        <div class="form-el">
+          <label for="entry-date2">Date</label>
+          <input id="entry-date2" type="date">
+        </div>
+        <div class="form-el">
+          <label for="entry-begin-time2">Begin Time</label>
+          <input id="entry-begin-time2" type="time">
+        </div>
+        <div class="form-el">
+          <label for="entry-end-time2">End Time</label>
+          <input id="entry-end-time2" type="time">
+        </div>
+
+        <div class="form-el">
+          <button type="" class="">Save</button>
+        </div>
+      </form>
+    </section>  
+
+
   </div>
 
   <script src="assets/js/main.js" type="module"></script>
