@@ -28,8 +28,6 @@ Model.prototype = {
   },
 
   editRecord: function(submittedRecord) {
-    console.log('model editR', submittedRecord)
-
     submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
 
     this.records.filter(function(record) {

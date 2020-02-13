@@ -11,8 +11,6 @@ export default function Controller(model, view) {
 
   this.view.bindOpenEditDialog(this.handleOpenEditDialog.bind(this))
   this.view.bindSaveRecord(this.handleSaveRecord.bind(this))
-
-  // this.view.populateForm()
 }
 
 Controller.prototype = {
@@ -28,15 +26,12 @@ Controller.prototype = {
     this.model.addRecord(record)
   },
   handleSaveRecord: function(record) {
-    console.log('here', record)
-
     this.model.editRecord(record)
   },
   handleDeleteRecord: function(id) {
     this.model.deleteRecord(id)
   },
   handleOpenEditDialog: function(id) {
-    // Daten Record mit schicken??? statt id
     this.view.openEditDialog(this.getRecordById(id))
   },
   handleSeedRecords: function() {
