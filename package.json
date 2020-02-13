@@ -4,7 +4,7 @@
   "description": "App to record working sessions",
   "main": "src/index.js",
   "scripts": {
-    "serve": "light-server -c .lightserverrc"
+    "start": "light-server -c .lightserverrc"
   },
   "keywords": [],
   "author": "Benedikt Gregor",
