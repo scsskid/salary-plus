@@ -23,6 +23,10 @@ export default {
     var dateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0]
     return dateString
   },
+  getDateFromIsoString: function(string) {
+    var dateString = new Date(string).toISOString().split('T')[0]
+    return dateString
+  },
   getTimeElapsed: function(duration) {
     var milliseconds = parseInt((duration % 1000) / 100),
       seconds = Math.floor((duration / 1000) % 60),
@@ -34,5 +38,21 @@ export default {
     seconds = seconds < 10 ? '0' + seconds : seconds
 
     return `${hours}:${minutes}`
+  },
+  /**
+   * if timeBegin is gt timeEnd assuming endDate to be next day
+   * @param {Object} record
+   */
+
+  sanitizeRecordEndDate: function todo(record) {
+    if (record.timeBegin <= record.timeEnd) {
+      record.dateEnd = record.date
+    } else {
+      var recordedDate = new Date(record.date)
+      var recordedDay = recordedDate.getDate()
+      recordedDate.setDate(recordedDay + 1)
+      record.dateEnd = this.getTimeZoneAwareIsoString(recordedDate)
+    }
+    return record
   }
 }

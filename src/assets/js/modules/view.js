@@ -5,11 +5,18 @@ function View() {
   this.recordsList.classList.add('records-list')
   this.recordsSection.append(this.recordsList)
 
+  this.editSection = document.querySelector('.data-modify')
+  this.editSectionForm = this.editSection.querySelector('form')
+
   this.form = document.querySelector('.data-insert form')
 
   this.inputDate = this.form.querySelector('#entry-date')
   this.inputBeginTime = this.form.querySelector('#entry-begin-time')
   this.inputEndTime = this.form.querySelector('#entry-end-time')
+
+  this.inputDate2 = this.editSection.querySelector('#entry-date2')
+  this.inputBeginTime2 = this.editSection.querySelector('#entry-begin-time2')
+  this.inputEndTime2 = this.editSection.querySelector('#entry-end-time2')
 }
 
 View.prototype = {
@@ -43,6 +50,7 @@ View.prototype = {
           <div class="record-date">${utils.formatDate.short(record.begin)}</div>
           <div class="record-time">${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)}</div>
           <div class="record-time-elapsed">${utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))}</div>
+          <button class="record-edit">Edit</button>
           <button class="record-delete">Delete</button>
         `
         this.recordsList.append(li)
@@ -70,12 +78,14 @@ View.prototype = {
       }.bind(this)
     )
   },
+
+  /**
+   *
+   * @param {function} addRecordHandler
+   */
   bindAddRecord: function(addRecordHandler) {
     this.form.addEventListener('submit', event => {
       event.preventDefault()
-
-      // Auto Populate
-
       var record = {}
       record.date = this.inputDate.value
       record.timeBegin = this.inputBeginTime.value
@@ -84,10 +94,47 @@ View.prototype = {
       addRecordHandler(record)
     })
   },
+  // ? Combine Listeners delete and open?
   bindDeleteRecord: function(deleteRecordHandler) {
     this.recordsList.addEventListener('click', function handleEvent(event) {
       if (event.target.className == 'record-delete') {
         deleteRecordHandler(event.target.parentElement.dataset.id)
+      }
+    })
+  },
+
+  bindSaveRecord: function(handler) {
+    this.editSectionForm.addEventListener('submit', event => {
+      event.preventDefault()
+      var record = {}
+      record.id = this.editSectionForm.dataset.recordId
+      record.date = this.inputDate2.value
+      record.timeBegin = this.inputBeginTime2.value
+      record.timeEnd = this.inputEndTime2.value
+
+      handler(record)
+    })
+  },
+
+  openEditDialog: function(record) {
+    this.editSection.style.opacity = 1
+
+    this.editSectionForm.dataset.recordId = record.id
+    this.inputDate2.value = utils.getDateFromIsoString(new Date(record.begin))
+    this.inputBeginTime2.value = utils.formatTime(new Date(record.begin))
+    this.inputEndTime2.value = utils.formatTime(new Date(record.end))
+  },
+  /**
+   *
+   * @param {*} records
+   */
+
+  bindOpenEditDialog: function(handler) {
+    // add listener to edit click
+
+    this.recordsList.addEventListener('click', function handleEvent(event) {
+      if (event.target.className == 'record-edit') {
+        handler(event.target.parentElement.dataset.id)
       }
     })
   }

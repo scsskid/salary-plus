@@ -14,37 +14,23 @@ Model.prototype = {
     this.onRecordsListChanged(records)
     localStorage.setItem('appData', JSON.stringify(records))
   },
-  /**
-   * if timeBegin is gt timeEnd assuming endDate to be next day
-   * @param {Object} record
-   */
 
-  _sanitizeRecordEndDate: function todo(record) {
-    if (record.timeBegin <= record.timeEnd) {
-      record.dateEnd = record.date
-    } else {
-      var recordedDate = new Date(record.date)
-      var recordedDay = recordedDate.getDate()
-      recordedDate.setDate(recordedDay + 1)
-      record.dateEnd = utils.getTimeZoneAwareIsoString(recordedDate)
-    }
-    return record
-  },
   /**
    *
    * @param {int} id
    */
   getRecordById: function(id) {
-    var requestedRecord = this.records.filter(
-      function recordIdMatches(record) {
-        return record.id == id
-      }.bind(this)
-    )
+    var requestedRecord = this.records.filter(function recordIdMatches(record) {
+      return record.id == id
+    })[0]
+
     return requestedRecord
   },
 
   editRecord: function(submittedRecord) {
-    submittedRecord = this._sanitizeRecordEndDate(submittedRecord)
+    console.log('model editR', submittedRecord)
+
+    submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
 
     this.records.filter(function(record) {
       if (record.id == submittedRecord.id) {
@@ -57,7 +43,7 @@ Model.prototype = {
   },
 
   addRecord: function(submittedRecord) {
-    submittedRecord = this._sanitizeRecordEndDate(submittedRecord)
+    submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
 
     var newRecord = {
       // todo: get max id with reduce()?
