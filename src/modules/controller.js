@@ -5,6 +5,8 @@ export default function Controller(model, view) {
   this.init()
 
   this.model.bindRecordsListChanged(this.onRecordsListChanged.bind(this))
+  this.model.bindUserDataChanged(this.onUserDataChanged.bind(this))
+
   this.view.bindAddRecord(this.handleAddRecord.bind(this))
   this.view.bindDeleteRecord(this.handleDeleteRecord.bind(this))
   this.view.bindSeedRecords(this.handleSeedRecords.bind(this))
@@ -15,8 +17,13 @@ export default function Controller(model, view) {
 
 Controller.prototype = {
   init: function() {
-    this.onRecordsListChanged(this.model.records)
+    this.onRecordsListChanged(this.model.state.records)
+    this.onUserDataChanged(this.model.state.user)
     this.view.populateForm()
+  },
+
+  onUserDataChanged: function(userData) {
+    this.view.displayUserName(userData)
   },
 
   onRecordsListChanged: function(records) {

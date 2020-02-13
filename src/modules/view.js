@@ -20,11 +20,14 @@ function View() {
 }
 
 View.prototype = {
+  displayUserName: function(userData) {
+    console.log(userData.name)
+  },
   /**
    * Display Records To Screen
    */
 
-  displayRecords: function(records) {
+  displayRecords: function(records = []) {
     var recordsListCount = document.querySelector('[data-records-list-count]')
     recordsListCount.innerHTML = records.length
     // Empty Records List

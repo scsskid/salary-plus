@@ -1,27 +1,23 @@
 import sampleData from './../../../data/sample-data.js'
 import utils from '../utils.js'
 function Model() {
-  this.records = JSON.parse(localStorage.getItem('appData')) || []
-  this.sampleData = sampleData
+  this.state = JSON.parse(localStorage.getItem('store')) || {}
+  this.state.user = sampleData.user
+
+  // this.sampleData = sampleData
+
+  console.log(this.state)
 }
 
 Model.prototype = {
-  /**
-   *
-   * @param {Object} records
-   */
-
   _commitRecords: function(records) {
     this.onRecordsListChanged(records)
-    localStorage.setItem('appData', JSON.stringify(records))
+    this.state.records = records
+    localStorage.setItem('store', JSON.stringify(this.state))
   },
 
-  /**
-   *
-   * @param {int} id
-   */
   getRecordById: function(id) {
-    var requestedRecord = this.records.filter(function recordIdMatches(record) {
+    var requestedRecord = this.state.records.filter(function recordIdMatches(record) {
       return record.id == id
     })[0]
 
@@ -31,14 +27,14 @@ Model.prototype = {
   editRecord: function(submittedRecord) {
     submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
 
-    this.records.filter(function(record) {
+    this.state.records.filter(function(record) {
       if (record.id == submittedRecord.id) {
         record.begin = `${submittedRecord.date} ${submittedRecord.timeBegin}`
         record.end = `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
       }
       return record
     })
-    this._commitRecords(this.records)
+    this._commitRecords(this.state.records)
   },
 
   addRecord: function(submittedRecord) {
@@ -46,28 +42,31 @@ Model.prototype = {
 
     var newRecord = {
       // todo: get max id with reduce()?
-      id: this.records.length > 0 ? this.records[this.records.length - 1].id + 1 : 1,
+      id: this.state.records.length > 0 ? this.state.records[this.state.records.length - 1].id + 1 : 1,
       rate_id: 1,
       begin: `${submittedRecord.date} ${submittedRecord.timeBegin}`,
       end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
     }
-    this.records.push(newRecord)
-    this._commitRecords(this.records)
+    this.state.records.push(newRecord)
+    this._commitRecords(this.state.records)
   },
 
   deleteRecord: function(id) {
-    var remainingRecords = this.records.filter(function deleteRecord(record) {
+    var remainingRecords = this.state.records.filter(function deleteRecord(record) {
       return record.id != id
     })
-    this.records = remainingRecords
-    this._commitRecords(this.records)
+    this.state.records = remainingRecords
+    this._commitRecords(this.state.records)
   },
   bindRecordsListChanged: function(callback) {
     this.onRecordsListChanged = callback
   },
+  bindUserDataChanged: function(callback) {
+    this.onUserDataChanged = callback
+  },
   seedRecords: function() {
-    this.records = sampleData.records
-    this._commitRecords(this.records)
+    this.state.records = sampleData.records
+    this._commitRecords(this.state.records)
   }
 }
 

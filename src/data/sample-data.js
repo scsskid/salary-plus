@@ -1,32 +1,12 @@
-var users = [
-  {
-    id: 1,
-    name: 'Benedikt',
-    settings: {
-      defaultRate: 1,
-      defaultEmployer: 1
-    }
-  }
-]
+var settingsDefault = {
+  rate: 13.5,
+  employer: 'Bundesnachrichtendienst & Söhne'
+}
 
-var rates = [
-  {
-    id: 1,
-    amount: 13.5,
-    interval: 'hourly'
-  }
-]
-
-var employers = [
-  {
-    id: 1,
-    name: 'Bundesnachrichtendienst'
-  },
-  {
-    id: 2,
-    name: 'Palsta'
-  }
-]
+var user = {
+  name: 'Anon',
+  settings: settingsDefault
+}
 
 var records = [
   {
@@ -56,9 +36,7 @@ var records = [
 ]
 
 var appData = {
-  users,
-  rates,
-  employers,
+  user,
   records
 }
 
