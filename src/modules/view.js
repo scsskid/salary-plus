@@ -1,4 +1,4 @@
-import utils from '../utils.js'
+import utils from './utils.js'
 function View() {
   this.recordsSection = document.querySelector('[data-records]')
   this.recordsList = document.createElement('ul')

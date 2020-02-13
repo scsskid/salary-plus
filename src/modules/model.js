@@ -1,12 +1,8 @@
 import sampleData from './../../../data/sample-data.js'
-import utils from '../utils.js'
+import utils from './utils.js'
 function Model() {
   this.state = JSON.parse(localStorage.getItem('store')) || {}
   this.state.user = sampleData.user
-
-  // this.sampleData = sampleData
-
-  console.log(this.state)
 }
 
 Model.prototype = {
