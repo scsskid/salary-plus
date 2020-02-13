@@ -2,7 +2,11 @@ import sampleData from './../../../data/sample-data.js'
 import utils from './utils.js'
 function Model() {
   this.state = JSON.parse(localStorage.getItem('store')) || {}
-  this.state.user = sampleData.user
+
+  if (!this.state.user) {
+    this.state.user = sampleData.user
+    localStorage.setItem('store', JSON.stringify(this.state))
+  }
 }
 
 Model.prototype = {
