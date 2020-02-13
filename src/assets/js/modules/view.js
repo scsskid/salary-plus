@@ -103,7 +103,7 @@ View.prototype = {
     })
   },
 
-  bindSaveRecord: function(handler) {
+  bindSaveRecord: function(saveRecordHandler, closeEditDialogHandler) {
     this.editSectionForm.addEventListener('submit', event => {
       event.preventDefault()
       var record = {}
@@ -112,17 +112,24 @@ View.prototype = {
       record.timeBegin = this.inputBeginTime2.value
       record.timeEnd = this.inputEndTime2.value
 
-      handler(record)
+      saveRecordHandler(record)
+      closeEditDialogHandler()
     })
   },
 
   openEditDialog: function(record) {
     this.editSection.style.opacity = 1
+    this.editSection.style.pointerEvents = 'all'
 
     this.editSectionForm.dataset.recordId = record.id
     this.inputDate2.value = utils.getDateFromIsoString(new Date(record.begin))
     this.inputBeginTime2.value = utils.formatTime(new Date(record.begin))
     this.inputEndTime2.value = utils.formatTime(new Date(record.end))
+  },
+  closeEditDialog: function() {
+    this.editSection.style.opacity = 0.2
+    this.editSection.style.pointerEvents = 'none'
+    this.editSectionForm.reset()
   },
   /**
    *
