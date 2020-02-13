@@ -5,7 +5,7 @@
  "delay": 100,
  "quiet": true,
  "watchexps": [
-    "src/assets/js/**/*.js",
+    "src/**/*.js",
     "src/assets/css/**/*.css # # reloadcss",
     "src/**/*.html",
     "src/images/"
