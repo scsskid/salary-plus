@@ -57,12 +57,9 @@ Model.prototype = {
   },
 
   deleteRecord: function(id) {
-    console.log(id)
-
     var remainingRecords = this.state.records.filter(function deleteRecord(record) {
       return record.id != id
     })
-    console.log(remainingRecords)
 
     this.state.records = remainingRecords
     this._commitState(this.state)
