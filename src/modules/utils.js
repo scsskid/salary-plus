@@ -67,7 +67,8 @@ export default {
 
     // filter submit els
     formInputElements = formInputElements.filter(function(el) {
-      return el.type != 'submit'
+      var targetTypes = ['text', 'date', 'time']
+      return el.nodeName == 'INPUT' && targetTypes.includes(el.type)
     })
 
     // map to smaller obj
