@@ -10,10 +10,8 @@ Model.prototype = {
    */
   _init: function() {
     this.state = JSON.parse(localStorage.getItem('store')) || undefined
-
     if (!this.state) {
       this.state = sampleData
-
       localStorage.setItem('store', JSON.stringify(this.state))
     }
   },
@@ -38,13 +36,11 @@ Model.prototype = {
     var requestedRecord = this.state.records.filter(function recordIdMatches(record) {
       return record.id == id
     })[0]
-
     return requestedRecord
   },
 
   editRecord: function(submittedRecord) {
     submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
-
     this.state.records.filter(function(record) {
       if (record.id == submittedRecord.id) {
         record.begin = `${submittedRecord.date} ${submittedRecord.timeBegin}`
@@ -57,7 +53,6 @@ Model.prototype = {
 
   addRecord: function(submittedRecord) {
     submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
-
     var newRecord = {
       // todo: get max id with reduce()?
       id: this.state.records.length > 0 ? this.state.records[this.state.records.length - 1].id + 1 : 1,

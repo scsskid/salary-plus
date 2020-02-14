@@ -12,7 +12,7 @@ export default function Controller(model, view) {
   this.view.bindSeedRecords(this.handleSeedRecords.bind(this))
 
   this.view.bindOpenUserUpdateDialog(this.handleOpenUserUpdateDialog.bind(this))
-  this.view.bindUpdateUserSettings(this.handleUpdateUserSettings.bind(this))
+  this.view.bindUpdateUserSettings(this.handleUpdateUserSettings.bind(this), this.handleCloseUserUpdateDialog.bind(this))
 
   this.view.bindOpenRecordUpdateDialog(this.handleOpenRecordUpdateDialog.bind(this))
   this.view.bindSaveRecord(this.handleSaveRecord.bind(this), this.handleCloseEditDialog.bind(this))
@@ -46,11 +46,16 @@ Controller.prototype = {
   handleCloseEditDialog: function() {
     this.view.closeEditDialog()
   },
+  handleCloseUserUpdateDialog: function(params) {
+    this.view.closeUserUpdateDialog()
+  },
   handleSeedRecords: function() {
     this.model.seedRecords()
   },
   // Update User
   onUpdateUserSettings: function(userData) {
+    console.log(userData)
+
     this.view.displayUserName(userData)
     this.view.updateUserName(userData)
   },
