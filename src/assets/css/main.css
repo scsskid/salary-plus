@@ -56,10 +56,14 @@ body {
   display: flex;
 }
 
-.app-branding, .user-bar {
+.app-branding {
   font-size: .8rem;
   font-weight: 400;
   opacity: .5;
+}
+
+.user-bar {
+    opacity: 1;
 }
 
 .user-bar {

@@ -16,7 +16,7 @@ var users = [
 
 var appData = {
   user: {
-    name: 'Laser Ears',
+    name: '',
     settings: settingsDefault
   },
   records: [

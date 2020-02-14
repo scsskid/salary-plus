@@ -25,10 +25,10 @@ function View() {
 
 View.prototype = {
   displayUserName: function(userData) {
-    var displayName = userData ? userData.name : 'Anonymous!'
+    var displayName = userData.name ? userData.name : '👻 Anonymous'
     var userBar = `
       <div class="user-bar">
-        <div class="user-bar-name">${displayName}</div> <a href="" data-open-user-update-dialog>Edit Profile</a> 
+        <div class="user-bar-name">${displayName}</div> <button data-open-user-update-dialog>Edit Profile</button> 
       </div>
     `
     document.addEventListener('DOMContentLoaded', function() {
