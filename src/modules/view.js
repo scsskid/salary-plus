@@ -21,7 +21,20 @@ function View() {
 
 View.prototype = {
   displayUserName: function(userData) {
-    console.log(userData.name)
+    var displayName
+    if (userData) {
+      displayName = userData.name
+    } else {
+      displayName = 'Anonymous!'
+    }
+    var userBar = `
+      <div class="user-bar">
+        😍${displayName}
+      </div>
+    `
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.app-branding').insertAdjacentHTML('afterend', userBar)
+    })
   },
   /**
    * Display Records To Screen

@@ -1,15 +1,19 @@
 import sampleData from './../../../data/sample-data.js'
 import utils from './utils.js'
 function Model() {
-  this.state = JSON.parse(localStorage.getItem('store')) || {}
-
-  if (!this.state.user) {
-    this.state.user = sampleData.user
-    localStorage.setItem('store', JSON.stringify(this.state))
-  }
+  this._init()
 }
 
 Model.prototype = {
+  _init: function() {
+    this.state = JSON.parse(localStorage.getItem('store')) || undefined
+
+    if (!this.state) {
+      this.state = sampleData
+      // this.state = {}
+      localStorage.setItem('store', JSON.stringify(this.state))
+    }
+  },
   _commitRecords: function(records) {
     this.onRecordsListChanged(records)
     this.state.records = records
