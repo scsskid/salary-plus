@@ -166,7 +166,7 @@ View.prototype = {
 
     this.recordsList.addEventListener('click', function handleEvent(event) {
       if (event.target.className == 'record-edit') {
-        handler(event.target.parentElement.dataset.id)
+        handler(event.target.closest('.records-list-item').dataset.id)
       }
     })
   }
