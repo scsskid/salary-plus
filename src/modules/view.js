@@ -54,17 +54,31 @@ View.prototype = {
       this.recordsSection.append(p)
     } else {
       state.records.forEach(record => {
-        var li = document.createElement('li')
-        li.classList.add('records-list-item')
-        li.dataset.id = record.id
-        li.innerHTML = `
-          <div class="record-date">${utils.formatDate.short(record.begin)}</div>
-          <div class="record-time">${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)}</div>
-          <div class="record-time-elapsed">${utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))}</div>
-          <button class="record-edit">Edit</button>
-          <button class="record-delete">Delete</button>
+        var job = state.jobs.filter(function(job) {
+          return job.id == record.jobId
+        })[0]
+        var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+        var earnedNumber = utils.timeToDecimal(timeElapsed) * job.rate
+        var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+
+        var listItemMarkup = `
+          <li class="records-list-item" data-id="${record.id}">
+            <header class="record-header">
+              <h3>${utils.formatDate.nice(record.begin)}</h3>
+            </header>
+            <p class="record-body">
+              ${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)} |
+              <span class="record-time-elapsed">${timeElapsed}</span> |
+              ${earned}
+            </p>
+            
+            <footer class="record-footer">
+              <button class="record-edit">Edit</button>
+              <button class="record-delete">Delete</button>
+            </footer>
+          </li>
         `
-        this.recordsList.append(li)
+        this.recordsList.insertAdjacentHTML('beforeend', listItemMarkup)
       })
     }
   },
@@ -109,7 +123,7 @@ View.prototype = {
   bindDeleteRecord: function(deleteRecordHandler) {
     this.recordsList.addEventListener('click', function handleEvent(event) {
       if (event.target.className == 'record-delete') {
-        deleteRecordHandler(event.target.parentElement.dataset.id)
+        deleteRecordHandler(event.target.closest('.records-list-item').dataset.id)
       }
     })
   },

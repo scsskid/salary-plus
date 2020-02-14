@@ -39,6 +39,12 @@ export default {
 
     return `${hours}:${minutes}`
   },
+  timeToDecimal: function(t) {
+    var arr = t.split(':')
+    var dec = parseInt((arr[1] / 6) * 10, 10)
+
+    return parseFloat(parseInt(arr[0], 10) + '.' + (dec < 10 ? '0' : '') + dec)
+  },
   /**
    * if timeBegin is gt timeEnd assuming endDate to be next day
    * @param {Object} record

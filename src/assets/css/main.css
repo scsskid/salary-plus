@@ -107,23 +107,7 @@ label {
 .app-insert {
 }
 
-/* Records List */
-
-.records-list  {
-  padding-left: 0;
-  list-style: none;
-}
-
-.records-list-item {
-  display: flex;
-  box-shadow: 0 1px 0 hsl(0, 0%, 90%);
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-}
-
-.records-list-item:last-child {
-  box-shadow: none;
-}
+/* Records List Section */
 
 .records h2 {
   display: flex;
@@ -133,21 +117,26 @@ label {
   margin-left: auto;
 }
 
-.record-date {
-  margin-right: .5rem;
-  flex: 0 0 8rem;
-}
-.record-time {
-  margin-right: .5rem;
-  flex: 0 0 8rem;
-}
-.record-time-elapsed {
-  opacity: .5;
-}
-.record-delete {
-  margin-left: auto;
+.records-list  {
+  padding-left: 0;
+  list-style: none;
 }
 
-.record-edit {
-  margin-left: auto;
+.records-list-item {
+  /* display: flex; */
+  box-shadow: 0 1px 0 hsl(0, 0%, 90%);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.record-header h3 {
+  margin-bottom: .5rem;
+}
+
+.records-list-item:last-child {
+  box-shadow: none;
+}
+
+.record-time-elapsed {
+  opacity: .5;
 }

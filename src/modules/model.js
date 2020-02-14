@@ -48,7 +48,7 @@ Model.prototype = {
     var newRecord = {
       // todo: get max id with reduce()?
       id: this.state.records.length > 0 ? this.state.records[this.state.records.length - 1].id + 1 : 1,
-      rate_id: 1,
+      jobId: 1,
       begin: `${submittedRecord.date} ${submittedRecord.timeBegin}`,
       end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
     }
@@ -57,9 +57,13 @@ Model.prototype = {
   },
 
   deleteRecord: function(id) {
+    console.log(id)
+
     var remainingRecords = this.state.records.filter(function deleteRecord(record) {
       return record.id != id
     })
+    console.log(remainingRecords)
+
     this.state.records = remainingRecords
     this._commitState(this.state)
   },
