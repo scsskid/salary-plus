@@ -60,5 +60,23 @@ export default {
       record.dateEnd = this.getTimeZoneAwareIsoString(recordedDate)
     }
     return record
+  },
+
+  mapFormInputElements: function(form) {
+    var formInputElements = Array.from(form.elements)
+
+    // filter submit els
+    formInputElements = formInputElements.filter(function(el) {
+      return el.type != 'submit'
+    })
+
+    // map to smaller obj
+    formInputElements = formInputElements.map(function returnIdValPairs(el) {
+      return {
+        [el.id]: el.value
+      }
+    })
+
+    return formInputElements
   }
 }
