@@ -21,12 +21,7 @@ function View() {
 
 View.prototype = {
   displayUserName: function(userData) {
-    var displayName
-    if (userData) {
-      displayName = userData.name
-    } else {
-      displayName = 'Anonymous!'
-    }
+    var displayName = userData ? userData.name : 'Anonymous!'
     var userBar = `
       <div class="user-bar">
         😍${displayName}
@@ -40,9 +35,9 @@ View.prototype = {
    * Display Records To Screen
    */
 
-  displayRecords: function(records = []) {
+  displayRecords: function(state) {
     var recordsListCount = document.querySelector('[data-records-list-count]')
-    recordsListCount.innerHTML = records.length
+    recordsListCount.innerHTML = state.records.length
     // Empty Records List
     while (this.recordsList.firstChild) {
       this.recordsList.removeChild(this.recordsList.firstChild)
@@ -52,13 +47,13 @@ View.prototype = {
       this.recordsSection.removeChild(this.recordsSection.querySelector('.info-message'))
     }
     // Add Records to List in View
-    if (records.length == 0) {
+    if (state.records.length == 0) {
       var p = document.createElement('p')
       p.classList.add('info-message')
       p.innerHTML = `records are empty <button class="seed-records" data-seed-records>Seed Records</button>`
       this.recordsSection.append(p)
     } else {
-      records.forEach(record => {
+      state.records.forEach(record => {
         var li = document.createElement('li')
         li.classList.add('records-list-item')
         li.dataset.id = record.id

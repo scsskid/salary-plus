@@ -17,7 +17,7 @@ export default function Controller(model, view) {
 
 Controller.prototype = {
   init: function() {
-    this.onRecordsListChanged(this.model.state.records)
+    this.onRecordsListChanged(this.model.state)
     this.onUserDataChanged(this.model.state.user)
     this.view.populateForm()
   },

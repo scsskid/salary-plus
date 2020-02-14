@@ -14,9 +14,8 @@ Model.prototype = {
       localStorage.setItem('store', JSON.stringify(this.state))
     }
   },
-  _commitRecords: function(records) {
-    this.onRecordsListChanged(records)
-    this.state.records = records
+  _commitRecords: function(state) {
+    this.onRecordsListChanged(state)
     localStorage.setItem('store', JSON.stringify(this.state))
   },
 
@@ -38,7 +37,7 @@ Model.prototype = {
       }
       return record
     })
-    this._commitRecords(this.state.records)
+    this._commitRecords(this.state)
   },
 
   addRecord: function(submittedRecord) {
@@ -52,7 +51,7 @@ Model.prototype = {
       end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
     }
     this.state.records.push(newRecord)
-    this._commitRecords(this.state.records)
+    this._commitRecords(this.state)
   },
 
   deleteRecord: function(id) {
@@ -60,17 +59,13 @@ Model.prototype = {
       return record.id != id
     })
     this.state.records = remainingRecords
-    this._commitRecords(this.state.records)
+    this._commitRecords(this.state)
   },
   bindRecordsListChanged: function(callback) {
     this.onRecordsListChanged = callback
   },
   bindUserDataChanged: function(callback) {
     this.onUserDataChanged = callback
-  },
-  seedRecords: function() {
-    this.state.records = sampleData.records
-    this._commitRecords(this.state.records)
   }
 }
 
