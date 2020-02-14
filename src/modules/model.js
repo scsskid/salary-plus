@@ -5,6 +5,9 @@ function Model() {
 }
 
 Model.prototype = {
+  /**
+   * Set state to store, seed data if store is emtpy
+   */
   _init: function() {
     this.state = JSON.parse(localStorage.getItem('store')) || undefined
 
@@ -19,6 +22,16 @@ Model.prototype = {
     this.onRecordsListChanged(state)
     localStorage.setItem('store', JSON.stringify(this.state))
     console.log('saved data to store.', this.state)
+  },
+
+  updateUserSettings: function(user) {
+    this.state.user = user
+    this._commitState(this.state)
+    console.log('model.setusersettings')
+  },
+
+  bindUserSettingsChanged: function(callback) {
+    this.onUserDataChanged = callback
   },
 
   getRecordById: function(id) {
@@ -67,9 +80,7 @@ Model.prototype = {
   bindRecordsListChanged: function(callback) {
     this.onRecordsListChanged = callback
   },
-  bindUserDataChanged: function(callback) {
-    this.onUserDataChanged = callback
-  },
+
   seedRecords: function() {
     this.state.records = sampleData.records
     this._commitState(this.state)

@@ -5,25 +5,24 @@ export default function Controller(model, view) {
   this.init()
 
   this.model.bindRecordsListChanged(this.onRecordsListChanged.bind(this))
-  this.model.bindUserDataChanged(this.onUserDataChanged.bind(this))
+  this.model.bindUserSettingsChanged(this.onUpdateUserSettings.bind(this))
 
   this.view.bindAddRecord(this.handleAddRecord.bind(this))
   this.view.bindDeleteRecord(this.handleDeleteRecord.bind(this))
   this.view.bindSeedRecords(this.handleSeedRecords.bind(this))
 
-  this.view.bindOpenEditDialog(this.handleOpenEditDialog.bind(this))
+  this.view.bindOpenUserUpdateDialog(this.handleOpenUserUpdateDialog.bind(this))
+  this.view.bindUpdateUserSettings(this.handleUpdateUserSettings.bind(this))
+
+  this.view.bindOpenRecordUpdateDialog(this.handleOpenRecordUpdateDialog.bind(this))
   this.view.bindSaveRecord(this.handleSaveRecord.bind(this), this.handleCloseEditDialog.bind(this))
 }
 
 Controller.prototype = {
   init: function() {
     this.onRecordsListChanged(this.model.state)
-    this.onUserDataChanged(this.model.state.user)
+    this.onUpdateUserSettings(this.model.state.user)
     this.view.populateForm()
-  },
-
-  onUserDataChanged: function(userData) {
-    this.view.displayUserName(userData)
   },
 
   onRecordsListChanged: function(records) {
@@ -38,8 +37,11 @@ Controller.prototype = {
   handleDeleteRecord: function(id) {
     this.model.deleteRecord(id)
   },
-  handleOpenEditDialog: function(id) {
-    this.view.openEditDialog(this.getRecordById(id))
+  handleOpenRecordUpdateDialog: function(id) {
+    this.view.openRecordUpdateDialog(this.getRecordById(id))
+  },
+  handleOpenUserUpdateDialog: function() {
+    this.view.openUserUpdateDialog(this.model.state.user)
   },
   handleCloseEditDialog: function() {
     this.view.closeEditDialog()
@@ -47,15 +49,23 @@ Controller.prototype = {
   handleSeedRecords: function() {
     this.model.seedRecords()
   },
-  /*
-   * CLI *
-   */
-  logRecords: function() {
-    this.model.records.forEach(function(record) {
-      console.log(record)
-    })
+  // Update User
+  onUpdateUserSettings: function(userData) {
+    this.view.displayUserName(userData)
+    this.view.updateUserName(userData)
   },
-  getRecordById: function(id) {
-    return this.model.getRecordById(id)
+  handleUpdateUserSettings: function(user) {
+    this.model.updateUserSettings(user)
+    this.view.updateUserName(user)
   }
+}
+
+Controller.prototype.logRecords = function() {
+  this.model.records.forEach(function(record) {
+    console.log(record)
+  })
+}
+
+Controller.prototype.getRecordById = function(id) {
+  return this.model.getRecordById(id)
 }

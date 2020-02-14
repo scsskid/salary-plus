@@ -17,6 +17,8 @@ function View() {
   this.inputDate2 = this.editSection.querySelector('#entry-date2')
   this.inputBeginTime2 = this.editSection.querySelector('#entry-begin-time2')
   this.inputEndTime2 = this.editSection.querySelector('#entry-end-time2')
+
+  this.sectionUserUpdateDialog = document.querySelector('.user-update-dialog')
 }
 
 View.prototype = {
@@ -24,12 +26,19 @@ View.prototype = {
     var displayName = userData ? userData.name : 'Anonymous!'
     var userBar = `
       <div class="user-bar">
-        😍${displayName}
+        <div class="user-bar-name">${displayName}</div> <a href="" data-open-user-update-dialog>Edit Profile</a> 
       </div>
     `
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('.app-branding').insertAdjacentHTML('afterend', userBar)
     })
+  },
+
+  updateUserName: function(user) {
+    var userBar = document.querySelector('.user-bar')
+    if (userBar) {
+      userBar.innerHTML = user.name
+    }
   },
   /**
    * Display Records To Screen
@@ -131,6 +140,9 @@ View.prototype = {
   bindSaveRecord: function(saveRecordHandler, closeEditDialogHandler) {
     this.editSectionForm.addEventListener('submit', event => {
       event.preventDefault()
+
+      console.log(utils.mapFormInputElements(this.editSectionForm))
+
       var record = {}
       record.id = this.editSectionForm.dataset.recordId
       record.date = this.inputDate2.value
@@ -142,7 +154,23 @@ View.prototype = {
     })
   },
 
-  openEditDialog: function(record) {
+  bindUpdateUserSettings: function(handler) {
+    var form = this.sectionUserUpdateDialog.querySelector('form')
+
+    this.sectionUserUpdateDialog.querySelector('form').addEventListener('submit', function(event) {
+      event.preventDefault()
+
+      console.log(utils.mapFormInputElements(form))
+    })
+
+    // Listen for save button click
+    // ...
+    // call handler
+    // ...
+    // handler()
+  },
+
+  openRecordUpdateDialog: function(record) {
     this.editSection.style.opacity = 1
     this.editSection.style.pointerEvents = 'all'
 
@@ -156,12 +184,32 @@ View.prototype = {
     this.editSection.style.pointerEvents = 'none'
     this.editSectionForm.reset()
   },
-  /**
-   *
-   * @param {*} records
-   */
 
-  bindOpenEditDialog: function(handler) {
+  openUserUpdateDialog: function(user) {
+    this.sectionUserUpdateDialog.style.opacity = 1
+    this.sectionUserUpdateDialog.style.pointerEvents = 'all'
+
+    var inputUserName = this.sectionUserUpdateDialog.querySelector('[data-input-user-name]')
+    inputUserName.value = user.name
+  },
+
+  bindOpenUserUpdateDialog: function(handler) {
+    // Listen for edit user button click
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.user-bar').addEventListener('click', function(event) {
+        event.preventDefault()
+        if (event.target.dataset) {
+          handler()
+        }
+      })
+    })
+
+    // call handler
+    // ...
+    // handler()
+  },
+
+  bindOpenRecordUpdateDialog: function(handler) {
     // add listener to edit click
 
     this.recordsList.addEventListener('click', function handleEvent(event) {
