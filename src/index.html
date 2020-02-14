@@ -43,7 +43,7 @@
 
     <section class="data-modify" style="opacity: .2; pointer-events: none">
       <h2>Edit Record</h2>
-      <form class="" action="">
+      <form class="" action="" data-form-update-record>
 
         <div class="form-el">
           <label for="entry-date2">Date</label>
@@ -63,6 +63,19 @@
         </div>
       </form>
     </section>  
+
+    <section class="user-update-dialog" style="opacity: .2; pointer-events: none">
+      <h2>Edit User</h2>
+      <form action="" data-form-user-update>
+      <div class="form-el">
+        <label for="userName">Name</label>
+        <input type="text" id="userName" data-user-name>
+      </div>
+      <div class="form-el">
+        <button type="" class="">Save User</button>
+      </div>
+      </form>
+    </section>
 
 
   </div>
