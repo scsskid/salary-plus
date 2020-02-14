@@ -10,7 +10,7 @@ Model.prototype = {
 
     if (!this.state) {
       this.state = sampleData
-      // this.state = {}
+
       localStorage.setItem('store', JSON.stringify(this.state))
     }
   },
@@ -18,6 +18,7 @@ Model.prototype = {
     // ? pass indicator of whats changed, and only update necessary components?
     this.onRecordsListChanged(state)
     localStorage.setItem('store', JSON.stringify(this.state))
+    console.log('saved data to store.', this.state)
   },
 
   getRecordById: function(id) {
@@ -67,6 +68,10 @@ Model.prototype = {
   },
   bindUserDataChanged: function(callback) {
     this.onUserDataChanged = callback
+  },
+  seedRecords: function() {
+    this.state.records = sampleData.records
+    this._commitState(this.state)
   }
 }
 
