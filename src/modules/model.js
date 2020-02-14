@@ -14,7 +14,8 @@ Model.prototype = {
       localStorage.setItem('store', JSON.stringify(this.state))
     }
   },
-  _commitRecords: function(state) {
+  _commitState: function(state) {
+    // ? pass indicator of whats changed, and only update necessary components?
     this.onRecordsListChanged(state)
     localStorage.setItem('store', JSON.stringify(this.state))
   },
@@ -37,7 +38,7 @@ Model.prototype = {
       }
       return record
     })
-    this._commitRecords(this.state)
+    this._commitState(this.state)
   },
 
   addRecord: function(submittedRecord) {
@@ -51,7 +52,7 @@ Model.prototype = {
       end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
     }
     this.state.records.push(newRecord)
-    this._commitRecords(this.state)
+    this._commitState(this.state)
   },
 
   deleteRecord: function(id) {
@@ -59,7 +60,7 @@ Model.prototype = {
       return record.id != id
     })
     this.state.records = remainingRecords
-    this._commitRecords(this.state)
+    this._commitState(this.state)
   },
   bindRecordsListChanged: function(callback) {
     this.onRecordsListChanged = callback
