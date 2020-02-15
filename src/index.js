@@ -1,7 +1,12 @@
-import Model from './modules/model.js'
-import View from './modules/view.js'
-import Controller from './modules/controller.js'
+import RecordsList from './components/records-list.js'
+import sampleData from './data/sample-data.js'
 
-var app = new Controller(new Model(), new View())
+var recordsList = new RecordsList(document.querySelector('.records-list'))
 
-window.app = app
+recordsList.records = [{}, {}]
+
+setTimeout(() => {
+  recordsList.records = sampleData.records
+}, 1000)
+
+// document.addEventListener('DOMContentLoaded', () => {})

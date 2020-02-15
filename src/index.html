@@ -10,76 +10,12 @@
 <body>
 
   <div class="container">
-    <header class="main-header">
-      <h1 class="app-branding">Salary Plus</h1>
-    </header>
-
-    <section class="user-update-dialog" style="opacity: .2; pointer-events: none">
-      <h2>Edit User</h2>
-      <form action="" data-form-user-update>
-      <div class="form-el">
-        <label for="userName">Name</label>
-        <input type="text" id="username" data-input-user-name>
-      </div>
-      <div class="form-el">
-        <button type="" class="">Save User</button>
-      </div>
-      </form>
-    </section>
-
-    <section class="data-insert">
-      <h2>Add Record</h2>
-      <form class="" action="">
-
-        <div class="form-el">
-          <label for="entry-date">Date</label>
-          <input id="entry-date" type="date">
-        </div>
-        <div class="form-el">
-          <label for="entry-begin-time">Begin Time</label>
-          <input id="entry-begin-time" type="time">
-        </div>
-        <div class="form-el">
-          <label for="entry-end-time">End Time</label>
-          <input id="entry-end-time" type="time">
-        </div>
-
-        <div class="form-el">
-          <button type="" class="">Save New</button>
-        </div>
-      </form>
-    </section>    
-
-    <section class="records" data-records>
-    <h2>All Records <span data-records-list-count /></h2>
-    </section>
-
-    <section class="data-modify" style="opacity: .2; pointer-events: none">
-      <h2>Edit Record</h2>
-      <form class="" action="" data-form-update-record>
-
-        <div class="form-el">
-          <label for="entry-date2">Date</label>
-          <input id="entry-date2" type="date">
-        </div>
-        <div class="form-el">
-          <label for="entry-begin-time2">Begin Time</label>
-          <input id="entry-begin-time2" type="time">
-        </div>
-        <div class="form-el">
-          <label for="entry-end-time2">End Time</label>
-          <input id="entry-end-time2" type="time">
-        </div>
-
-        <div class="form-el">
-          <button type="" class="">Save</button>
-        </div>
-      </form>
-    </section>  
-
-
-
-
+  <header class="main-header">
+    <h1 class="app-branding">Salary Plus</h1>
+  </header>  
+  <main>
+    <div class="records-list" />
+  </main>
   </div>
 
   <script src="index.js" type="module"></script>
