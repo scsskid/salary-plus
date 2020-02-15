@@ -9,7 +9,7 @@ Server will reload according to settings in `.lightserverrc`
 
 ## Debug
 
-Test Commands
+Test Commands (deprecated, nnly for reference)
 
 ```js
 app.model.addRecord({
