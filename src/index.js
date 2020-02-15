@@ -1,11 +1,8 @@
 import RecordsList from './components/records-list.js'
 import sampleData from './data/sample-data.js'
 
-var recordsList = new RecordsList(document.querySelector('.records-list'))
-
-recordsList.records = [{}, {}]
-
 setTimeout(() => {
+  var recordsList = new RecordsList(document.querySelector('.records-list'))
   recordsList.records = sampleData.records
 }, 1000)
 

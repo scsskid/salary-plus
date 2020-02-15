@@ -13,7 +13,7 @@ export default class RecordsList {
     return this.recordsValue
   }
 
-  init(container, reo) {
+  init(container) {
     this.container = container
     this.render()
   }
@@ -23,6 +23,7 @@ export default class RecordsList {
   }
 
   static markup({ records }) {
+    // Descructing this.records
     console.log(records)
 
     let markup = ``
