@@ -1,32 +1,37 @@
 import utils from '../utils.js'
+import Generic from './generic.js'
 
 export default class RecordsList {
   set records(records) {
-    console.log('setting', records)
     this.recordsValue = records
-    console.log('rerender component', this)
     this.render()
   }
 
   get records() {
-    console.log('getting')
     return this.recordsValue
   }
 
   init(container) {
     this.container = container
     this.render()
+
+    // ? Hier Daten setzen statt in markup()?
   }
 
   render() {
     this.container.innerHTML = RecordsList.markup(this)
+    console.log(this.records)
+    if (this.records != undefined /* && this.records */) {
+      this.pageElement = this.container.querySelector('.record-header')
+      new Generic(this.pageElement)
+    }
   }
 
   static markup({ records }) {
-    // Descructing this.records1
     console.log(records)
 
     let markup = ``
+
     if (records) {
       markup += `<ul>`
       records.forEach(record => {

@@ -2,6 +2,10 @@
 @import "vendor/modern-normalize.css";
 @import "base/fonts.css";
 
+/* Colors */
+
+
+
 /* Misc */
 
 button {
@@ -13,7 +17,7 @@ button {
 }
 
 button:hover {
-  background: hsl(0, 0%, 98%);
+  background: hsla(0, 0%, 100%, .2);
   box-shadow: 0 0 0 1px hsl(0, 0%, 30%), 0 2px 2px 0 hsl(0, 0%, 95%);
 }
 
@@ -89,7 +93,25 @@ body {
   background: #fff;
 }
 
-
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #111;
+    color: #ddd;
+  }
+  
+  .container {
+    background: #222;
+  }
+  button {
+    box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
+  }
+  
+  button:hover {
+    background: hsla(0, 0%, 100%, .1);
+    box-shadow: 0 0 0 1px hsl(0, 0%, 100%);
+  }
+  
+}
 
 /* Forms */
 

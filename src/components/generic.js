@@ -1,4 +1,4 @@
-export default class SPComponent {
+export default class Generic {
   set title(title) {
     console.log('setting this.titleValue to', title)
     this.titleValue = title
@@ -19,27 +19,29 @@ export default class SPComponent {
   }
 
   render() {
-    this.container.innerHTML = SPComponent.markup(this)
+    this.container.innerHTML = Generic.markup(this)
   }
 
   static markup({ title }) {
     return `
-      <h1>${title}</h1>
+      <p>Hello from Generic Component</p>
+      <h1>title: ${title}</h1>
     `
   }
 
   constructor(container) {
     // The constructor should only contain the boiler plate code for finding or creating the reference.
     if (typeof container.dataset.ref === 'undefined') {
+      console.log(container)
       this.ref = Math.random()
-      SPComponent.refs[this.ref] = this
+      Generic.refs[this.ref] = this
       container.dataset.ref = this.ref
       this.init(container)
     } else {
       // If this element has already been instantiated, use the existing reference.
-      return SPComponent.refs[container.dataset.ref]
+      return Generic.refs[container.dataset.ref]
     }
   }
 }
 
-SPComponent.refs = {}
+Generic.refs = {}
