@@ -23,7 +23,8 @@ export default class RecordsList {
     console.log(this.records)
     if (this.records != undefined /* && this.records */) {
       this.pageElement = this.container.querySelector('.record-header')
-      new Generic(this.pageElement)
+      var recordsListItem = new Generic(this.pageElement)
+      recordsListItem.title = 'foo'
     }
   }
 
