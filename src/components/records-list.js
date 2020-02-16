@@ -23,7 +23,7 @@ export default class RecordsList {
   }
 
   static markup({ records }) {
-    // Descructing this.records
+    // Descructing this.records1
     console.log(records)
 
     let markup = ``
