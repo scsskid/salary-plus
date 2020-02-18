@@ -3,6 +3,8 @@ import RecordsListItem from './records-list-item.js'
 import Generic from './generic.js'
 import sampleData from './../data/sample-data.js'
 
+var { jobs } = sampleData
+
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
@@ -20,13 +22,9 @@ export default class RecordsList {
     this.container = container
   }
 
-  setState() {
-    this.state = this.state
-  }
-
   render() {
     var records = this.state.records.map(record => {
-      var job = sampleData.jobs.find(job => {
+      var job = jobs.find(job => {
         return job.id == record.jobId
       })
       var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
