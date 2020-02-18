@@ -49,7 +49,7 @@ var appData = {
     {
       id: 1,
       name: 'Bundesnachrichtendienst',
-      rate: 8.5,
+      rate: 88.5,
       interval: 'hourly'
     },
     {

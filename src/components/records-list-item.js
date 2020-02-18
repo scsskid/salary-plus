@@ -13,7 +13,7 @@ export default class RecordsListItem {
   }
 
   render() {
-    this.container.innerHTML = Generic.markup(this)
+    this.container.innerHTML = RecordsListItem.markup(this)
   }
 
   static markup({ title }) {
@@ -27,12 +27,12 @@ export default class RecordsListItem {
     if (typeof container.dataset.ref === 'undefined') {
       console.log(container)
       this.ref = Math.random()
-      Generic.refs[this.ref] = this
+      RecordsListItem.refs[this.ref] = this
       container.dataset.ref = this.ref
       this.init(container)
     } else {
       // If this element has already been instantiated, use the existing reference.
-      return Generic.refs[container.dataset.ref]
+      return RecordsListItem.refs[container.dataset.ref]
     }
   }
 }

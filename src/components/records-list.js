@@ -3,56 +3,67 @@ import RecordsListItem from './records-list-item.js'
 import Generic from './generic.js'
 
 export default class RecordsList {
-  set records(records) {
-    this.recordsValue = records
+  set state(state) {
+    this.stateValue = state
     this.render()
   }
 
-  get records() {
-    return this.recordsValue
+  get state() {
+    return this.stateValue
   }
 
   init(container) {
     this.container = container
-    this.render()
-
-    // ? Hier Daten setzen statt in markup()?
+    // this.render()
   }
 
   render() {
+    this.state.records = this.state.records.map(record => {
+      var job = this.state.jobs.find(job => {
+        return job.id == record.jobId
+      })
+      var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+      var earnedNumber = utils.timeToDecimal(timeElapsed) * job.rate
+      var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+
+      return {
+        id: record.id,
+        jobId: record.jobId,
+        dateBegin: utils.formatDate.nice(record.begin),
+        timeBegin: utils.formatTime(record.begin),
+        timeEnd: utils.formatTime(record.end),
+        end: record.end,
+        timeElapsed,
+        earned
+      }
+    })
+
+    console.log(this)
+
     this.container.innerHTML = RecordsList.markup(this)
-    console.log(this.records)
-    if (this.records != undefined /* && this.records */) {
-      this.pageElement = this.container.querySelector('.record-header')
-      var recordsListItem = new Generic(this.pageElement)
-      recordsListItem.title = 'foo'
-    }
+    // if (this.state.records != undefined /* && this.records */) {
+    //   this.pageElement = this.container.querySelector('.record-header')
+    //   var recordsListItem = new Generic(this.pageElement)
+    //   recordsListItem.title = 'foo'
+    // }
   }
 
-  static markup({ records }) {
-    console.log(records)
+  static markup({ state }) {
+    // console.log(records)
 
     let markup = ``
 
-    if (records) {
+    if (state.records) {
       markup += `<ul>`
-      records.forEach(record => {
-        // var job = state.jobs.filter(function(job) {
-        //   return job.id == record.jobId
-        // })[0]
-
-        var job = {}
-        var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
-        var earnedNumber = utils.timeToDecimal(timeElapsed) * job.rate
-        var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
-
+      state.records.forEach(record => {
+        const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
         markup += `
-          <li class="records-list-item" data-id="${record.id}">
+          <li class="records-list-item" data-id="${id}">
             <header class="record-header">
-              <h3>${utils.formatDate.nice(record.begin)}</h3>
+              <h3>${dateBegin}</h3>
             </header>
             <p class="record-body">
-              ${utils.formatTime(record.begin)} - ${utils.formatTime(record.end)} |
+              ${timeBegin} - ${timeEnd} |
               <span class="record-time-elapsed">${timeElapsed}</span> |
               ${earned}
             </p>
