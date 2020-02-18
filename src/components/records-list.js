@@ -1,4 +1,5 @@
 import utils from '../utils.js'
+import RecordsListItem from './records-list-item.js'
 import Generic from './generic.js'
 
 export default class RecordsList {

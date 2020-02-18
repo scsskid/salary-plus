@@ -1,6 +1,5 @@
-export default class Generic {
+export default class RecordsListItem {
   set title(title) {
-    this.titleValue = title
     this.render()
   }
 
@@ -10,7 +9,6 @@ export default class Generic {
 
   init(container) {
     this.container = container
-    this.titleValue = this.container.dataset.title
     this.render()
   }
 
@@ -20,14 +18,14 @@ export default class Generic {
 
   static markup({ title }) {
     return `
-      <p>Hello from Generic Component</p>
-      <h1>title: ${title}</h1>
+      <p>Hello from List Item</p>
     `
   }
 
   constructor(container) {
     // The constructor should only contain the boiler plate code for finding or creating the reference.
     if (typeof container.dataset.ref === 'undefined') {
+      console.log(container)
       this.ref = Math.random()
       Generic.refs[this.ref] = this
       container.dataset.ref = this.ref
@@ -39,4 +37,4 @@ export default class Generic {
   }
 }
 
-Generic.refs = {}
+RecordsListItem.refs = {}
