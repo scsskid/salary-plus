@@ -8,13 +8,13 @@ var { jobs } = sampleData
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
-    console.log('Setting state')
+    // console.log('Setting state')
 
     this.render()
   }
 
   get state() {
-    console.log('Getting state')
+    // console.log('Getting state')
     return this.stateValue
   }
 
@@ -23,26 +23,7 @@ export default class RecordsList {
   }
 
   render() {
-    var records = this.state.records.map(record => {
-      var job = jobs.find(job => {
-        return job.id == record.jobId
-      })
-      var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
-      var earnedNumber = utils.timeToDecimal(timeElapsed) * job.rate
-      var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
-
-      return {
-        id: record.id,
-        jobId: record.jobId,
-        dateBegin: utils.formatDate.nice(record.begin),
-        timeBegin: utils.formatTime(record.begin),
-        timeEnd: utils.formatTime(record.end),
-        end: record.end,
-        timeElapsed,
-        earned
-      }
-    })
-
+    var records = this.state.records.map(this.reMapRecord)
     this.container.innerHTML = RecordsList.markup(records)
     this.buttonDeleteRecord = this.container.querySelectorAll('.record-delete')
     this.addEventListeners()
@@ -55,9 +36,7 @@ export default class RecordsList {
   }
 
   static markup(records) {
-    // console.log(records)
-
-    let markup = ``
+    var markup = ``
 
     if (records.length) {
       markup += `<ul class="records-list">`
@@ -100,6 +79,26 @@ export default class RecordsList {
         this.render()
       })
     })
+  }
+
+  reMapRecord(record) {
+    var job = jobs.find(job => {
+      return job.id == record.jobId
+    })
+    var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+    var earnedNumber = utils.timeToDecimal(timeElapsed) * job.rate
+    var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+
+    return {
+      id: record.id,
+      jobId: record.jobId,
+      dateBegin: utils.formatDate.nice(record.begin),
+      timeBegin: utils.formatTime(record.begin),
+      timeEnd: utils.formatTime(record.end),
+      end: record.end,
+      timeElapsed,
+      earned
+    }
   }
 
   constructor(container) {
