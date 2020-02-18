@@ -1,25 +1,32 @@
 import utils from '../utils.js'
 import RecordsListItem from './records-list-item.js'
 import Generic from './generic.js'
+import sampleData from './../data/sample-data.js'
 
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
+    console.log('Setting state')
+
     this.render()
   }
 
   get state() {
+    console.log('Getting state')
     return this.stateValue
   }
 
   init(container) {
     this.container = container
-    // this.render()
+  }
+
+  setState() {
+    this.state = this.state
   }
 
   render() {
-    this.state.records = this.state.records.map(record => {
-      var job = this.state.jobs.find(job => {
+    var records = this.state.records.map(record => {
+      var job = sampleData.jobs.find(job => {
         return job.id == record.jobId
       })
       var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
@@ -38,9 +45,10 @@ export default class RecordsList {
       }
     })
 
-    console.log(this)
+    this.container.innerHTML = RecordsList.markup(records)
+    this.buttonDeleteRecord = this.container.querySelectorAll('.record-delete')
+    this.addEventListeners()
 
-    this.container.innerHTML = RecordsList.markup(this)
     // if (this.state.records != undefined /* && this.records */) {
     //   this.pageElement = this.container.querySelector('.record-header')
     //   var recordsListItem = new Generic(this.pageElement)
@@ -48,14 +56,14 @@ export default class RecordsList {
     // }
   }
 
-  static markup({ state }) {
+  static markup(records) {
     // console.log(records)
 
     let markup = ``
 
-    if (state.records) {
-      markup += `<ul>`
-      state.records.forEach(record => {
+    if (records.length) {
+      markup += `<ul class="records-list">`
+      records.forEach(record => {
         const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
         markup += `
           <li class="records-list-item" data-id="${id}">
@@ -81,6 +89,19 @@ export default class RecordsList {
     }
 
     return markup
+  }
+
+  addEventListeners() {
+    this.buttonDeleteRecord.forEach(button => {
+      button.addEventListener('click', () => {
+        console.log('clicked', button.closest('li').dataset.id)
+        this.state.records = this.state.records.filter(record => {
+          return record.id != button.closest('li').dataset.id
+        })
+
+        this.render()
+      })
+    })
   }
 
   constructor(container) {
