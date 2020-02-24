@@ -1,6 +1,7 @@
-import utils from '../utils.js'
 import RecordsListItem from './records-list-item.js'
 import sampleData from './../data/sample-data.js'
+
+// const sampleData = {}
 
 var { jobs } = sampleData
 
@@ -16,10 +17,13 @@ export default class RecordsList {
 
   init(container) {
     this.container = container
+    this.state = sampleData
   }
 
   render() {
     var records = this.state.records
+    console.log('Records List Container', this.container)
+
     this.container.innerHTML = RecordsList.markup(records)
 
     // Sub Component
@@ -39,8 +43,7 @@ export default class RecordsList {
   }
 
   static markup(records) {
-    let markup = ''
-
+    var markup
     if (records.length) {
       markup = `<ul class="records-list"></ul>`
     } else {

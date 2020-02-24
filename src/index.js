@@ -1,24 +1,7 @@
-import RecordsList from './components/records-list.js'
-import sampleData from './data/sample-data.js'
+import Nav from './components/nav.js' // aka app?
+import MainView from './components/main-view.js' // aka app?
 
-var recordsList = new RecordsList(document.querySelector('.records-list-container'))
+const nav = new Nav(document.querySelector('[data-main-nav]'))
+const mainView = new MainView(document.querySelector('[data-main-view]'))
 
-window.recordsList = recordsList
-
-setTimeout(() => {
-  recordsList.state = { records: sampleData.records, jobs: sampleData.jobs }
-}, 500)
-
-// setTimeout(() => {
-//   sampleData.records.pop()
-//   recordsList.state = { records: sampleData.records, jobs: sampleData.jobs }
-// }, 1000)
-
-// setTimeout(() => {
-//   console.log('setting recordsList.state.subComp')
-
-//   // recordsList.state = Object.assign(recordsList.state, { subComp: 'set from index.js' })
-//   recordsList.state = { ...recordsList.state, subComp: 'set from index.js' }
-// }, 2000)
-
-// document.addEventListener('DOMContentLoaded', () => {})
+// window.app = app
