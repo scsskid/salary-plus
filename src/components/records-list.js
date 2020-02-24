@@ -31,7 +31,7 @@ export default class RecordsList {
 
     this.recordsListItemDom = this.container.querySelector('.singleRecordsListItem')
     this.recordsListItem = new RecordsListItem(this.recordsListItemDom)
-    this.recordsListItem.state = 'fooState from Parent, Props Down'
+    this.recordsListItem.state = 'fooState from Parent, Props Down ' + this.state.subComp
     // this.recordsListItemComponent =
 
     // if (this.state.records != undefined /* && this.records */) {
@@ -63,7 +63,7 @@ export default class RecordsList {
               <button class="record-edit">Edit</button>
               <button class="record-delete">Delete</button>
             </footer>
-            <div class="singleRecordsListItem" />
+            <div class="singleRecordsListItem"></div>
           </li>
         `
       })

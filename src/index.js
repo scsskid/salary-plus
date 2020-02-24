@@ -14,4 +14,10 @@ setTimeout(() => {
   recordsList.state = { records: sampleData.records, jobs: sampleData.jobs }
 }, 1000)
 
+setTimeout(() => {
+  console.log('setting recordsList.state.subComp')
+
+  recordsList.state = Object.assign(recordsList.state, { subComp: 'set from index.js' })
+}, 2000)
+
 // document.addEventListener('DOMContentLoaded', () => {})
