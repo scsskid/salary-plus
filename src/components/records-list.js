@@ -22,23 +22,20 @@ export default class RecordsList {
   }
 
   render() {
-    var records = this.state.records.map(this.reMapRecord)
+    var records = this.state.records
     this.container.innerHTML = RecordsList.markup(records)
-    this.buttonDeleteRecord = this.container.querySelectorAll('.record-delete')
-    this.addEventListeners()
+
+    // this.buttonDeleteRecord = this.container.querySelectorAll('.record-delete')
+    // this.addEventListeners()
 
     // Sub Component
 
-    this.recordsListItemDom = this.container.querySelector('.singleRecordsListItem')
-    this.recordsListItem = new RecordsListItem(this.recordsListItemDom)
-    this.recordsListItem.state = 'fooState from Parent, Props Down ' + this.state.subComp
-    // this.recordsListItemComponent =
+    this.recordsListItemContainer = this.container.querySelector('.records-list')
 
-    // if (this.state.records != undefined /* && this.records */) {
-    //   this.pageElement = this.container.querySelector('.record-header')
-    //   var recordsListItem = new Generic(this.pageElement)
-    //   recordsListItem.title = 'foo'
-    // }
+    this.state.records.forEach(record => {
+      this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
+      this.recordsListItem.state = record
+    })
   }
 
   static markup(records) {
@@ -46,66 +43,13 @@ export default class RecordsList {
 
     if (records.length) {
       markup += `<ul class="records-list">`
-      records.forEach(record => {
-        const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
-        markup += `
-          <li class="records-list-item" data-id="${id}">
-            <header class="record-header">
-              <h3>${dateBegin}</h3>
-            </header>
-            <p class="record-body">
-              ${timeBegin} - ${timeEnd} |
-              <span class="record-time-elapsed">${timeElapsed}</span> |
-              ${earned}
-            </p>
-            
-            <footer class="record-footer">
-              <button class="record-edit">Edit</button>
-              <button class="record-delete">Delete</button>
-            </footer>
-            <div class="singleRecordsListItem"></div>
-          </li>
-        `
-      })
+
       markup += `</ul>`
     } else {
       markup = 'no data'
     }
 
     return markup
-  }
-
-  addEventListeners() {
-    this.buttonDeleteRecord.forEach(button => {
-      button.addEventListener('click', () => {
-        console.log('clicked', button.closest('li').dataset.id)
-        this.state.records = this.state.records.filter(record => {
-          return record.id != button.closest('li').dataset.id
-        })
-
-        this.render()
-      })
-    })
-  }
-
-  reMapRecord(record) {
-    var job = jobs.find(job => {
-      return job.id == record.jobId
-    })
-    var timeElapsed = utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
-    var earnedNumber = utils.timeToDecimal(timeElapsed) * job.rate
-    var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
-
-    return {
-      id: record.id,
-      jobId: record.jobId,
-      dateBegin: utils.formatDate.nice(record.begin),
-      timeBegin: utils.formatTime(record.begin),
-      timeEnd: utils.formatTime(record.end),
-      end: record.end,
-      timeElapsed,
-      earned
-    }
   }
 
   constructor(container) {
