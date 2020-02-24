@@ -7,13 +7,10 @@ var { jobs } = sampleData
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
-    // console.log('Setting state')
-
     this.render()
   }
 
   get state() {
-    // console.log('Getting state')
     return this.stateValue
   }
 
@@ -25,28 +22,29 @@ export default class RecordsList {
     var records = this.state.records
     this.container.innerHTML = RecordsList.markup(records)
 
-    // this.buttonDeleteRecord = this.container.querySelectorAll('.record-delete')
-    // this.addEventListeners()
-
     // Sub Component
-
     this.recordsListItemContainer = this.container.querySelector('.records-list')
-
     this.state.records.forEach(record => {
       this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
       this.recordsListItem.state = record
     })
+
+    // Listen for Custom Event from Child
+    document.addEventListener('record-delete', event => {
+      let stateToMerge = {
+        records: this.state.records.filter(record => record.id != event.detail.id)
+      }
+      this.state = { ...this.state, ...stateToMerge }
+    })
   }
 
   static markup(records) {
-    var markup = ``
+    let markup = ''
 
     if (records.length) {
-      markup += `<ul class="records-list">`
-
-      markup += `</ul>`
+      markup = `<ul class="records-list"></ul>`
     } else {
-      markup = 'no data'
+      markup = '<p>no data</p>'
     }
 
     return markup

@@ -7,12 +7,10 @@ import utils from '../utils.js'
 export default class RecordsListItem {
   set state(state) {
     this.stateValue = state
-    // console.log('Setting state of SUb Comp')
     this.render()
   }
 
   get state() {
-    // console.log('Getting state of SUb Comp')
     return this.stateValue
   }
 
@@ -21,8 +19,7 @@ export default class RecordsListItem {
   }
 
   render() {
-    // console.log('sub comp render')
-    const record = this.reMapRecord(this.state)
+    const record = this.mapRecord(this.state)
     this.rootEl = document.createElement('li')
     this.rootEl.classList.add('records-list-item')
     this.rootEl.dataset.id = record.id
@@ -35,7 +32,6 @@ export default class RecordsListItem {
     // console.log(record)
     const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
     return `
-      <div class="item-inner" data-id="${id}">
         <header class="record-header">
           <h3>${dateBegin}</h3>
         </header>
@@ -50,31 +46,21 @@ export default class RecordsListItem {
           <button class="record-delete">Delete</button>
         </footer>
         <div class="singleRecordsListItem"></div>
-      </div>
     `
   }
 
   addEventListeners() {
-    console.log('addEvList')
-
-    const li = this.container.querySelector('.records-list-item')
-
-    this.rootEl.addEventListener('click', event => {
-      // this.state.records = this.state.records.filter(record => {
-      //   return record.id != button.closest('li').dataset.id
-      // })
-
-      // todo: dispatch event to parent
-      // then set parent state and rerender (optional?)
-
-      console.log('clik', event.target)
-      console.log(event.target.closest('li'))
-
-      // this.render()
+    this.rootEl.querySelector('.record-delete').addEventListener('click', event => {
+      const id = event.target.closest('.records-list-item').dataset.id
+      const myEvent = new CustomEvent('record-delete', {
+        bubbles: true,
+        detail: { id }
+      })
+      this.rootEl.dispatchEvent(myEvent)
     })
   }
 
-  reMapRecord(record) {
+  mapRecord(record) {
     var job = jobs.find(job => {
       return job.id == record.jobId
     })
