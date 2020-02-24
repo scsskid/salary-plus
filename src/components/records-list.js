@@ -1,6 +1,5 @@
 import utils from '../utils.js'
 import RecordsListItem from './records-list-item.js'
-import Generic from './generic.js'
 import sampleData from './../data/sample-data.js'
 
 var { jobs } = sampleData
@@ -27,6 +26,13 @@ export default class RecordsList {
     this.container.innerHTML = RecordsList.markup(records)
     this.buttonDeleteRecord = this.container.querySelectorAll('.record-delete')
     this.addEventListeners()
+
+    // Sub Component
+
+    this.recordsListItemDom = this.container.querySelector('.singleRecordsListItem')
+    this.recordsListItem = new RecordsListItem(this.recordsListItemDom)
+    this.recordsListItem.state = 'fooState from Parent, Props Down'
+    // this.recordsListItemComponent =
 
     // if (this.state.records != undefined /* && this.records */) {
     //   this.pageElement = this.container.querySelector('.record-header')
@@ -57,6 +63,7 @@ export default class RecordsList {
               <button class="record-edit">Edit</button>
               <button class="record-delete">Delete</button>
             </footer>
+            <div class="singleRecordsListItem" />
           </li>
         `
       })
