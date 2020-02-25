@@ -5,8 +5,9 @@ import sampleData from './data/sample-data.js'
 
 export default class App {
   set state(state) {
-    // console.log('APP setting state', state)
+    console.log('APP set state', state)
     this.stateValue = state
+    this.render()
   }
 
   get state() {
@@ -17,17 +18,37 @@ export default class App {
     this.container = container
     this.state = undefined
 
-    // Render Main Components
-    this.nav = new Nav(document.querySelector('[data-main-nav]'))
-    this.mainView = new MainView(document.querySelector('[data-main-view]'))
-    this.mainView.state = { target: 'home' }
     this.addEventListeners()
   }
 
   addEventListeners() {
+    this.removeEventListeners()
     document.addEventListener('record-delete', deleteRecordHandler)
     document.addEventListener('seed-state', seedStateHandler.bind(this))
     document.addEventListener('save-state', saveStateHandler.bind(this))
+  }
+
+  removeEventListeners() {
+    document.removeEventListener('record-delete', deleteRecordHandler)
+    document.removeEventListener('seed-state', seedStateHandler.bind(this))
+    document.removeEventListener('save-state', saveStateHandler.bind(this))
+  }
+
+  render() {
+    console.log('APP render()')
+
+    if (this.state == undefined) {
+      console.log('%cAUTOSEED', 'color: white; background: red')
+
+      seedStateHandler.bind(this)()
+    }
+
+    // Render Main Components
+    // todo: merge app.state
+
+    this.nav = new Nav(document.querySelector('[data-main-nav]'))
+    this.mainView = new MainView(document.querySelector('[data-main-view]'))
+    this.mainView.state = Object.assign({ target: 'home' }, this.state)
   }
 
   constructor(container) {
@@ -40,10 +61,10 @@ function seedStateHandler() {
     console.error('state present, reload to clear', this.state)
   } else {
     this.state = sampleData
-    const recordsListContainer = document.createElement('div')
-    this.container.querySelector('main').appendChild(recordsListContainer)
-    var recordsList = new RecordsList(recordsListContainer)
-    recordsList.state = this.state
+    // const recordsListContainer = document.createElement('div')
+    // this.container.querySelector('main').appendChild(recordsListContainer)
+    // var recordsList = new RecordsList(recordsListContainer)
+    // recordsList.state = this.state
   }
 }
 

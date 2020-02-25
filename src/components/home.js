@@ -3,30 +3,45 @@ import RecordsList from './records-list.js'
 
 export default class Home {
   set state(state) {
+    // console.log('HOME set state', state)
     this.stateValue = state
     this.render()
-    // console.log('setting state')
+    // if (state) {
+    //   this.render()
+    // }
   }
 
   get state() {
-    // console.log('getting state')
     return this.stateValue
   }
 
   init(container) {
     this.container = container
-    // this.state = state
-
+    this.state = undefined
     this.render()
     this.addEventListeners()
   }
 
   render() {
+    // console.log('HOME render() ', this.state)
     this.container.innerHTML = `
       <h1>Welcome Home</h1>
       <button data-init-state>Set State with sampleData</button>
       <button data-save-state>Save State to localStorage</button>
+      
     `
+
+    this.addEventListeners()
+
+    if (this.state != undefined && 'records' in this.state) {
+      var recordsListContainer = document.createElement('section')
+      var recordsList = new RecordsList(recordsListContainer)
+      recordsList.state = this.state
+      this.container.appendChild(recordsListContainer)
+    } else {
+      // push to logFile
+      // console.log('state undefined or no records prop in state')
+    }
   }
 
   static markup(record) {

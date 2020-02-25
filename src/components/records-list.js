@@ -8,7 +8,9 @@ var { jobs } = sampleData
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
-    this.render()
+    if (state != undefined) {
+      this.render()
+    }
   }
 
   get state() {
@@ -17,12 +19,13 @@ export default class RecordsList {
 
   init(container) {
     this.container = container
-    // this.state = sampleData
+    this.state = undefined
   }
 
   render() {
     var records = this.state.records
-    console.log('Records List Container', this.container)
+    // console.log('Records List Container', this.container)
+    console.log(this.state)
 
     this.container.innerHTML = RecordsList.markup(records)
 
@@ -32,6 +35,8 @@ export default class RecordsList {
       this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
       this.recordsListItem.state = record
     })
+
+    // this.container.innerHTML = 'sorry 💩'
   }
 
   static markup(records) {
