@@ -36,6 +36,10 @@ body {
   background: #fff;
 }
 
+.main-footer {
+  padding-top: 2rem;
+}
+
 @media (prefers-color-scheme: dark) {
 
   :root {

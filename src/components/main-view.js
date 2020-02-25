@@ -4,44 +4,43 @@ import RecordsList from './records-list.js'
 
 export default class MainView {
   set state(state) {
+    console.log('mainView state', state)
     this.stateValue = state
-    this.render()
-    // console.log('setting state')
+    if (state) {
+      this.render()
+    }
   }
 
   get state() {
-    // console.log('getting state')
     return this.stateValue
   }
 
   init(container) {
     this.container = container
-
-    this.render()
+    this.state = undefined
   }
 
   render() {
-    this.container.innerHTML = `inside mainView Component`
-    document.addEventListener('navigate', event => {
-      this.navTarget = event.srcElement.dataset.navTarget
-      console.log(this.navTarget)
-      switch (this.navTarget) {
-        case 'home':
-          this.container.innerHTML = ''
-          const homeContainer = this.container.appendChild(document.createElement('div'))
-          new Home(homeContainer)
-          break
-        case 'records':
-          this.container.innerHTML = ''
-          const recordsListContainer = this.container.appendChild(document.createElement('div'))
-          new RecordsList(recordsListContainer)
+    this.container.innerHTML = ``
 
-          break
+    switch (this.state.target) {
+      case 'home':
+        this.container.innerHTML = ''
+        const homeContainer = this.container.appendChild(document.createElement('div'))
+        new Home(homeContainer)
+        break
+      case 'records':
+        this.container.innerHTML = ''
+        const recordsListContainer = this.container.appendChild(document.createElement('div'))
+        new RecordsList(recordsListContainer)
 
-        default:
-          break
-      }
-    })
+        break
+
+      default:
+        break
+    }
+
+    // document.addEventListener('navigate', navigationHandler.bind(this))
   }
 
   addEventListeners() {}
@@ -62,3 +61,23 @@ export default class MainView {
 }
 
 MainView.refs = {}
+
+function navigationHandler(event) {
+  this.navTarget = event.srcElement.dataset.navTarget
+  switch (this.navTarget) {
+    case 'home':
+      this.container.innerHTML = ''
+      const homeContainer = this.container.appendChild(document.createElement('div'))
+      new Home(homeContainer)
+      break
+    case 'records':
+      this.container.innerHTML = ''
+      const recordsListContainer = this.container.appendChild(document.createElement('div'))
+      new RecordsList(recordsListContainer)
+
+      break
+
+    default:
+      break
+  }
+}

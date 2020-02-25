@@ -1,6 +1,6 @@
 import RecordsListItem from './records-list-item.js'
 import sampleData from './../data/sample-data.js'
-
+// import Store from './store.js'
 // const sampleData = {}
 
 var { jobs } = sampleData
@@ -17,7 +17,7 @@ export default class RecordsList {
 
   init(container) {
     this.container = container
-    this.state = sampleData
+    // this.state = sampleData
   }
 
   render() {
@@ -31,14 +31,6 @@ export default class RecordsList {
     this.state.records.forEach(record => {
       this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
       this.recordsListItem.state = record
-    })
-
-    // Listen for Custom Event from Child
-    document.addEventListener('record-delete', event => {
-      let stateToMerge = {
-        records: this.state.records.filter(record => record.id != event.detail.id)
-      }
-      this.state = { ...this.state, ...stateToMerge }
     })
   }
 

@@ -18,30 +18,37 @@ export default class Home {
     // this.state = state
 
     this.render()
+    this.addEventListeners()
   }
 
   render() {
-    console.log('this.state: ', this.state)
-
     this.container.innerHTML = `
       <h1>Welcome Home</h1>
       <button data-init-state>Set State with sampleData</button>
+      <button data-save-state>Save State to localStorage</button>
     `
-
-    this.container.querySelector('[data-init-state]').addEventListener('click', event => {
-      this.state = state
-      const recordsListContainer = document.createElement('div')
-      this.container.appendChild(recordsListContainer)
-      var recordsList = new RecordsList(recordsListContainer)
-      recordsList.state = state
-    })
   }
 
   static markup(record) {
     return `empty markup`
   }
 
-  addEventListeners() {}
+  addEventListeners() {
+    this.container.querySelector('[data-init-state]').addEventListener('click', event => {
+      this.container.dispatchEvent(
+        new CustomEvent('seed-state', {
+          bubbles: true
+        })
+      )
+    })
+    this.container.querySelector('[data-save-state]').addEventListener('click', event => {
+      this.container.dispatchEvent(
+        new CustomEvent('save-state', {
+          bubbles: true
+        })
+      )
+    })
+  }
 
   constructor(container) {
     // The constructor should only contain the boiler plate code for finding or creating the reference.

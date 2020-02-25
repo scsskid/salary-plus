@@ -18,8 +18,6 @@ export default class Nav {
   }
 
   render() {
-    console.log('this.state: ', this.state)
-
     this.container.innerHTML = `
       <ul class="main-nav-menu" data-nav-menu>
         <li><a data-nav-target="home" href="/">Home</a></li>
@@ -30,7 +28,7 @@ export default class Nav {
 
     this.container.querySelector('[data-nav-menu]').addEventListener('click', event => {
       event.preventDefault()
-      console.log(event.target)
+      // console.log(event.target)
       const navigate = new CustomEvent('navigate', { bubbles: true })
       event.target.dispatchEvent(navigate)
     })

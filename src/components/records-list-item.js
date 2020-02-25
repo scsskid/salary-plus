@@ -52,11 +52,11 @@ export default class RecordsListItem {
   addEventListeners() {
     this.rootEl.querySelector('.record-delete').addEventListener('click', event => {
       const id = event.target.closest('.records-list-item').dataset.id
-      const myEvent = new CustomEvent('record-delete', {
+      const recordDeleteEvent = new CustomEvent('record-delete', {
         bubbles: true,
         detail: { id }
       })
-      this.rootEl.dispatchEvent(myEvent)
+      this.rootEl.dispatchEvent(recordDeleteEvent)
     })
   }
 
