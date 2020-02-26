@@ -1,6 +1,6 @@
-import state from './../data/sample-data.js'
 import Home from './home.js'
-import RecordsList from './records-list.js'
+// import RecordsList from './records-list.js'
+// import UserSettings from './user-settings.js'
 
 export default class MainView {
   set state(state) {
@@ -29,13 +29,12 @@ export default class MainView {
           this.container.innerHTML = ''
           const homeContainer = this.container.appendChild(document.createElement('div'))
           homeContainer.dataset.section = 'home'
-          const home = new Home(homeContainer)
-          home.state = this.state
+          new Home(homeContainer, { displayRecords: true })
           break
         case 'records':
           this.container.innerHTML = ''
           const recordsListContainer = this.container.appendChild(document.createElement('div'))
-          new RecordsList(recordsListContainer)
+          // new RecordsList(recordsListContainer)
 
           break
 
@@ -60,12 +59,12 @@ function navigationHandler(event) {
     case 'home':
       this.container.innerHTML = ''
       const homeContainer = this.container.appendChild(document.createElement('div'))
-      new Home(homeContainer)
+      // new Home(homeContainer)
       break
     case 'records':
       this.container.innerHTML = ''
       const recordsListContainer = this.container.appendChild(document.createElement('div'))
-      new RecordsList(recordsListContainer)
+      // new RecordsList(recordsListContainer)
 
       break
 

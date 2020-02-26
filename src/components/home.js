@@ -1,4 +1,3 @@
-import state from './../data/sample-data.js'
 import RecordsList from './records-list.js'
 
 export default class Home {
@@ -6,46 +5,37 @@ export default class Home {
     // console.log('HOME set state', state)
     this.stateValue = state
     this.render()
-    // if (state) {
-    //   this.render()
-    // }
   }
 
   get state() {
     return this.stateValue
   }
 
-  init(container) {
+  init(container, state) {
     this.container = container
-    this.state = undefined
-    this.render()
-    this.addEventListeners()
+    this.state = state || undefined
+
+    // this.render()
   }
 
   render() {
-    // console.log('HOME render() ', this.state)
+    console.log('HOME render() ', this.state)
     this.container.innerHTML = `
-      <h1>Welcome Home</h1>
+      <h1>Home</h1>
       <button data-init-state>Set State with sampleData</button>
-      <button data-save-state>Save State to localStorage</button>
-      
+      <button data-save-sample-data>Save SampleData to localStorage</button>
     `
 
-    this.addEventListeners()
-
-    if (this.state != undefined && 'records' in this.state) {
+    if (this.state.displayRecords) {
       var recordsListContainer = document.createElement('section')
       var recordsList = new RecordsList(recordsListContainer)
-      recordsList.state = this.state
-      this.container.appendChild(recordsListContainer)
-    } else {
-      // push to logFile
-      // console.log('state undefined or no records prop in state')
+      // recordsList.state = this.state
+      setTimeout(() => {
+        this.container.appendChild(recordsListContainer)
+      }, 250)
     }
-  }
 
-  static markup(record) {
-    return `empty markup`
+    this.addEventListeners()
   }
 
   addEventListeners() {
@@ -56,23 +46,23 @@ export default class Home {
         })
       )
     })
-    this.container.querySelector('[data-save-state]').addEventListener('click', event => {
+    this.container.querySelector('[data-save-sample-data]').addEventListener('click', event => {
       this.container.dispatchEvent(
-        new CustomEvent('save-state', {
+        new CustomEvent('save-sample-data', {
           bubbles: true
         })
       )
     })
   }
 
-  constructor(container) {
+  constructor(container, state) {
     // The constructor should only contain the boiler plate code for finding or creating the reference.
     if (typeof container.dataset.ref === 'undefined') {
       // console.log('constructur called of subComp', container)
       this.ref = Math.random()
       Home.refs[this.ref] = this
       container.dataset.ref = this.ref
-      this.init(container)
+      this.init(container, state)
     } else {
       // If this element has already been instantiated, use the existing reference.
       return Home.refs[container.dataset.ref]

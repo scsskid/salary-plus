@@ -8,9 +8,7 @@ var { jobs } = sampleData
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
-    if (state != undefined) {
-      this.render()
-    }
+    this.render()
   }
 
   get state() {
@@ -18,25 +16,28 @@ export default class RecordsList {
   }
 
   init(container) {
+    console.log('RecordsList init')
     this.container = container
-    this.state = undefined
+    const storedAppData = JSON.parse(localStorage.getItem('appData'))
+
+    this.state = storedAppData ? { records: storedAppData.records, jobs: storedAppData.jobs } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
   }
 
   render() {
-    var records = this.state.records
-    // console.log('Records List Container', this.container)
-    console.log(this.state)
+    if (!this.state) {
+      console.log('RecordsList State undefined')
+    } else {
+      var records = this.state.records
 
-    this.container.innerHTML = RecordsList.markup(records)
+      this.container.innerHTML = RecordsList.markup(records)
 
-    // Sub Component
-    this.recordsListItemContainer = this.container.querySelector('.records-list')
-    this.state.records.forEach(record => {
-      this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
-      this.recordsListItem.state = record
-    })
-
-    // this.container.innerHTML = 'sorry 💩'
+      // Sub Component
+      this.recordsListItemContainer = this.container.querySelector('.records-list')
+      this.state.records.forEach(record => {
+        this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
+        this.recordsListItem.state = record
+      })
+    }
   }
 
   static markup(records) {

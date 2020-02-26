@@ -22,16 +22,9 @@ export default class App {
   }
 
   addEventListeners() {
-    this.removeEventListeners()
     document.addEventListener('record-delete', deleteRecordHandler)
     document.addEventListener('seed-state', seedStateHandler.bind(this))
-    document.addEventListener('save-state', saveStateHandler.bind(this))
-  }
-
-  removeEventListeners() {
-    document.removeEventListener('record-delete', deleteRecordHandler)
-    document.removeEventListener('seed-state', seedStateHandler.bind(this))
-    document.removeEventListener('save-state', saveStateHandler.bind(this))
+    document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
   }
 
   render() {
@@ -39,12 +32,10 @@ export default class App {
 
     if (this.state == undefined) {
       console.log('%cAUTOSEED', 'color: white; background: red')
-
       seedStateHandler.bind(this)()
     }
 
     // Render Main Components
-    // todo: merge app.state
 
     this.nav = new Nav(document.querySelector('[data-main-nav]'))
     this.mainView = new MainView(document.querySelector('[data-main-view]'))
@@ -57,18 +48,10 @@ export default class App {
 }
 
 function seedStateHandler() {
-  if (this.state != undefined) {
-    console.error('state present, reload to clear', this.state)
-  } else {
-    this.state = sampleData
-    // const recordsListContainer = document.createElement('div')
-    // this.container.querySelector('main').appendChild(recordsListContainer)
-    // var recordsList = new RecordsList(recordsListContainer)
-    // recordsList.state = this.state
-  }
+  this.state = { ...sampleData }
 }
 
-function saveStateHandler() {
+function saveSampleDataHandler() {
   if (this.state != undefined) {
     localStorage.setItem('appData', JSON.stringify(this.state))
   } else {
