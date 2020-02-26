@@ -10,7 +10,7 @@ export default {
     }
   },
   formatTime: function(string) {
-    return new Date(string).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+    return new Date(string).toLocaleTimeString('DE-de', { hour: '2-digit', minute: '2-digit' })
   },
   setData: function(data) {
     localStorage.setItem('appData', JSON.stringify(data))
