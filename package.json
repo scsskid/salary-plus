@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "light-server -c .lightserverrc",
-    "build": "rm -rf dist || mkdir dist || cp -rf src/ dist/"
+    "build": "rm -rf dist && mkdir dist && cp -rf src/ dist/"
   },
   "keywords": [],
   "author": "Benedikt Gregor",
