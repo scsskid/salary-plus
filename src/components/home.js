@@ -20,19 +20,17 @@ export default class Home {
 
   render() {
     console.log('HOME render() ', this.state)
+    const seedSampleButton = `<button data-save-sample-data>Save SampleData to localStorage</button>`
     this.container.innerHTML = `
       <h1>Home</h1>
-      <button data-init-state>Set State with sampleData</button>
-      <button data-save-sample-data>Save SampleData to localStorage</button>
+      <button style="display: none" data-init-state>Set State with sampleData</button>
+      ${seedSampleButton}
     `
 
     if (this.state.displayRecords) {
       var recordsListContainer = document.createElement('section')
       var recordsList = new RecordsList(recordsListContainer)
-      // recordsList.state = this.state
-      setTimeout(() => {
-        this.container.appendChild(recordsListContainer)
-      }, 250)
+      this.container.appendChild(recordsListContainer)
     }
 
     this.addEventListeners()

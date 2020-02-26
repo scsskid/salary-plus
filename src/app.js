@@ -16,7 +16,10 @@ export default class App {
 
   init(container) {
     this.container = container
-    this.state = undefined
+    this.store = localStorage.getItem('appData')
+    this.navContainer = this.container.querySelector('[data-main-nav]')
+    this.mainViewContainer = this.container.querySelector('[data-main-view]')
+    this.state = { ui: 'default', appDataPresent: this.store ? true : false }
 
     this.addEventListeners()
   }
@@ -25,21 +28,19 @@ export default class App {
     document.addEventListener('record-delete', deleteRecordHandler)
     document.addEventListener('seed-state', seedStateHandler.bind(this))
     document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
+
+    // document.addEventListener('navigate', navigationHandler.bind(this))
+    document.addEventListener('navigate', event => {
+      console.log('engage!', event)
+    })
   }
 
   render() {
     console.log('APP render()')
 
-    if (this.state == undefined) {
-      console.log('%cAUTOSEED', 'color: white; background: red')
-      seedStateHandler.bind(this)()
-    }
-
     // Render Main Components
-
-    this.nav = new Nav(document.querySelector('[data-main-nav]'))
-    this.mainView = new MainView(document.querySelector('[data-main-view]'))
-    this.mainView.state = Object.assign({ target: 'home' }, this.state)
+    this.nav = new Nav(this.navContainer)
+    this.mainView = new MainView(this.mainViewContainer, { target: 'home' })
   }
 
   constructor(container) {
@@ -48,22 +49,14 @@ export default class App {
 }
 
 function seedStateHandler() {
-  this.state = { ...sampleData }
+  this.state = { user: 'Benedikt' }
 }
 
 function saveSampleDataHandler() {
-  if (this.state != undefined) {
-    localStorage.setItem('appData', JSON.stringify(this.state))
-  } else {
-    console.error('state is undefined', this.state)
-  }
+  localStorage.setItem('appData', JSON.stringify(sampleData))
+  this.render()
 }
 
 function deleteRecordHandler(event) {
   console.log('recieved delete event', event)
-  // let stateToMerge = {
-  //   records: this.state.records.filter(record => record.id != event.detail.id)
-  // }
-
-  // this.state = { ...this.state, ...stateToMerge }
 }

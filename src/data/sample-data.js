@@ -3,20 +3,20 @@ var settingsDefault = {
   defaultjobID: 1
 }
 
-var users = [
-  {
-    id: 1,
-    name: 'Benedikt',
-    settings: {
-      defaultRateId: 1,
-      defaultjobId: 1
-    }
-  }
-]
+// var users = [
+//   {
+//     id: 1,
+//     name: 'Benedikt',
+//     settings: {
+//       defaultRateId: 1,
+//       defaultjobId: 1
+//     }
+//   }
+// ]
 
 var appData = {
   user: {
-    name: '',
+    name: 'Anonymous',
     settings: settingsDefault
   },
   records: [

@@ -6,50 +6,44 @@ export default class MainView {
   set state(state) {
     // console.log('mainView set state', state)
     this.stateValue = state
-    if (state) {
-      this.render()
-    }
   }
 
   get state() {
     return this.stateValue
   }
 
-  init(container) {
+  init(container, state) {
     this.container = container
-    this.state = undefined
+    this.state = state || undefined
+    this.render()
   }
 
   render() {
     this.container.innerHTML = ``
 
-    setTimeout(() => {
-      switch (this.state.target) {
-        case 'home':
-          this.container.innerHTML = ''
-          const homeContainer = this.container.appendChild(document.createElement('div'))
-          homeContainer.dataset.section = 'home'
-          new Home(homeContainer, { displayRecords: true })
-          break
-        case 'records':
-          this.container.innerHTML = ''
-          const recordsListContainer = this.container.appendChild(document.createElement('div'))
-          // new RecordsList(recordsListContainer)
+    switch (this.state.target) {
+      case 'home':
+        this.container.innerHTML = ''
+        const homeContainer = this.container.appendChild(document.createElement('div'))
+        homeContainer.dataset.section = 'home'
+        new Home(homeContainer, { displayRecords: true })
+        break
+      case 'records':
+        this.container.innerHTML = ''
+        const recordsListContainer = this.container.appendChild(document.createElement('div'))
+        // new RecordsList(recordsListContainer)
 
-          break
+        break
 
-        default:
-          break
-      }
-    }, 200)
-
-    // document.addEventListener('navigate', navigationHandler.bind(this))
+      default:
+        break
+    }
   }
 
   addEventListeners() {}
 
-  constructor(container) {
-    this.init(container)
+  constructor(container, state) {
+    this.init(container, state)
   }
 }
 

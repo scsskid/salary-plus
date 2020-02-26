@@ -16,7 +16,6 @@ export default class RecordsList {
   }
 
   init(container) {
-    console.log('RecordsList init')
     this.container = container
     const storedAppData = JSON.parse(localStorage.getItem('appData'))
 
@@ -24,8 +23,12 @@ export default class RecordsList {
   }
 
   render() {
-    if (!this.state) {
-      console.log('RecordsList State undefined')
+    console.log('RecordsList render()', this.state)
+    if (!this.state || !this.state.records) {
+      console.error('RecordsList State undefined')
+      this.container.innerHTML = `
+        <p>No Data.</p>
+      `
     } else {
       var records = this.state.records
 
@@ -41,14 +44,7 @@ export default class RecordsList {
   }
 
   static markup(records) {
-    var markup
-    if (records.length) {
-      markup = `<ul class="records-list"></ul>`
-    } else {
-      markup = '<p>no data</p>'
-    }
-
-    return markup
+    return `<ul class="records-list"></ul>`
   }
 
   constructor(container) {
