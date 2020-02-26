@@ -15,6 +15,9 @@ var settingsDefault = {
 // ]
 
 var appData = {
+  app: {
+    version: '0.0.1'
+  },
   user: {
     name: 'Anonymous',
     settings: settingsDefault
@@ -23,26 +26,26 @@ var appData = {
     {
       id: 1,
       jobId: 1,
-      begin: '2020-01-30 16:00 UTC',
-      end: '2020-01-30 22:00 UTC'
+      begin: '2019-12-21T13:30:00.000Z',
+      end: '2019-12-22T01:00:00.000Z'
     },
     {
       id: 2,
       jobId: 1,
-      begin: '2020-01-31 16:00 UTC',
-      end: '2020-02-01 01:00 UTC'
+      begin: '2020-02-10T13:30:00.000Z',
+      end: '2020-02-10T22:00:00.000Z'
     },
     {
       id: 3,
       jobId: 2,
-      begin: '2020-02-01 12:00 UTC',
-      end: '2020-02-01 22:00 UTC'
+      begin: '2020-02-14T15:30:00.000Z',
+      end: '2020-02-15T00:00:00.000Z'
     },
     {
       id: 4,
       jobId: 1,
-      begin: '2020-02-02 11:00 UTC',
-      end: '2020-02-02 15:00 UTC'
+      begin: '2020-02-10T14:30:00.000Z',
+      end: '2020-02-02T22:22:00.000Z'
     }
   ],
   jobs: [
