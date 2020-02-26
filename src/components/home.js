@@ -20,7 +20,7 @@ export default class Home {
 
   render() {
     console.log('HOME render() ', this.state)
-    const seedSampleButton = `<button data-save-sample-data>Save SampleData to localStorage</button>`
+    const seedSampleButton = `<button data-save-sample-data>Insert SampleData</button>`
     this.container.innerHTML = `
       <h1>Home</h1>
       <button style="display: none" data-init-state>Set State with sampleData</button>
