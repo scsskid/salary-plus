@@ -3,13 +3,13 @@
 ## Start server
 
 - `npm install`
-- `npm run serve`
+- `npm run start`
 
 Server will reload according to settings in `.lightserverrc`
 
 ## Debug
 
-Test Commands (deprecated, nnly for reference)
+Test Commands (deprecated, only for reference)
 
 ```js
 app.model.addRecord({
