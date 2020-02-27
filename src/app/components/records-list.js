@@ -1,5 +1,5 @@
 import RecordsListItem from './records-list-item.js'
-import sampleData from './../data/sample-data.js'
+import sampleData from '../data/sample-data.js'
 // import Store from './store.js'
 // const sampleData = {}
 

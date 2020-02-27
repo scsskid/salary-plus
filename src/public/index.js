@@ -16,6 +16,12 @@ export default class App {
   }
 
   init(container) {
+    // Routing
+
+    console.log(location)
+
+    // Etc
+
     this.appDataPresent = localStorage.hasOwnProperty('appData')
 
     this.container = container
@@ -83,3 +89,8 @@ function saveSampleDataHandler() {
 function deleteRecordHandler(event) {
   console.log('recieved delete event', event)
 }
+
+//
+
+const app = new App(document.documentElement)
+window.app = app

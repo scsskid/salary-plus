@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "light-server -c .lightserverrc",
+    "server": "node server.js",
     "build": "rm -rf dist && mkdir dist && cp -rf src/ dist/"
   },
   "keywords": [],
@@ -17,5 +18,8 @@
     "eslint-config-prettier": "^6.7.0",
     "light-server": "^2.6.4",
     "papaparse": "^5.1.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
