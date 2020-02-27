@@ -2,6 +2,7 @@ import Nav from './components/nav.js'
 import MainView from './components/main-view.js'
 import RecordsList from './components/records-list.js'
 import sampleData from './data/sample-data.js'
+import Toolbar from './components/toolbar.js'
 
 export default class App {
   set state(state) {
@@ -15,13 +16,23 @@ export default class App {
   }
 
   init(container) {
+    this.appDataPresent = localStorage.hasOwnProperty('appData')
+
     this.container = container
-    this.store = localStorage.getItem('appData')
+    this.store = JSON.parse(localStorage.getItem('appData'))
     this.navContainer = this.container.querySelector('[data-main-nav]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: this.store ? true : false }
 
     this.addEventListeners()
+
+    if (this.appDataPresent) {
+      if (this.store.app && this.store.app.version) {
+        console.log('local storage app version: ', this.store.app.version)
+      }
+    }
+
+    this.forceUpgradeStorage()
   }
 
   addEventListeners() {
@@ -41,6 +52,16 @@ export default class App {
     // Render Main Components
     this.nav = new Nav(this.navContainer)
     this.mainView = new MainView(this.mainViewContainer, { target: 'home' })
+    const toolbar = new Toolbar(document.querySelector('[data-toolbar]'))
+  }
+
+  forceUpgradeStorage() {
+    if (this.appDataPresent) {
+      if (!this.store.app) {
+        localStorage.removeItem('appData')
+        this.render()
+      }
+    }
   }
 
   constructor(container) {
@@ -53,6 +74,8 @@ function seedStateHandler() {
 }
 
 function saveSampleDataHandler() {
+  console.log('saveSampleDataHandler()')
+
   localStorage.setItem('appData', JSON.stringify(sampleData))
   this.render()
 }

@@ -20,11 +20,10 @@ export default class Home {
 
   render() {
     console.log('HOME render() ', this.state)
-    const seedSampleButton = `<button data-save-sample-data>Insert SampleData</button>`
+
     this.container.innerHTML = `
       <h1>Home</h1>
-      <button style="display: none" data-init-state>Set State with sampleData</button>
-      ${seedSampleButton}
+
     `
 
     if (this.state.displayRecords) {
@@ -36,22 +35,7 @@ export default class Home {
     this.addEventListeners()
   }
 
-  addEventListeners() {
-    this.container.querySelector('[data-init-state]').addEventListener('click', event => {
-      this.container.dispatchEvent(
-        new CustomEvent('seed-state', {
-          bubbles: true
-        })
-      )
-    })
-    this.container.querySelector('[data-save-sample-data]').addEventListener('click', event => {
-      this.container.dispatchEvent(
-        new CustomEvent('save-sample-data', {
-          bubbles: true
-        })
-      )
-    })
-  }
+  addEventListeners() {}
 
   constructor(container, state) {
     // The constructor should only contain the boiler plate code for finding or creating the reference.
