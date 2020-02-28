@@ -6,7 +6,7 @@
   "scripts": {
     "serve:express": "node server.js",
     "serve:light": "light-server -c .lightserverrc",
-    "start" : "run-p serve:*",
+    "start": "run-p serve:*",
     "build": "rm -rf dist && mkdir dist && cp -rf src/ dist/"
   },
   "keywords": [],
