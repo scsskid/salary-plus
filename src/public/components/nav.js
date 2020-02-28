@@ -20,22 +20,20 @@ export default class Nav {
   render() {
     this.container.innerHTML = `
       <ul class="main-nav-menu" data-nav-menu>
-        <li><a data-nav-target="home" href="/">Home</a></li>
-        <li><a data-nav-target="records/new" href="/records">Records List</a></li>
-        <li><a data-nav-target="settings" href="/settings">Settings</a></li>
+        <li><a data-nav-target="home" href="${window.location.origin}/">Home</a></li>
+        <li><a data-nav-target="records" href="${window.location.origin}/records">Records List</a></li>
+        <li><a data-nav-target="settings" href="${window.location.origin}/settings">Settings</a></li>
       </ul>
     `
 
     this.container.querySelector('[data-nav-menu]').addEventListener('click', event => {
       event.preventDefault()
-
       window.history.pushState({}, '', '/' + event.target.dataset.navTarget)
-      const navigate = new CustomEvent('navigate', { bubbles: true })
-      event.target.dispatchEvent(navigate)
+      event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true }))
     })
 
     window.onpopstate = function(event) {
-      console.log(`location: ${document.location}, state: ${JSON.stringify(event.state)}`)
+      console.log(`location: ${window.location}, state: ${JSON.stringify(event.state)}`)
     }
   }
 
