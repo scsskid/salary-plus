@@ -21,17 +21,22 @@ export default class Nav {
     this.container.innerHTML = `
       <ul class="main-nav-menu" data-nav-menu>
         <li><a data-nav-target="home" href="/">Home</a></li>
-        <li><a data-nav-target="records" href="/records">Records List</a></li>
+        <li><a data-nav-target="records/new" href="/records">Records List</a></li>
         <li><a data-nav-target="settings" href="/settings">Settings</a></li>
       </ul>
     `
 
     this.container.querySelector('[data-nav-menu]').addEventListener('click', event => {
       event.preventDefault()
-      // console.log(event.target)
+
+      window.history.pushState({}, '', '/' + event.target.dataset.navTarget)
       const navigate = new CustomEvent('navigate', { bubbles: true })
       event.target.dispatchEvent(navigate)
     })
+
+    window.onpopstate = function(event) {
+      console.log(`location: ${document.location}, state: ${JSON.stringify(event.state)}`)
+    }
   }
 
   static markup(record) {

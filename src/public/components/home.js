@@ -19,7 +19,7 @@ export default class Home {
   }
 
   render() {
-    console.log('HOME render() ', this.state)
+    // console.log('HOME render() ', this.state)
 
     this.container.innerHTML = `
       <h1>Home</h1>

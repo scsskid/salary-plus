@@ -4,9 +4,16 @@ import RecordsList from './components/records-list.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
 
-export default class App {
+class App {
+  // routes = {
+  //   '/': homePage,
+  //   '/portfolio': portfolioPage,
+  //   '/resume': resumePage,
+  //   '/contact': contactPage
+  // }
+
   set state(state) {
-    console.log('APP set state', state)
+    // console.log('APP set state', state)
     this.stateValue = state
     this.render()
   }
@@ -17,9 +24,13 @@ export default class App {
 
   init(container) {
     // Routing
+    const pathnameParts = window.location.pathname.split('/')
+    console.log(window.location.origin)
 
-    console.log(location)
-
+    console.log(pathnameParts, pathnameParts[1])
+    window.addEventListener('load', event => {
+      console.log('load event', event)
+    })
     // Etc
 
     this.appDataPresent = localStorage.hasOwnProperty('appData')
@@ -34,7 +45,7 @@ export default class App {
 
     if (this.appDataPresent) {
       if (this.store.app && this.store.app.version) {
-        console.log('local storage app version: ', this.store.app.version)
+        // console.log('local storage app version: ', this.store.app.version)
       }
     }
 
@@ -53,7 +64,7 @@ export default class App {
   }
 
   render() {
-    console.log('APP render()')
+    // console.log('APP render()')
 
     // Render Main Components
     this.nav = new Nav(this.navContainer)
@@ -89,8 +100,6 @@ function saveSampleDataHandler() {
 function deleteRecordHandler(event) {
   console.log('recieved delete event', event)
 }
-
-//
 
 const app = new App(document.documentElement)
 window.app = app

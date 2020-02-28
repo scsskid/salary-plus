@@ -23,7 +23,7 @@ export default class RecordsList {
   }
 
   render() {
-    console.log('RecordsList render()', this.state)
+    // console.log('RecordsList render()', this.state)
     if (!this.state || !this.state.records) {
       console.log('RecordsList State undefined')
       this.container.innerHTML = `
@@ -54,11 +54,11 @@ export default class RecordsList {
       RecordsList.refs[this.ref] = this
       container.dataset.ref = this.ref
       this.init(container)
-      console.log('Records List NEW instance')
+      // console.log('Records List NEW instance')
     } else {
       // If this element has already been instantiated, use the existing reference.
       return RecordsList.refs[container.dataset.ref]
-      console.log('Records List EXISTING instance')
+      // console.log('Records List EXISTING instance')
     }
   }
 }
