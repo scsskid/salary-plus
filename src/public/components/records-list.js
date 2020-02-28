@@ -44,7 +44,9 @@ export default class RecordsList {
   }
 
   static markup(records) {
-    return `<ul class="records-list"></ul>`
+    return `
+      <h2>All Records</h2>
+      <ul class="records-list"></ul>`
   }
 
   constructor(container) {

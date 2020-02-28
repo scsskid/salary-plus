@@ -22,7 +22,7 @@ export default class Home {
     // console.log('HOME render() ', this.state)
 
     this.container.innerHTML = `
-      <h1>Home</h1>
+      <p><small>Home Component Begin</small></h1>
 
     `
 
