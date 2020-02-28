@@ -1,5 +1,5 @@
 import Home from './home.js'
-// import RecordsList from './records-list.js'
+import RecordsList from './records-list.js'
 // import UserSettings from './user-settings.js'
 
 export default class MainView {
@@ -20,18 +20,19 @@ export default class MainView {
 
   render() {
     this.container.innerHTML = ``
+    console.log(this.state.target.pathname)
 
-    switch (this.state.target) {
-      case 'home':
+    switch (this.state.target.pathname) {
+      case '/':
         this.container.innerHTML = ''
         const homeContainer = this.container.appendChild(document.createElement('div'))
         homeContainer.dataset.section = 'home'
         new Home(homeContainer, { displayRecords: true })
         break
-      case 'records':
+      case '/records':
         this.container.innerHTML = ''
         const recordsListContainer = this.container.appendChild(document.createElement('div'))
-        // new RecordsList(recordsListContainer)
+        new RecordsList(recordsListContainer)
 
         break
 
@@ -44,25 +45,5 @@ export default class MainView {
 
   constructor(container, state) {
     this.init(container, state)
-  }
-}
-
-function navigationHandler(event) {
-  this.navTarget = event.srcElement.dataset.navTarget
-  switch (this.navTarget) {
-    case 'home':
-      this.container.innerHTML = ''
-      const homeContainer = this.container.appendChild(document.createElement('div'))
-      // new Home(homeContainer)
-      break
-    case 'records':
-      this.container.innerHTML = ''
-      const recordsListContainer = this.container.appendChild(document.createElement('div'))
-      // new RecordsList(recordsListContainer)
-
-      break
-
-    default:
-      break
   }
 }

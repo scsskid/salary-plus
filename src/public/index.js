@@ -1,17 +1,9 @@
 import Nav from './components/nav.js'
 import MainView from './components/main-view.js'
-import RecordsList from './components/records-list.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
 
 class App {
-  // routes = {
-  //   '/': homePage,
-  //   '/portfolio': portfolioPage,
-  //   '/resume': resumePage,
-  //   '/contact': contactPage
-  // }
-
   set state(state) {
     // console.log('APP set state', state)
     this.stateValue = state
@@ -23,14 +15,6 @@ class App {
   }
 
   init(container) {
-    // Routing
-    const pathnameParts = window.location.pathname.split('/')
-    console.log(window.location.origin)
-
-    console.log(pathnameParts, pathnameParts[1])
-    window.addEventListener('load', event => {
-      console.log('load event', event)
-    })
     // Etc
 
     this.appDataPresent = localStorage.hasOwnProperty('appData')
@@ -52,24 +36,35 @@ class App {
     this.forceUpgradeStorage()
   }
 
+  router() {
+    // Routing
+
+    // routes = {
+    //   '/': homePage,
+    //   '/portfolio': portfolioPage,
+    //   '/resume': resumePage,
+    //   '/contact': contactPage
+    // }
+    console.log('routing...', window.location.pathname)
+
+    this.mainView = new MainView(this.mainViewContainer, { target: window.location })
+  }
+
   addEventListeners() {
     document.addEventListener('record-delete', deleteRecordHandler)
     document.addEventListener('seed-state', seedStateHandler.bind(this))
     document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
 
-    // document.addEventListener('navigate', navigationHandler.bind(this))
-    document.addEventListener('navigate', event => {
-      console.log('engage!', event)
-    })
+    document.addEventListener('navigate', this.router.bind(this))
+    window.addEventListener('load', this.router.bind(this))
   }
 
   render() {
     // console.log('APP render()')
 
     // Render Main Components
-    this.nav = new Nav(this.navContainer)
-    this.mainView = new MainView(this.mainViewContainer, { target: 'home' })
-    const toolbar = new Toolbar(document.querySelector('[data-toolbar]'))
+    new Nav(this.navContainer)
+    new Toolbar(document.querySelector('[data-toolbar]'))
   }
 
   forceUpgradeStorage() {

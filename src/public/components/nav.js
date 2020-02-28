@@ -28,8 +28,13 @@ export default class Nav {
 
     this.container.querySelector('[data-nav-menu]').addEventListener('click', event => {
       event.preventDefault()
-      window.history.pushState({}, '', '/' + event.target.dataset.navTarget)
-      event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true }))
+      // overengineered? but what about protocols
+      if (event.target.href) {
+        const url = new URL(event.target.href)
+
+        window.history.pushState({}, '', url)
+        event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true }))
+      }
     })
 
     window.onpopstate = function(event) {
