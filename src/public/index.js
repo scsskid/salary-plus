@@ -5,7 +5,6 @@ import Toolbar from './components/toolbar.js'
 
 class App {
   set state(state) {
-    // console.log('APP set state', state)
     this.stateValue = state
     this.render()
   }
@@ -15,10 +14,7 @@ class App {
   }
 
   init(container) {
-    // Etc
-
     this.appDataPresent = localStorage.hasOwnProperty('appData')
-
     this.container = container
     this.store = JSON.parse(localStorage.getItem('appData'))
     this.navContainer = this.container.querySelector('[data-main-nav]')
@@ -26,27 +22,19 @@ class App {
     this.state = { ui: 'default', appDataPresent: this.store ? true : false }
 
     this.addEventListeners()
-
-    if (this.appDataPresent) {
-      if (this.store.app && this.store.app.version) {
-        // console.log('local storage app version: ', this.store.app.version)
-      }
-    }
+    ;(function appDataIsPresent() {
+      // if (this.appDataPresent) {
+      //   if (this.store.app && this.store.app.version) {
+      //     console.log('local storage app version: ', this.store.app.version)
+      //   }
+      // }
+    })()
 
     this.forceUpgradeStorage()
   }
 
   router() {
-    // Routing
-
-    // routes = {
-    //   '/': homePage,
-    //   '/portfolio': portfolioPage,
-    //   '/resume': resumePage,
-    //   '/contact': contactPage
-    // }
-    console.log('routing...', window.location.pathname)
-
+    // console.log('routing...', window.location.pathname)
     this.mainView = new MainView(this.mainViewContainer, { target: window.location })
   }
 
@@ -54,15 +42,11 @@ class App {
     document.addEventListener('record-delete', deleteRecordHandler)
     document.addEventListener('seed-state', seedStateHandler.bind(this))
     document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
-
     document.addEventListener('navigate', this.router.bind(this))
     window.addEventListener('load', this.router.bind(this))
   }
 
   render() {
-    // console.log('APP render()')
-
-    // Render Main Components
     new Nav(this.navContainer)
     new Toolbar(document.querySelector('[data-toolbar]'))
   }

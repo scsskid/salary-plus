@@ -50,19 +50,6 @@ export default class RecordsList {
   }
 
   constructor(container) {
-    // The constructor should only contain the boiler plate code for finding or creating the reference.
-    if (typeof container.dataset.ref === 'undefined') {
-      this.ref = Math.random()
-      RecordsList.refs[this.ref] = this
-      container.dataset.ref = this.ref
-      this.init(container)
-      // console.log('Records List NEW instance')
-    } else {
-      // If this element has already been instantiated, use the existing reference.
-      return RecordsList.refs[container.dataset.ref]
-      // console.log('Records List EXISTING instance')
-    }
+    this.init(container)
   }
 }
-
-RecordsList.refs = {}
