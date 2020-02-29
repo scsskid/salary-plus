@@ -1,7 +1,9 @@
 import Nav from './components/nav.js'
-import MainView from './components/main-view.js'
+// import MainView from './components/main-view.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
+import Home from './components/home.js'
+import RecordsList from './components/records-list.js'
 
 class App {
   set state(state) {
@@ -33,9 +35,33 @@ class App {
     this.forceUpgradeStorage()
   }
 
+  prepareView() {
+    if (this.viewComponent) {
+      this.viewComponent.remove()
+    }
+    this.viewComponent = this.mainViewContainer.appendChild(document.createElement('div'))
+    this.viewComponent.dataset.viewComponent = ''
+  }
+
   router() {
-    // console.log('routing...', window.location.pathname)
-    this.mainView = new MainView(this.mainViewContainer, { target: window.location })
+    this.viewComponent = this.container.querySelector('[data-view-component]')
+
+    switch (window.location.pathname) {
+      case '/':
+        this.prepareView()
+        new Home(this.viewComponent, { displayRecords: true })
+        break
+
+      case '/records':
+        this.prepareView()
+        new RecordsList(this.viewComponent)
+        break
+
+      default:
+        break
+    }
+
+    // this.mainView = new MainView(this.mainViewContainer, { target: window.location })
   }
 
   addEventListeners() {
