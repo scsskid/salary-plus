@@ -23,7 +23,7 @@ export default class RecordsList {
   }
 
   render() {
-    // console.log('RecordsList render()', this.state)
+    // console.log('RecordsList render()', this.state.records)
     if (!this.state || !this.state.records) {
       console.log('RecordsList State undefined')
       this.container.innerHTML = `
@@ -37,8 +37,7 @@ export default class RecordsList {
       // Sub Component
       this.recordsListItemContainer = this.container.querySelector('.records-list')
       this.state.records.forEach(record => {
-        this.recordsListItem = new RecordsListItem(this.recordsListItemContainer)
-        this.recordsListItem.state = record
+        this.recordsListItem = new RecordsListItem(this.recordsListItemContainer, record)
       })
     }
   }
@@ -46,7 +45,7 @@ export default class RecordsList {
   static markup(records) {
     return `
       <h2>All Records</h2>
-      <ul class="records-list"></ul>`
+      <div class="records-list"></div>`
   }
 
   constructor(container) {

@@ -1,5 +1,7 @@
-import sampleData from './../data/sample-data.js'
-var { jobs } = sampleData
+// import sampleData from './../data/sample-data.js'
+// var { jobs } = sampleData
+
+var { jobs } = JSON.parse(localStorage.getItem('appData'))
 
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils from '../utils.js'
@@ -14,13 +16,14 @@ export default class RecordsListItem {
     return this.stateValue
   }
 
-  init(container) {
+  init(container, state) {
     this.container = container
+    this.state = state
   }
 
   render() {
     const record = this.mapRecord(this.state)
-    this.rootEl = document.createElement('li')
+    this.rootEl = document.createElement('article')
     this.rootEl.classList.add('records-list-item')
     this.rootEl.dataset.id = record.id
     this.container.appendChild(this.rootEl)
@@ -29,10 +32,10 @@ export default class RecordsListItem {
   }
 
   static markup(record) {
-    // console.log(record)
     const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
     return `
         <header class="record-header">
+          <p>id: ${id}</p>
           <h3>${dateBegin}</h3>
         </header>
         <p class="record-body">
@@ -80,19 +83,7 @@ export default class RecordsListItem {
     }
   }
 
-  constructor(container) {
-    // The constructor should only contain the boiler plate code for finding or creating the reference.
-    if (typeof container.dataset.ref === 'undefined') {
-      // console.log('constructur called of subComp', container)
-      this.ref = Math.random()
-      RecordsListItem.refs[this.ref] = this
-      container.dataset.ref = this.ref
-      this.init(container)
-    } else {
-      // If this element has already been instantiated, use the existing reference.
-      return RecordsListItem.refs[container.dataset.ref]
-    }
+  constructor(container, state) {
+    this.init(container, state)
   }
 }
-
-RecordsListItem.refs = {}

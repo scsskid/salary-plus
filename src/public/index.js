@@ -25,7 +25,7 @@ class App {
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
 
     this.state = { ui: 'default', appDataPresent: this.store ? true : false }
-    this.prepareMainViewComponent()
+
     this.addEventListeners()
 
     this.forceUpgradeStorage()
@@ -55,6 +55,7 @@ class App {
   }
 
   router() {
+    this.prepareMainViewComponent()
     const request = this.parseRequestURL()
 
     switch (request.resource) {
@@ -62,24 +63,25 @@ class App {
         new Home(this.viewComponent, { displayRecords: true })
         break
       case 'records':
-        console.log(request.id)
         if (request.verb) {
           console.log('new Form, action: ', request.verb)
         } else if (request.id) {
-          console.log('get single')
-          new RecordsListItem(
-            this.viewComponent,
-            this.store.records.filter(record => {
-              return record.id == request.id
-            })
-          )
+          console.log('get single', this.viewComponent)
+
+          const record = this.store.records.filter(record => {
+            return record.id == request.id
+          })[0]
+
+          new RecordsListItem(this.viewComponent, record)
         } else {
+          console.log('view list')
+
           new RecordsList(this.viewComponent)
         }
 
         break
       case 'settings':
-        new RecordsList(this.viewComponent)
+        // new RecordsList(this.viewComponent)
         break
 
       default:
