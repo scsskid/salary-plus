@@ -1,6 +1,6 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils from '../utils.js'
-
+import RecordTools from './record-tools.js'
 export default class RecordsListItem {
   set state(state) {
     this.stateValue = state
@@ -18,32 +18,31 @@ export default class RecordsListItem {
 
   render() {
     const record = utils.mapRecord(this.state)
+    // record.recordEditButton = new RecordEditButton(document.querySelector('.record-footer'), this.state.id).render()
+
     this.rootEl = document.createElement('article')
     this.rootEl.classList.add('records-list-item')
     this.rootEl.dataset.id = record.id
     this.container.appendChild(this.rootEl)
     this.rootEl.innerHTML = RecordsListItem.markup(record)
+    new RecordTools(this.rootEl.querySelector('.record-footer'), { id: this.state.id })
+
     this.addEventListeners()
   }
 
   static markup(record) {
-    const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
+    const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned, recordEditButton } = record
     return `
         <header class="record-header">
           <p>id: ${id}</p>
-          <h3>${dateBegin}</h3>
+          <h3><a href="/records/${id}">${dateBegin}</a></h3>
         </header>
         <p class="record-body">
           ${timeBegin} - ${timeEnd} |
           <span class="record-time-elapsed">${timeElapsed}</span> |
           ${earned}
         </p>
-
-        <footer class="record-footer">
-          <button class="record-edit">Edit</button>
-          <button class="record-delete">Delete</button>
-        </footer>
-        <div class="singleRecordsListItem"></div>
+        <footer class="record-footer" />
     `
   }
 

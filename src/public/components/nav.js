@@ -36,10 +36,6 @@ export default class Nav {
         event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true }))
       }
     })
-
-    window.onpopstate = function(event) {
-      console.log(`location: ${window.location}, state: ${JSON.stringify(event.state)}`)
-    }
   }
 
   static markup(record) {

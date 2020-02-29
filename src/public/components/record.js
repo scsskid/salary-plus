@@ -44,7 +44,6 @@ export default class Record {
           <button class="record-edit">Edit</button>
           <button class="record-delete">Delete</button>
         </footer>
-        <div class="singleRecordsListItem"></div>
     `
   }
 

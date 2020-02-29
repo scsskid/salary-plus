@@ -1,8 +1,8 @@
 import RecordsList from './records-list.js'
+import ButtonRecordNew from './record-button-new.js'
 
 export default class Home {
   set state(state) {
-    // console.log('HOME set state', state)
     this.stateValue = state
     this.render()
   }
@@ -14,17 +14,17 @@ export default class Home {
   init(container, state) {
     this.container = container
     this.state = state || undefined
-
-    // this.render()
   }
 
   render() {
-    // console.log('HOME render() ', this.state)
-
     this.container.innerHTML = `
-      <p><small>Home Component Begin</small></h1>
-
+    <header data-home-header>
+      <p><small>Home Component Begin</small></p>
+      
+    </header>
     `
+
+    new ButtonRecordNew(this.container.querySelector('[data-home-header]'))
 
     if (this.state.displayRecords) {
       var recordsListContainer = document.createElement('section')

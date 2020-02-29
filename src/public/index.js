@@ -4,6 +4,7 @@ import Toolbar from './components/toolbar.js'
 import Home from './components/home.js'
 import RecordsList from './components/records-list.js'
 import Record from './components/record.js'
+import RecordForm from './components/record-form.js'
 
 class App {
   set state(state) {
@@ -65,14 +66,31 @@ class App {
       case 'records':
         if (request.verb) {
           console.log('new Form, action: ', request.verb)
-        } else if (request.id) {
-          console.log('get single', this.viewComponent)
 
           const record = this.store.records.filter(record => {
             return record.id == request.id
           })[0]
 
-          new Record(this.viewComponent, record)
+          switch (request.verb) {
+            case 'edit':
+              new RecordForm(this.viewComponent, record)
+              break
+
+            default:
+              break
+          }
+        } else if (request.id) {
+          if ('new' == request.id) {
+            new RecordForm(this.viewComponent, {})
+          } else {
+            console.log('get single', this.viewComponent)
+
+            const record = this.store.records.filter(record => {
+              return record.id == request.id
+            })[0]
+
+            new Record(this.viewComponent, record)
+          }
         } else {
           console.log('view list')
 
@@ -93,13 +111,21 @@ class App {
 
   addEventListeners() {
     document.addEventListener('record-delete', deleteRecordHandler)
+    document.addEventListener('record-edit', editRecordHandler.bind(this))
+    document.addEventListener('record-add-new', recordAddNewHandler.bind(this))
     document.addEventListener('seed-state', seedStateHandler.bind(this))
     document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
     document.addEventListener('navigate', this.router.bind(this))
     window.addEventListener('load', this.router.bind(this))
+
+    window.onpopstate = function(event) {
+      console.log(`location: ${window.location}, state: ${JSON.stringify(event.state)}`)
+      this.router()
+    }.bind(this)
   }
 
   render() {
+    this.mainViewContainer.innerHTML = ''
     new Nav(this.navContainer)
     new Toolbar(document.querySelector('[data-toolbar]'))
   }
@@ -131,6 +157,21 @@ function saveSampleDataHandler() {
 
 function deleteRecordHandler(event) {
   console.log('recieved delete event', event)
+}
+
+function recordAddNewHandler(event) {
+  console.log('recieved add new event', event)
+  this.prepareMainViewComponent()
+  new RecordForm(this.viewComponent, {})
+}
+
+function editRecordHandler(event) {
+  console.log('recieved edit event', event)
+  const record = this.store.records.filter(record => {
+    return record.id == event.detail.id
+  })[0]
+  this.prepareMainViewComponent()
+  new RecordForm(this.viewComponent, record)
 }
 
 const app = new App(document.documentElement)
