@@ -83,5 +83,26 @@ export default {
 
   parseRequestedURL: function() {
     console.log(location)
+  },
+
+  mapRecord(record) {
+    var { jobs } = JSON.parse(localStorage.getItem('appData'))
+    var job = jobs.find(job => {
+      return job.id == record.jobId
+    })
+    var timeElapsed = this.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+    var earnedNumber = this.timeToDecimal(timeElapsed) * job.rate
+    var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+
+    return {
+      id: record.id,
+      jobId: record.jobId,
+      dateBegin: this.formatDate.nice(record.begin),
+      timeBegin: this.formatTime(record.begin),
+      timeEnd: this.formatTime(record.end),
+      end: record.end,
+      timeElapsed,
+      earned
+    }
   }
 }

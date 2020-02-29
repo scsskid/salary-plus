@@ -1,7 +1,7 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils from '../utils.js'
 
-export default class RecordsListItem {
+export default class RecordForm {
   set state(state) {
     this.stateValue = state
     this.render()
@@ -22,7 +22,7 @@ export default class RecordsListItem {
     this.rootEl.classList.add('records-list-item')
     this.rootEl.dataset.id = record.id
     this.container.appendChild(this.rootEl)
-    this.rootEl.innerHTML = RecordsListItem.markup(record)
+    this.rootEl.innerHTML = Record.markup(record)
     this.addEventListeners()
   }
 
@@ -30,6 +30,7 @@ export default class RecordsListItem {
     const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned } = record
     return `
         <header class="record-header">
+          <h1>SINGLE RECORD</h1>
           <p>id: ${id}</p>
           <h3>${dateBegin}</h3>
         </header>

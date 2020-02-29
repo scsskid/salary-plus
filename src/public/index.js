@@ -3,7 +3,7 @@ import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
 import Home from './components/home.js'
 import RecordsList from './components/records-list.js'
-import RecordsListItem from './components/records-list-item.js'
+import Record from './components/record.js'
 
 class App {
   set state(state) {
@@ -72,7 +72,7 @@ class App {
             return record.id == request.id
           })[0]
 
-          new RecordsListItem(this.viewComponent, record)
+          new Record(this.viewComponent, record)
         } else {
           console.log('view list')
 
