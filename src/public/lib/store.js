@@ -17,7 +17,7 @@ export const Store = {
   }
 }
 
-function recordById(record, id) {
+function recordById(id) {
   return function() {
     return record.id == id
   }
