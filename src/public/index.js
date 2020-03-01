@@ -81,7 +81,7 @@ class App {
           }
         } else if (request.id) {
           if ('new' == request.id) {
-            new RecordForm(this.viewComponent, {})
+            new RecordForm(this.viewComponent, { mode: 'new' })
           } else {
             console.log('get single', this.viewComponent)
 
@@ -116,6 +116,11 @@ class App {
     document.addEventListener('seed-state', seedStateHandler.bind(this))
     document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
     document.addEventListener('navigate', this.router.bind(this))
+
+    document.addEventListener('submitNewRecord', event => {
+      console.log(event)
+    })
+
     window.addEventListener('load', this.router.bind(this))
 
     window.onpopstate = function(event) {
@@ -162,7 +167,7 @@ function deleteRecordHandler(event) {
 function recordAddNewHandler(event) {
   console.log('recieved add new event', event)
   this.prepareMainViewComponent()
-  new RecordForm(this.viewComponent, {})
+  new RecordForm(this.viewComponent, { mode: 'new' })
 }
 
 function editRecordHandler(event) {
@@ -171,7 +176,7 @@ function editRecordHandler(event) {
     return record.id == event.detail.id
   })[0]
   this.prepareMainViewComponent()
-  new RecordForm(this.viewComponent, record)
+  new RecordForm(this.viewComponent, { mode: 'edit', record })
 }
 
 const app = new App(document.documentElement)

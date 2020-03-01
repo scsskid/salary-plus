@@ -1,22 +1,5 @@
-export default class Nav {
-  set state(state) {
-    this.stateValue = state
-    this.render()
-    // console.log('setting state')
-  }
-
-  get state() {
-    // console.log('getting state')
-    return this.stateValue
-  }
-
-  init(container) {
-    this.container = container
-    // this.state = state
-
-    this.render()
-  }
-
+import BaseComponent from './base-component.js'
+export default class Nav extends BaseComponent {
   render() {
     this.container.innerHTML = `
       <ul class="main-nav-menu" data-nav-menu>
@@ -44,7 +27,7 @@ export default class Nav {
 
   addEventListeners() {}
 
-  constructor(container) {
-    this.init(container)
+  constructor(container, state) {
+    super(container, state)
   }
 }

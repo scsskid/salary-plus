@@ -1,26 +1,12 @@
+import BaseComponent from './base-component.js'
 import RecordsList from './records-list.js'
 import ButtonRecordNew from './record-button-new.js'
 
-export default class Home {
-  set state(state) {
-    this.stateValue = state
-    this.render()
-  }
-
-  get state() {
-    return this.stateValue
-  }
-
-  init(container, state) {
-    this.container = container
-    this.state = state || undefined
-  }
-
+export default class Home extends BaseComponent {
   render() {
     this.container.innerHTML = `
     <header data-home-header>
       <p><small>Home Component Begin</small></p>
-      
     </header>
     `
 
@@ -38,17 +24,7 @@ export default class Home {
   addEventListeners() {}
 
   constructor(container, state) {
-    // The constructor should only contain the boiler plate code for finding or creating the reference.
-    if (typeof container.dataset.ref === 'undefined') {
-      // console.log('constructur called of subComp', container)
-      this.ref = Math.random()
-      Home.refs[this.ref] = this
-      container.dataset.ref = this.ref
-      this.init(container, state)
-    } else {
-      // If this element has already been instantiated, use the existing reference.
-      return Home.refs[container.dataset.ref]
-    }
+    super(container, state)
   }
 }
 
