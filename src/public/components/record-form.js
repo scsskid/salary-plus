@@ -1,16 +1,8 @@
+import BaseComponent from './base-component.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils from '../utils.js'
 
-export default class RecordForm {
-  set state(state) {
-    this.stateValue = state
-    this.render()
-  }
-
-  get state() {
-    return this.stateValue
-  }
-
+export default class RecordForm extends BaseComponent {
   init(container, state) {
     this.container = container
     this.state = state
@@ -23,50 +15,17 @@ export default class RecordForm {
     this.addEventListeners()
   }
 
-  static markup(state) {
-    return `
-      <section class="data-insert">
-        <h2><b>--${state.mode}--</b> Record</h2>
-        <form action="">
-          <div class="form-el">
-            <label for="entry-date">Date</label>
-            <input name="entry-date" id="entry-date" type="date">
-          </div>
-          <div class="form-el">
-            <label for="entry-begin-time">Begin Time</label>
-            <input name="entry-begin-time" id="entry-begin-time" type="time">
-          </div>
-          <div class="form-el">
-            <label for="entry-end-time">End Time</label>
-            <input name="entry-end-time" id="entry-end-time" type="time">
-          </div>
-
-          <div class="form-el">
-            <button data-button-submit>Save New</button>
-          </div>
-        </form>
-      </section>    
-    `
-  }
-
   addEventListeners() {
-    // this.form = document.querySelector('.data-insert form')
-    // this.buttonSubmit = this.container.querySelector('[data-button-submit]')
-
     this.form.addEventListener('submit', event => {
       event.preventDefault()
       var formData = new FormData(this.form)
-
-      // for (var [key, value] of formData.entries()) {
-      //   console.log(key, value)
-      // }
 
       const formDataTransport = {}
       for (var [formElementName, value] of formData.entries()) {
         formDataTransport[formElementName] = value
       }
 
-      console.log(formDataTransport)
+      // console.log(formDataTransport)
       event.target.dispatchEvent(
         new CustomEvent('submitNewRecord', {
           bubbles: true,
@@ -75,10 +34,42 @@ export default class RecordForm {
           }
         })
       )
-      // mapInputs
-      // ...
-      // event mit daten zu index.js
+
+      this.form.reset()
     })
+  }
+
+  static markup(state) {
+    return `
+      <section class="data-insert">
+        <h2><b>--${state.mode}--</b> Record</h2>
+        <form action="">
+          <div class="form-el">
+            <label for="entry-job">Job</label>
+            <select name="jobId" id="entry-job" type="date">
+              <option value="1">BND</option>
+              <option value="2" selected>Palsta</option>
+            </select>
+          </div>        
+          <div class="form-el">
+            <label for="entry-date">Date</label>
+            <input name="dateBegin" id="entry-date" type="date">
+          </div>
+          <div class="form-el">
+            <label for="entry-begin-time">Begin Time</label>
+            <input name="timeBegin" id="entry-begin-time" type="time">
+          </div>
+          <div class="form-el">
+            <label for="entry-end-time">End Time</label>
+            <input name="timeEnd" id="entry-end-time" type="time">
+          </div>
+
+          <div class="form-el">
+            <button data-button-submit>Save New</button>
+          </div>
+        </form>
+      </section>    
+    `
   }
 
   populateForm() {
@@ -94,6 +85,6 @@ export default class RecordForm {
   }
 
   constructor(container, state) {
-    this.init(container, state)
+    super(container, state)
   }
 }

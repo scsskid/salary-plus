@@ -1,4 +1,5 @@
 import settings from './settings.js'
+import { Store } from './lib/store.js'
 
 export default {
   formatDate: {
@@ -45,21 +46,28 @@ export default {
 
     return parseFloat(parseInt(arr[0], 10) + '.' + (dec < 10 ? '0' : '') + dec)
   },
-  /**
-   * if timeBegin is gt timeEnd assuming endDate to be next day
-   * @param {Object} record
-   */
 
-  sanitizeRecordEndDate: function todo(record) {
-    if (record.timeBegin <= record.timeEnd) {
-      record.dateEnd = record.date
-    } else {
-      var recordedDate = new Date(record.date)
+  processRecordFormData: function(record) {
+    // set enddate to begin date
+    record.dateEnd = record.dateBegin
+
+    // check if endtime is less that begin time (enddate is next day), if so add one day
+    if (record.timeBegin > record.timeEnd) {
+      var recordedDate = new Date(record.dateEnd)
       var recordedDay = recordedDate.getDate()
       recordedDate.setDate(recordedDay + 1)
-      record.dateEnd = this.getTimeZoneAwareIsoString(recordedDate)
+      record.dateEnd = recordedDate.toDateString()
     }
-    return record
+
+    let begin = new Date(record.dateBegin + ' ' + record.timeBegin).toISOString()
+    let end = new Date(record.dateEnd + ' ' + record.timeEnd).toISOString()
+
+    return {
+      id: record.id ? record.id : Store.recordsMaxId + 1,
+      jobId: parseInt(record.jobId),
+      begin,
+      end
+    }
   },
 
   mapFormInputElements: function(form) {
@@ -96,7 +104,7 @@ export default {
 
     return {
       id: record.id,
-      jobId: record.jobId,
+      jobId: parseInt(record.jobId),
       dateBegin: this.formatDate.nice(record.begin),
       timeBegin: this.formatTime(record.begin),
       timeEnd: this.formatTime(record.end),

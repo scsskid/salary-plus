@@ -1,3 +1,4 @@
+import { Store } from './lib/store.js'
 import Nav from './components/nav.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
@@ -5,6 +6,7 @@ import Home from './components/home.js'
 import RecordsList from './components/records-list.js'
 import Record from './components/record.js'
 import RecordForm from './components/record-form.js'
+import Utils from './utils.js'
 
 class App {
   set state(state) {
@@ -19,13 +21,13 @@ class App {
   init(container) {
     this.container = container
 
-    this.appDataPresent = localStorage.hasOwnProperty('appData')
+    // this.appDataPresent = localStorage.hasOwnProperty('appData')
     this.store = JSON.parse(localStorage.getItem('appData'))
 
     this.navContainer = this.container.querySelector('[data-main-nav]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
 
-    this.state = { ui: 'default', appDataPresent: this.store ? true : false }
+    this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
     this.addEventListeners()
 
@@ -65,15 +67,10 @@ class App {
         break
       case 'records':
         if (request.verb) {
-          console.log('new Form, action: ', request.verb)
-
-          const record = this.store.records.filter(record => {
-            return record.id == request.id
-          })[0]
-
+          console.log('new Form, action: ', request.verb, request.id)
           switch (request.verb) {
             case 'edit':
-              new RecordForm(this.viewComponent, record)
+              new RecordForm(this.viewComponent, Store.getRecord(request.id))
               break
 
             default:
@@ -83,17 +80,9 @@ class App {
           if ('new' == request.id) {
             new RecordForm(this.viewComponent, { mode: 'new' })
           } else {
-            console.log('get single', this.viewComponent)
-
-            const record = this.store.records.filter(record => {
-              return record.id == request.id
-            })[0]
-
-            new Record(this.viewComponent, record)
+            new Record(this.viewComponent, Store.getRecord(request.id))
           }
         } else {
-          console.log('view list')
-
           new RecordsList(this.viewComponent)
         }
 
@@ -118,7 +107,8 @@ class App {
     document.addEventListener('navigate', this.router.bind(this))
 
     document.addEventListener('submitNewRecord', event => {
-      console.log(event)
+      const newRecord = Utils.processRecordFormData(event.detail.formData)
+      Store.write.record(newRecord)
     })
 
     window.addEventListener('load', this.router.bind(this))
@@ -141,6 +131,17 @@ class App {
         localStorage.removeItem('appData')
         this.render()
       }
+    }
+  }
+
+  addRecord(submittedRecord) {
+    submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
+    var newRecord = {
+      // todo: get max id with reduce()?
+      id: this.state.records.length > 0 ? this.state.records[this.state.records.length - 1].id + 1 : 1,
+      jobId: 1,
+      begin: `${submittedRecord.date} ${submittedRecord.timeBegin}`,
+      end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
     }
   }
 
@@ -181,3 +182,4 @@ function editRecordHandler(event) {
 
 const app = new App(document.documentElement)
 window.app = app
+window.store = Store
