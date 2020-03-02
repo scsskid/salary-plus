@@ -26,8 +26,6 @@ export const Store = {
       localStorage.setItem('appData', JSON.stringify(appData))
     },
     record: function(record) {
-      console.log(record)
-
       let appData = JSON.parse(localStorage.getItem('appData'))
       appData = { ...appData }
       appData.records.push(record)
