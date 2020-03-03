@@ -8,6 +8,13 @@ export default {
     },
     short: function(string) {
       return new Date(string).toLocaleDateString('DE-de', settings.dateFormatOptions.short)
+    },
+    rfc3339: function(date) {
+      // target: YYYY-MM-DD
+      var year = date.getFullYear().toString()
+      var month = (date.getMonth() + 101).toString().substring(1) // 101 because first month is 0 not 1
+      var day = (date.getDate() + 100).toString().substring(1)
+      return year + '-' + month + '-' + day
     }
   },
   formatTime: function(string) {
@@ -93,24 +100,50 @@ export default {
     console.log(location)
   },
 
-  mapRecord(record) {
-    var { jobs } = JSON.parse(localStorage.getItem('appData'))
-    var job = jobs.find(job => {
-      return job.id == record.jobId
-    })
-    var timeElapsed = this.getTimeElapsed(new Date(record.end) - new Date(record.begin))
-    var earnedNumber = this.timeToDecimal(timeElapsed) * job.rate
-    var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+  /**
+   * Maps Storage Data to Form values or to Display Values
+   * @param {*} record
+   * @param {*} mode
+   */
+  // mapRecord(record, args = { mode: 'display' }) {
+  mapRecord(...args) {
+    const record = args[0] || undefined
+    const mode = args[1] || 'display'
 
-    return {
-      id: record.id,
-      jobId: parseInt(record.jobId),
-      dateBegin: this.formatDate.nice(record.begin),
-      timeBegin: this.formatTime(record.begin),
-      timeEnd: this.formatTime(record.end),
-      end: record.end,
-      timeElapsed,
-      earned
+    let mapped = {}
+
+    if (mode == 'form') {
+      mapped = {
+        id: record.id || undefined,
+        jobId: parseInt(record.jobId || 0),
+        dateBegin: this.formatDate.nice(record.begin),
+        timeBegin: this.formatTime(record.begin),
+        timeEnd: this.formatTime(record.end),
+        end: record.end,
+        timeElapsed,
+        earned
+      }
+    } else if (mode == 'display') {
+      var { jobs } = JSON.parse(localStorage.getItem('appData'))
+      var job = jobs.find(job => {
+        return job.id == record.jobId
+      })
+      var timeElapsed = this.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+      var earnedNumber = this.timeToDecimal(timeElapsed) * job.rate
+      var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+
+      mapped = {
+        id: record.id,
+        jobId: parseInt(record.jobId),
+        dateBegin: this.formatDate.nice(record.begin),
+        timeBegin: this.formatTime(record.begin),
+        timeEnd: this.formatTime(record.end),
+        end: record.end,
+        timeElapsed,
+        earned
+      }
     }
+    console.log(record, mode, mapped)
+    return mapped
   }
 }
