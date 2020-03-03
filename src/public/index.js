@@ -87,31 +87,64 @@ class App {
         }
 
         break
+      case 'calendar':
+        // new Calendar(this.viewComponent)
+        break
       case 'settings':
-        // new RecordsList(this.viewComponent)
+        // new Settings(this.viewComponent)
         break
 
       default:
         break
     }
-
-    // this.mainView = new MainView(this.mainViewContainer, { target: window.location })
   }
 
   addEventListeners() {
-    document.addEventListener('record-delete', deleteRecordHandler)
-    document.addEventListener('record-edit', editRecordHandler.bind(this))
-    document.addEventListener('record-add-new', recordAddNewHandler.bind(this))
-    document.addEventListener('seed-state', seedStateHandler.bind(this))
-    document.addEventListener('save-sample-data', saveSampleDataHandler.bind(this))
     document.addEventListener('navigate', this.router.bind(this))
+    window.addEventListener('load', this.router.bind(this))
 
-    document.addEventListener('submitNewRecord', event => {
-      const newRecord = Utils.processRecordFormData(event.detail.formData)
-      Store.write.record(newRecord)
+    document.addEventListener(
+      'record-add-new',
+      function recordAddNewHandler(event) {
+        console.log('recieved add new event', event)
+        this.prepareMainViewComponent()
+        new RecordForm(this.viewComponent, { mode: 'new' })
+      }.bind(this)
+    )
+
+    document.addEventListener(
+      'record-edit',
+      function editRecordHandler(event) {
+        console.log('recieved edit event', event)
+        const record = this.store.records.find(record => {
+          return record.id == event.detail.id
+        })
+        this.prepareMainViewComponent()
+        new RecordForm(this.viewComponent, { mode: 'edit', record })
+      }.bind(this)
+    )
+
+    document.addEventListener('record-delete', function deleteRecordHandler(event) {
+      console.log('recieved delete event', event)
     })
 
-    window.addEventListener('load', this.router.bind(this))
+    document.addEventListener(
+      'save-sample-data',
+      function saveSampleDataHandler() {
+        console.log('saveSampleDataHandler()')
+
+        localStorage.setItem('appData', JSON.stringify(sampleData))
+        this.render()
+      }.bind(this)
+    )
+
+    document.addEventListener(
+      'submitNewRecord',
+      function subNewRecordHandler(event) {
+        const newRecord = Utils.processRecordFormData(event.detail.formData)
+        Store.write.record(newRecord)
+      }.bind(this)
+    )
 
     window.onpopstate = function(event) {
       console.log(`location: ${window.location}, state: ${JSON.stringify(event.state)}`)
@@ -134,50 +167,9 @@ class App {
     }
   }
 
-  addRecord(submittedRecord) {
-    submittedRecord = utils.sanitizeRecordEndDate(submittedRecord)
-    var newRecord = {
-      // todo: get max id with reduce()?
-      id: this.state.records.length > 0 ? this.state.records[this.state.records.length - 1].id + 1 : 1,
-      jobId: 1,
-      begin: `${submittedRecord.date} ${submittedRecord.timeBegin}`,
-      end: `${submittedRecord.dateEnd} ${submittedRecord.timeEnd}`
-    }
-  }
-
   constructor(container) {
     this.init(container)
   }
-}
-
-function seedStateHandler() {
-  this.state = { user: 'Benedikt' }
-}
-
-function saveSampleDataHandler() {
-  console.log('saveSampleDataHandler()')
-
-  localStorage.setItem('appData', JSON.stringify(sampleData))
-  this.render()
-}
-
-function deleteRecordHandler(event) {
-  console.log('recieved delete event', event)
-}
-
-function recordAddNewHandler(event) {
-  console.log('recieved add new event', event)
-  this.prepareMainViewComponent()
-  new RecordForm(this.viewComponent, { mode: 'new' })
-}
-
-function editRecordHandler(event) {
-  console.log('recieved edit event', event)
-  const record = this.store.records.filter(record => {
-    return record.id == event.detail.id
-  })[0]
-  this.prepareMainViewComponent()
-  new RecordForm(this.viewComponent, { mode: 'edit', record })
 }
 
 const app = new App(document.documentElement)
