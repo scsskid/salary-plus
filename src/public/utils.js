@@ -116,12 +116,9 @@ export default {
       mapped = {
         id: record.id || undefined,
         jobId: parseInt(record.jobId || 0),
-        dateBegin: this.formatDate.nice(record.begin),
+        dateBegin: this.formatDate.rfc3339(new Date(record.begin)),
         timeBegin: this.formatTime(record.begin),
-        timeEnd: this.formatTime(record.end),
-        end: record.end,
-        timeElapsed,
-        earned
+        timeEnd: this.formatTime(record.end)
       }
     } else if (mode == 'display') {
       var { jobs } = JSON.parse(localStorage.getItem('appData'))

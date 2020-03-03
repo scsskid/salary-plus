@@ -3,19 +3,29 @@ import BaseComponent from './base-component.js'
 import Utils from '../utils.js'
 
 class RecordForm extends BaseComponent {
+  set state(state) {
+    this.stateValue = state
+  }
+
+  get state() {
+    return this.stateValue
+  }
+
   init(container, state) {
     this.container = container
 
     // If no record prop in state, mode is 'new', otherwise 'edit
-    this.state = {
-      ...state,
-      ...{ mode: state.record != undefined ? 'edit' : 'new' }
-    }
+    this.state =
+      {
+        ...state,
+        ...{ mode: state.record != undefined ? 'edit' : 'new' }
+      } || {}
     this.form = this.container.querySelector('.data-insert form')
     this.inputDate = this.container.querySelector('#entry-date')
     this.inputBeginTime = this.container.querySelector('#entry-begin-time')
     this.inputEndTime = this.container.querySelector('#entry-end-time')
 
+    console.log(this.state.record)
     // Defaults
     this.defaultFormValues = {
       jobId: 1,
@@ -30,21 +40,26 @@ class RecordForm extends BaseComponent {
         ...this.state,
         ...{ record: this.defaultFormValues }
       }
-
-      console.log(this.state)
+    } else if (this.state.mode == 'edit') {
+      this.state = {
+        ...this.state,
+        ...{ record: Utils.mapRecord(this.state.record, 'form') }
+      }
     }
+    console.log(this.state)
+    // Utils.mapRecord(this.state.record, 'form')
 
-    // console.log('this.state.record', this.state.record)
-    // console.log('mapped', utils.mapRecord(this.state.record, 'form'))
-    Utils.mapRecord(this.state.record, 'form')
-    // set state.record to default
-
-    this.populateForm()
-    this.addEventListeners()
+    this.render()
   }
 
   render() {
     this.container.innerHTML = RecordForm.markup(this.state)
+    this.form = this.container.querySelector('.data-insert form')
+    this.inputDate = this.container.querySelector('#entry-date')
+    this.inputBeginTime = this.container.querySelector('#entry-begin-time')
+    this.inputEndTime = this.container.querySelector('#entry-end-time')
+    this.populateForm()
+    this.addEventListeners()
   }
 
   addEventListeners() {
@@ -112,9 +127,11 @@ class RecordForm extends BaseComponent {
 
     // Set Values
 
-    this.inputDate.value = Utils.getTimeZoneAwareIsoString(new Date())
-    this.inputBeginTime.value = Utils.formatTime(new Date())
-    this.inputEndTime.value = Utils.formatTime(new Date())
+    console.log(this.state.record)
+
+    this.inputDate.value = this.state.record.dateBegin
+    this.inputBeginTime.value = this.state.record.timeBegin
+    this.inputEndTime.value = this.state.record.timeEnd
   }
 
   constructor(container, state) {
