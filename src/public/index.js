@@ -21,7 +21,6 @@ class App {
   init(container) {
     this.container = container
 
-    // this.appDataPresent = localStorage.hasOwnProperty('appData')
     this.store = JSON.parse(localStorage.getItem('appData'))
 
     this.navContainer = this.container.querySelector('[data-main-nav]')
@@ -70,7 +69,8 @@ class App {
           console.log('new Form, action: ', request.verb, request.id)
           switch (request.verb) {
             case 'edit':
-              new RecordForm(this.viewComponent, Store.getRecord(request.id))
+              // new RecordForm(this.viewComponent, Store.getRecord(request.id))
+              new RecordForm(this.viewComponent, { record: Store.getRecord(request.id) })
               break
 
             default:
@@ -78,8 +78,9 @@ class App {
           }
         } else if (request.id) {
           if ('new' == request.id) {
-            new RecordForm(this.viewComponent, { mode: 'new' })
+            new RecordForm(this.viewComponent, {})
           } else {
+            // /records/${id}
             new Record(this.viewComponent, Store.getRecord(request.id))
           }
         } else {
@@ -116,9 +117,7 @@ class App {
       'record-edit',
       function editRecordHandler(event) {
         console.log('recieved edit event', event)
-        const record = this.store.records.find(record => {
-          return record.id == event.detail.id
-        })
+        const record = Store.getRecord(event.detail.id)
         this.prepareMainViewComponent()
         new RecordForm(this.viewComponent, { mode: 'edit', record })
       }.bind(this)

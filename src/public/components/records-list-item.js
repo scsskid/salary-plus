@@ -31,16 +31,17 @@ export default class RecordsListItem {
   }
 
   static markup(record) {
-    const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned, recordEditButton } = record
+    const { id, dateBegin, timeBegin, timeEnd, timeElapsed, earned, jobId } = record
     return `
         <header class="record-header">
-          <p>id: ${id}</p>
+          <p>id: ${id} </p>
           <h3><a href="/records/${id}">${dateBegin}</a></h3>
         </header>
         <p class="record-body">
           ${timeBegin} - ${timeEnd} |
           <span class="record-time-elapsed">${timeElapsed}</span> |
           ${earned}
+          <br>jobId: ${jobId}
         </p>
         <footer class="record-footer" />
     `
