@@ -20,16 +20,11 @@ class App {
 
   init(container) {
     this.container = container
-
     this.store = JSON.parse(localStorage.getItem('appData'))
-
     this.navContainer = this.container.querySelector('[data-main-nav]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
-
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
-
     this.addEventListeners()
-
     this.forceUpgradeStorage()
   }
 
@@ -66,10 +61,8 @@ class App {
         break
       case 'records':
         if (request.verb) {
-          console.log('new Form, action: ', request.verb, request.id)
           switch (request.verb) {
             case 'edit':
-              // new RecordForm(this.viewComponent, Store.getRecord(request.id))
               new RecordForm(this.viewComponent, { record: Store.getRecord(request.id) })
               break
 
@@ -107,7 +100,6 @@ class App {
     document.addEventListener(
       'record-add-new',
       function recordAddNewHandler(event) {
-        console.log('recieved add new event', event)
         this.prepareMainViewComponent()
         new RecordForm(this.viewComponent, { mode: 'new' })
       }.bind(this)
@@ -116,7 +108,6 @@ class App {
     document.addEventListener(
       'record-edit',
       function editRecordHandler(event) {
-        console.log('recieved edit event', event)
         const record = Store.getRecord(event.detail.id)
         this.prepareMainViewComponent()
         new RecordForm(this.viewComponent, { mode: 'edit', record })
@@ -130,18 +121,15 @@ class App {
     document.addEventListener(
       'save-sample-data',
       function saveSampleDataHandler() {
-        console.log('saveSampleDataHandler()')
-
         localStorage.setItem('appData', JSON.stringify(sampleData))
         this.render()
       }.bind(this)
     )
 
     document.addEventListener(
-      'submitNewRecord',
+      'recordSubmitted',
       function subNewRecordHandler(event) {
-        const newRecord = Utils.processRecordFormData(event.detail.formData)
-        Store.write.record(newRecord)
+        Store.write.record(event.detail.formData)
       }.bind(this)
     )
 

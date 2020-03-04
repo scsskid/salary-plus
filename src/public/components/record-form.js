@@ -2,6 +2,13 @@ import BaseComponent from './base-component.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import Utils from '../utils.js'
 
+// todo: eval populateForm() on stateChange ?
+/*
+! comp state.record is in display format, not db format
+! db format belongs only in Store Component
+! keep it this way
+*/
+
 class RecordForm extends BaseComponent {
   set state(state) {
     this.stateValue = state
@@ -20,12 +27,7 @@ class RecordForm extends BaseComponent {
         ...state,
         ...{ mode: state.record != undefined ? 'edit' : 'new' }
       } || {}
-    this.form = this.container.querySelector('.data-insert form')
-    this.inputDate = this.container.querySelector('#entry-date')
-    this.inputBeginTime = this.container.querySelector('#entry-begin-time')
-    this.inputEndTime = this.container.querySelector('#entry-end-time')
 
-    console.log(this.state.record)
     // Defaults
     this.defaultFormValues = {
       jobId: 1,
@@ -35,46 +37,53 @@ class RecordForm extends BaseComponent {
     }
 
     // set state.record to default if { mode: new }
+    let record
     if (this.state.mode == 'new') {
-      this.state = {
-        ...this.state,
-        ...{ record: this.defaultFormValues }
-      }
+      record = this.defaultFormValues
     } else if (this.state.mode == 'edit') {
-      this.state = {
-        ...this.state,
-        ...{ record: Utils.mapRecord(this.state.record, 'form') }
-      }
+      // map data from localstorage to format of form
+      record = Utils.mapRecord(this.state.record, 'form')
     }
-    console.log(this.state)
-    // Utils.mapRecord(this.state.record, 'form')
+    this.state = { ...this.state, ...{ record } }
 
     this.render()
   }
 
   render() {
     this.container.innerHTML = RecordForm.markup(this.state)
-    this.form = this.container.querySelector('.data-insert form')
+    this.form = this.container.querySelector('form')
     this.inputDate = this.container.querySelector('#entry-date')
     this.inputBeginTime = this.container.querySelector('#entry-begin-time')
     this.inputEndTime = this.container.querySelector('#entry-end-time')
+
     this.populateForm()
     this.addEventListeners()
   }
 
-  addEventListeners() {
-    this.form.addEventListener('submit', event => {
-      event.preventDefault()
-      var formData = new FormData(this.form)
+  populateForm() {
+    this.form.dataset.id = this.state.record.id
+    this.inputDate.value = this.state.record.dateBegin
+    this.inputBeginTime.value = this.state.record.timeBegin
+    this.inputEndTime.value = this.state.record.timeEnd
+  }
 
+  addEventListeners() {
+    this.container.addEventListener('submit', event => {
+      event.preventDefault()
+      const form = event.target
+
+      var formData = new FormData(form)
       const formDataTransport = {}
       for (var [formElementName, value] of formData.entries()) {
         formDataTransport[formElementName] = value
       }
 
-      // console.log(formDataTransport)
+      // add id from form.dataset
+      formDataTransport.id = event.target.dataset.id
+
+      // Dispatch Event /w attached unaltered formData
       event.target.dispatchEvent(
-        new CustomEvent('submitNewRecord', {
+        new CustomEvent('recordSubmitted', {
           bubbles: true,
           detail: {
             formData: formDataTransport
@@ -82,13 +91,14 @@ class RecordForm extends BaseComponent {
         })
       )
 
-      this.form.reset()
+      this.state.record = formDataTransport
+      this.populateForm()
     })
   }
 
   static markup(state) {
     return `
-      <section class="data-insert">
+      <section class="edit-record" data-id>
         <h2><b>--${state.mode}--</b> Record</h2>
         <form action="">
           <div class="form-el">
@@ -117,21 +127,6 @@ class RecordForm extends BaseComponent {
         </form>
       </section>    
     `
-  }
-
-  populateForm() {
-    // Map Record To Form
-
-    // use defaults if no state is given
-    // ? mode prop not necessary
-
-    // Set Values
-
-    console.log(this.state.record)
-
-    this.inputDate.value = this.state.record.dateBegin
-    this.inputBeginTime.value = this.state.record.timeBegin
-    this.inputEndTime.value = this.state.record.timeEnd
   }
 
   constructor(container, state) {

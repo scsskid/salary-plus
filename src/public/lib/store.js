@@ -1,3 +1,5 @@
+import Utils from './../utils.js'
+
 export const Store = {
   // localStorageKey: 'appData',
   appDataPresent: localStorage.hasOwnProperty('appData'),
@@ -25,16 +27,23 @@ export const Store = {
     appData: function(appData) {
       localStorage.setItem('appData', JSON.stringify(appData))
     },
-    record: function(record) {
+    record: function(submittedRecord) {
       let appData = JSON.parse(localStorage.getItem('appData'))
       appData = { ...appData }
-      appData.records.push(record)
-      localStorage.setItem('appData', JSON.stringify(appData))
+      submittedRecord = Utils.processRecordFormData(submittedRecord)
 
-      // if id undefined -> write new
-      // ...
-      //  else
-      // .. write existing
+      if (submittedRecord.id == 'undefined') {
+        // new
+        submittedRecord.id = Store.recordsMaxId + 1
+        appData.records.push(submittedRecord)
+      } else {
+        // update existing
+        const targetIndex = appData.records.findIndex(el => {
+          return el.id == submittedRecord.id
+        })
+        appData.records[targetIndex] = submittedRecord
+      }
+      localStorage.setItem('appData', JSON.stringify(appData))
     }
   }
 }

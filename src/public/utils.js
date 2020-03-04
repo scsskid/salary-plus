@@ -55,7 +55,7 @@ export default {
   },
 
   processRecordFormData: function(record) {
-    // set enddate to begin date
+    // set dateEnd, since its not set in Form
     record.dateEnd = record.dateBegin
 
     // check if endtime is less that begin time (enddate is next day), if so add one day
@@ -70,7 +70,7 @@ export default {
     let end = new Date(record.dateEnd + ' ' + record.timeEnd).toISOString()
 
     return {
-      id: record.id ? record.id : Store.recordsMaxId + 1,
+      id: record.id,
       jobId: parseInt(record.jobId),
       begin,
       end
@@ -102,10 +102,7 @@ export default {
 
   /**
    * Maps Storage Data to Form values or to Display Values
-   * @param {*} record
-   * @param {*} mode
    */
-  // mapRecord(record, args = { mode: 'display' }) {
   mapRecord(...args) {
     const record = args[0] || undefined
     const mode = args[1] || 'display'
@@ -140,7 +137,6 @@ export default {
         earned
       }
     }
-    console.log(record, mode, mapped)
     return mapped
   }
 }
