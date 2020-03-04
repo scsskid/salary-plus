@@ -116,6 +116,8 @@ class App {
 
     document.addEventListener('record-delete', function deleteRecordHandler(event) {
       console.log('recieved delete event', event)
+
+      Store.write.delete(event.detail.id)
     })
 
     document.addEventListener(

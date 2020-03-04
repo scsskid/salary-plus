@@ -1,6 +1,7 @@
 import BaseComponent from './base-component.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import Utils from '../utils.js'
+import { Store } from '../lib/store.js'
 
 // todo: eval populateForm() on stateChange ?
 /*
@@ -22,15 +23,11 @@ class RecordForm extends BaseComponent {
     this.container = container
 
     // If no record prop in state, mode is 'new', otherwise 'edit
-    this.state =
-      {
-        ...state,
-        ...{ mode: state.record != undefined ? 'edit' : 'new' }
-      } || {}
+    this.state = { jobs: Store.appData.jobs, ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
 
     // Defaults
     this.defaultFormValues = {
-      jobId: 1,
+      jobId: 2 /* swap for optional value (default job) */,
       dateBegin: Utils.formatDate.rfc3339(new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00'
@@ -67,6 +64,10 @@ class RecordForm extends BaseComponent {
     this.inputEndTime.value = this.state.record.timeEnd
   }
 
+  log() {
+    console.log('okay')
+  }
+
   addEventListeners() {
     this.container.addEventListener('submit', event => {
       event.preventDefault()
@@ -92,11 +93,30 @@ class RecordForm extends BaseComponent {
       )
 
       this.state.record = formDataTransport
-      this.populateForm()
+
+      // ! trying to reconstruct Form (not working)
+      // this.container.dataset.ref = undefined
+      // this.container.innerHTML = ''
+      console.log(this.container)
+      this.init(this.container, { record: this.defaultFormValues })
+
+      // var newForm = new RecordForm(this.container, { record: formDataTransport })
+      // console.log(newForm)
+      // new this.constructor(this.container, { record: formDataTransport })
+      // new this.constructor()
     })
   }
 
   static markup(state) {
+    let jobsOptionsMarkup = ``
+    // Fill select element with options
+    state.jobs.forEach(job => {
+      const selected = state.record.jobId == job.id ? 'selected ' : ''
+      jobsOptionsMarkup += `
+        <option ${selected}value="${job.id}">${job.name} (rate: ${job.rate})</option>
+        `
+    })
+
     return `
       <section class="edit-record" data-id>
         <h2><b>--${state.mode}--</b> Record</h2>
@@ -104,8 +124,7 @@ class RecordForm extends BaseComponent {
           <div class="form-el">
             <label for="entry-job">Job</label>
             <select name="jobId" id="entry-job" type="date">
-              <option value="1">BND</option>
-              <option value="2" selected>Palsta</option>
+              ${jobsOptionsMarkup}
             </select>
           </div>        
           <div class="form-el">

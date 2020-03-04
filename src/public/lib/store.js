@@ -44,6 +44,18 @@ export const Store = {
         appData.records[targetIndex] = submittedRecord
       }
       localStorage.setItem('appData', JSON.stringify(appData))
+    },
+    delete: function(id) {
+      console.log('delete', id)
+      let appData = JSON.parse(localStorage.getItem('appData'))
+      appData = { ...appData }
+      const targetIndex = appData.records.findIndex(el => {
+        return el.id == id
+      })
+
+      appData.records.splice(targetIndex, 1)
+
+      localStorage.setItem('appData', JSON.stringify(appData))
     }
   }
 }
