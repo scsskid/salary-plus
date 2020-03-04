@@ -1,6 +1,6 @@
 var appData = {
   app: { version: '0.0.1' },
-  user: { name: 'Anonymous', settings: { defaultRateID: 1, defaultjobID: 1 } },
+  user: { name: 'Anonymous', settings: { defaultJobId: 2 } },
   records: [
     { id: 1, jobId: 1, begin: '2019-12-21T13:30:00.000Z', end: '2019-12-22T01:00:00.000Z' },
     { id: 2, jobId: 1, begin: '2020-02-10T13:30:00.000Z', end: '2020-02-10T22:00:00.000Z' },

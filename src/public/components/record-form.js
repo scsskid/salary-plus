@@ -26,8 +26,9 @@ class RecordForm extends BaseComponent {
     this.state = { jobs: Store.appData.jobs, ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
 
     // Defaults
+
     this.defaultFormValues = {
-      jobId: 2 /* swap for optional value (default job) */,
+      jobId: Store.appData.user.settings.defaultJobId,
       dateBegin: Utils.formatDate.rfc3339(new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00'
@@ -113,7 +114,7 @@ class RecordForm extends BaseComponent {
     state.jobs.forEach(job => {
       const selected = state.record.jobId == job.id ? 'selected ' : ''
       jobsOptionsMarkup += `
-        <option ${selected}value="${job.id}">${job.name} (rate: ${job.rate})</option>
+        <option ${selected}value="${job.id}">#${job.id} ${job.name} (rate: ${job.rate})</option>
         `
     })
 
