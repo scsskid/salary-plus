@@ -6,14 +6,12 @@ import Calendar from './calendar.js'
 export default class Home extends BaseComponent {
   render() {
     this.container.innerHTML = `
-    <header data-home-header>
-      <p><small>Home Component Begin</small></p>
-    </header>
+    <header style="margin-bottom: 1rem" data-home-header />
     <section data-home-main />
     `
 
     new ButtonRecordNew(this.container.querySelector('[data-home-header]'))
-    new Calendar(this.container.querySelector('[data-home-main]'))
+    // new Calendar(this.container.querySelector('[data-home-main]'))
 
     // New Records List
     if (this.state.displayRecords) {
