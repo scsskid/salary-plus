@@ -8,6 +8,8 @@ import Record from './components/record.js'
 import RecordForm from './components/record-form.js'
 import Utils from './utils.js'
 
+import Router from './components/router.js'
+
 class App {
   set state(state) {
     this.stateValue = state
@@ -26,6 +28,11 @@ class App {
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
     this.addEventListeners()
     this.forceUpgradeStorage()
+
+    // console.log('window.location.pathname →', window.location.pathname)
+
+    const router = new Router()
+    // router.loadRoute(window.location.pathname)
   }
 
   prepareMainViewComponent() {
@@ -38,66 +45,66 @@ class App {
 
   parseRequestURL() {
     let url = window.location.pathname.toLowerCase() || '/'
-    let r = url.split('/')
+    let r = url.split('/').slice(1)
     let request = {
       resource: null,
       id: null,
       verb: null
     }
-    request.resource = r[1]
-    request.id = r[2]
-    request.verb = r[3]
+    request.resource = r[0]
+    request.id = r[1]
+    request.verb = r[2]
 
     return request
   }
 
-  router() {
-    this.prepareMainViewComponent()
-    const request = this.parseRequestURL()
+  // router() {
+  //   this.prepareMainViewComponent()
+  //   const request = this.parseRequestURL()
 
-    switch (request.resource) {
-      case '':
-        new Home(this.viewComponent, { displayRecords: true })
-        break
-      case 'records':
-        if (request.verb) {
-          switch (request.verb) {
-            case 'edit':
-              new RecordForm(this.viewComponent, { record: Store.getRecord(request.id) })
-              break
+  //   switch (request.resource) {
+  //     case '':
+  //       new Home(this.viewComponent, { displayRecords: true })
+  //       break
+  //     case 'records':
+  //       if (request.verb) {
+  //         switch (request.verb) {
+  //           case 'edit':
+  //             new RecordForm(this.viewComponent, { record: Store.getRecord(request.id) })
+  //             break
 
-            default:
-              break
-          }
-        } else if (request.id) {
-          if ('new' == request.id) {
-            new RecordForm(this.viewComponent, {})
-          } else {
-            // /records/${id}
-            new Record(this.viewComponent, Store.getRecord(request.id))
-          }
-        } else {
-          new RecordsList(this.viewComponent)
-        }
+  //           default:
+  //             break
+  //         }
+  //       } else if (request.id) {
+  //         if ('new' == request.id) {
+  //           new RecordForm(this.viewComponent, {})
+  //         } else {
+  //           // /records/${id}
+  //           new Record(this.viewComponent, Store.getRecord(request.id))
+  //         }
+  //       } else {
+  //         new RecordsList(this.viewComponent)
+  //       }
 
-        break
-      case 'calendar':
-        // new Calendar(this.viewComponent)
-        break
-      case 'settings':
-        // new Settings(this.viewComponent)
-        break
+  //       break
+  //     case 'calendar':
+  //       // new Calendar(this.viewComponent)
+  //       break
+  //     case 'settings':
+  //       // new Settings(this.viewComponent)
+  //       break
 
-      default:
-        break
-    }
-  }
+  //     default:
+  //       break
+  //   }
+  // }
 
   addEventListeners() {
-    document.addEventListener('navigate', this.router.bind(this))
-    window.addEventListener('load', this.router.bind(this))
+    // document.addEventListener('navigate', this.router.bind(this))
+    // window.addEventListener('load', this.router.bind(this))
 
-    document.addEventListener(
+    window.document.addEventListener(
       'record-add-new',
       function recordAddNewHandler(event) {
         this.prepareMainViewComponent()
