@@ -1,13 +1,19 @@
 import Utils from './../utils.js'
+// ? Rewrite to Function
+
+const settings = {
+  localStorageKey: 'appData'
+}
 
 export const Store = {
-  // localStorageKey: 'appData',
-  appDataPresent: localStorage.hasOwnProperty('appData'),
+  appData: JSON.parse(localStorage.getItem(settings.localStorageKey)),
 
-  appData: JSON.parse(localStorage.getItem('appData')),
+  appDataPresent: function() {
+    return localStorage.hasOwnProperty(settings.localStorageKey)
+  },
 
   getRecord: function(id) {
-    var requestedRecord = this.appData.records.find(function(record) {
+    var requestedRecord = Store.appData.records.find(function(record) {
       return record.id == id
     })
     return requestedRecord
@@ -28,8 +34,7 @@ export const Store = {
       localStorage.setItem('appData', JSON.stringify(appData))
     },
     record: function(submittedRecord) {
-      let appData = JSON.parse(localStorage.getItem('appData'))
-      appData = { ...appData }
+      let appData = { ...Store.appData }
       submittedRecord = Utils.processRecordFormData(submittedRecord)
 
       if (submittedRecord.id == 'undefined') {
@@ -38,22 +43,21 @@ export const Store = {
         appData.records.push(submittedRecord)
       } else {
         // update existing
-        const targetIndex = appData.records.findIndex(el => {
+        const targetIndex = Store.appData.records.findIndex(el => {
           return el.id == submittedRecord.id
         })
-        appData.records[targetIndex] = submittedRecord
+        Store.appData.records[targetIndex] = submittedRecord
       }
       localStorage.setItem('appData', JSON.stringify(appData))
     },
     delete: function(id) {
       console.log('delete', id)
-      let appData = JSON.parse(localStorage.getItem('appData'))
-      appData = { ...appData }
-      const targetIndex = appData.records.findIndex(el => {
+      let appData = { ...Store.appData }
+      const targetIndex = Store.appData.records.findIndex(el => {
         return el.id == id
       })
 
-      appData.records.splice(targetIndex, 1)
+      Store.appData.records.splice(targetIndex, 1)
 
       localStorage.setItem('appData', JSON.stringify(appData))
     }
