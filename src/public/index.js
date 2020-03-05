@@ -26,13 +26,58 @@ class App {
     this.navContainer = this.container.querySelector('[data-main-nav]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
+
+    this.router = new Router()
+
+    window.onpopstate = onLocationChange.bind(this)
+    document.addEventListener('navigate', onLocationChange.bind(this))
+
+    function onLocationChange(event) {
+      console.log(event)
+
+      let url
+
+      // event will be CustomEvent from Navigation or
+      // PopStateEvent from window.onpopstate
+      /*
+      if (event instanceof CustomEvent) {
+        console.log('Custom Event (navigtion)!!')
+        url = event.detail.url.pathname
+      } else if (event instanceof PopStateEvent) {
+        console.log('Pop State EVent ()!!')
+        url = window.location.pathname
+      }
+      */
+
+      // console.log('URL to send to router', url)
+
+      console.log('sync', window.location.pathname)
+
+      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
+      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
+      // console.log(pathnameSplit, pathnameSplit.length, pathSegments)
+
+      this.router.loadRoute(pathSegments)
+
+      // catch the moment when the new document state is already fully in place
+      // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
+      setTimeout(event => {
+        console.log('async', window.location.pathname)
+
+        // todo: split and/or splice
+        // this.router.loadRoute([''])
+      }, 0)
+    }
+
+    // window.onpopstate = function(event) {
+    //   console.log(`location: ${window.location}, state: ${JSON.stringify(event.state)}`)
+    //   this.router()
+    // }.bind(this)
+
+    // this.router.loadRoute(['records', '2'])
+
     this.addEventListeners()
     this.forceUpgradeStorage()
-
-    // console.log('window.location.pathname →', window.location.pathname)
-
-    const router = new Router()
-    // router.loadRoute(window.location.pathname)
   }
 
   prepareMainViewComponent() {
@@ -141,11 +186,6 @@ class App {
         Store.write.record(event.detail.formData)
       }.bind(this)
     )
-
-    window.onpopstate = function(event) {
-      console.log(`location: ${window.location}, state: ${JSON.stringify(event.state)}`)
-      this.router()
-    }.bind(this)
   }
 
   render() {

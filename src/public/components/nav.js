@@ -16,7 +16,7 @@ export default class Nav extends BaseComponent {
         const url = new URL(event.target.href)
 
         window.history.pushState({}, '', url)
-        event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true }))
+        event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { url } }))
       }
     })
   }
