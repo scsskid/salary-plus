@@ -14,9 +14,10 @@ export default class Nav extends BaseComponent {
       // overengineered? but what about protocols
       if (event.target.href) {
         const url = new URL(event.target.href)
+        // console.log(url.pathname, event.target.href)
 
-        window.history.pushState({}, '', url)
-        event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { url } }))
+        // window.history.pushState({}, '', url.pathname)
+        event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { pathname: url.pathname } }))
       }
     })
   }

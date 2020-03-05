@@ -24,27 +24,21 @@ class Router {
 
   loadRoute(urlSegments) {
     // Attempt to match the URL to a route.
-    const matchedRoute = this._matchUrlToRoute(urlSegments)
-
     console.log(urlSegments)
-    console.log(matchedRoute == undefined ? 'Route not found 404' : 'Route match found')
-
-    // Build url for history state
-
-    if (matchedRoute != undefined) {
-      const url = `/${urlSegments.join('/')}`
-      // history.pushState({}, '', url)
-      console.log('TEMPLATE:', matchedRoute.template)
-    }
+    const matchedRoute = this._matchUrlToRoute(urlSegments)
+    console.log('matchedRoute: ', matchedRoute)
+    const url = `/${urlSegments.join('/')}`
 
     // Render Component or Fire Event to app
+    if (matchedRoute != undefined) {
+      console.log('ROUTE, FOUND. TEMPLATE:', matchedRoute.template)
+    } else {
+      console.log('ROUTE NOT FOUND')
+    }
   }
 
   _matchUrlToRoute(urlSegments) {
-    // urlSegments = urlSegments.split('/').slice(1)
-    // console.log(urlSegments)
     // todo: deal with possible trailing slash
-
     // Try and match the URL to a route (wip)
     const matchedRoute = this.routes.find(route => {
       const routePathSegments = route.path.split('/').slice(1)
@@ -61,18 +55,14 @@ class Router {
 
       return doAllSegementsMatch // if callback == true find() returns the route
     })
-    // console.log(matchedRoute)
 
     return matchedRoute
   }
 
   _loadInitialRoute() {
-    // console.log(window.location.pathname)
-
     // todo: test pathname not empty
     const pathnameSplit = window.location.pathname.toLowerCase().split('/')
     const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-    // console.log(pathnameSplit, pathnameSplit.length, pathSegments)
 
     this.loadRoute(pathSegments)
   }
