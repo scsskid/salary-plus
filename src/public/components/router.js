@@ -27,8 +27,9 @@ class Router {
   }
 
   _matchUrlToRoute(urlSegments) {
+    let routeParams = {}
+
     // todo: deal with possible trailing slash see below trimTrailingSlash() fn
-    // Try and match the URL to a route (wip)
     const matchedRoute = this.routes.find(route => {
       const routePathSegments = route.path.split('/').slice(1)
 
@@ -37,13 +38,28 @@ class Router {
         return false
       }
 
-      // return true if all segements of url path and route path match
-      const doAllSegementsMatch = routePathSegments.every((routePathSegement, i) => {
-        return routePathSegement == urlSegments[i]
+      // return true if all segements of url path and route path match or
+      // or the route path segments first char starts with a ':'
+      const match = routePathSegments.every((routePathSegement, i) => {
+        return routePathSegement == urlSegments[i] || routePathSegement[0] == ':'
       })
 
-      return doAllSegementsMatch // if callback == true find() returns the route
+      if (match) {
+        console.log(routePathSegments)
+        routePathSegments.forEach((routePathSegement, i) => {
+          if (routePathSegement[0] == ':') {
+            const propName = routePathSegement.slice(1)
+            routeParams[propName] = urlSegments[i]
+          }
+        })
+
+        console.log(routeParams)
+      }
+
+      return match // if callback == true find() returns the route
     })
+
+    console.log({ ...matchedRoute, routeParams })
 
     return matchedRoute
   }

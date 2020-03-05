@@ -37,6 +37,10 @@ class App {
         module: new RecordsList(this.viewComponent)
       },
       {
+        path: '/records/:recordId',
+        module: new RecordsList(this.viewComponent)
+      },
+      {
         path: '/2-yolo',
         module: 'yolo>'
       },

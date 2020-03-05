@@ -18,7 +18,7 @@ export default class BaseComponent {
   constructor(container, state) {
     // The constructor should only contain the boiler plate code for finding or creating the reference.
     if (typeof container.dataset.ref === 'undefined') {
-      // console.log('constructur called of subComp', container)
+      // console.log('constructur call of ', this)
       this.ref = Math.random()
       BaseComponent.refs[this.ref] = this
       container.dataset.ref = this.ref
