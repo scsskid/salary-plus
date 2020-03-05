@@ -1,24 +1,6 @@
 class Router {
   constructor(routes) {
-    this.routes = [
-      {
-        path: '/',
-        module: 'Home'
-      },
-      {
-        path: '/records',
-        module: 'RecordsList'
-      },
-      {
-        path: '/2-yolo',
-        module: 'yolo>'
-      },
-      {
-        path: '/settings',
-        module: 'Settings'
-      }
-    ]
-
+    this.routes = routes
     this._loadInitialRoute()
   }
 
@@ -29,16 +11,23 @@ class Router {
     console.log('matchedRoute: ', matchedRoute)
     const url = `/${urlSegments.join('/')}`
 
+    let moduleToLoad
     // Render Component or Fire Event to app
     if (matchedRoute != undefined) {
+      moduleToLoad = matchedRoute.module
       console.log('👍ROUTE, FOUND. Module:', matchedRoute.module)
     } else {
+      moduleToLoad = 'Error404'
       console.log('👎ROUTE NOT FOUND')
     }
+
+    console.log('module to load', moduleToLoad)
+
+    window.dispatchEvent(new CustomEvent('routeLoad', { detail: { module: moduleToLoad } }))
   }
 
   _matchUrlToRoute(urlSegments) {
-    // todo: deal with possible trailing slash
+    // todo: deal with possible trailing slash see below trimTrailingSlash() fn
     // Try and match the URL to a route (wip)
     const matchedRoute = this.routes.find(route => {
       const routePathSegments = route.path.split('/').slice(1)

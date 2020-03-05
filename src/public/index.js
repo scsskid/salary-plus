@@ -27,35 +27,6 @@ class App {
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
-    this.router = new Router()
-
-    // window.onpopstate = onPopState.bind(this)
-    window.addEventListener('popstate', onPopState.bind(this))
-    document.addEventListener('navigate', onNavigate.bind(this))
-
-    function onPopState() {
-      console.log(this, 'onPopstate sync wlp', window.location.pathname)
-
-      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
-      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-
-      this.router.loadRoute(pathSegments)
-    }
-
-    function onNavigate(event) {
-      window.history.pushState({}, '', event.detail.pathname)
-      console.log('onNavigateSync wlp', window.location.pathname)
-
-      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
-      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-
-      this.router.loadRoute(pathSegments)
-
-      // catch the moment when the new document state is already fully in place
-      // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
-      setTimeout(event => {}, 0)
-    }
-
     this.addEventListeners()
     this.forceUpgradeStorage()
   }
@@ -170,10 +141,66 @@ class App {
 
   render() {
     this.mainViewContainer.innerHTML = ''
-    new Nav(this.navContainer)
+    this.prepareMainViewComponent()
+    new Nav(this.navContainer).render()
 
     // todo: resolve single compoenents like toolbar in parent component like footer
-    new Toolbar(document.querySelector('[data-toolbar]'))
+    new Toolbar(document.querySelector('[data-toolbar]')).render()
+
+    this.routes = [
+      {
+        path: '/',
+        module: new Home(this.viewComponent, { displayRecords: false })
+      },
+      {
+        path: '/records',
+        module: new RecordsList(this.viewComponent)
+      },
+      {
+        path: '/2-yolo',
+        module: 'yolo>'
+      },
+      {
+        path: '/settings',
+        module: 'Settings'
+      }
+    ]
+    this.router = new Router(this.routes)
+
+    // window.onpopstate = onPopState.bind(this)
+    window.addEventListener('popstate', onPopState.bind(this))
+    document.addEventListener('navigate', onNavigate.bind(this))
+
+    function onPopState() {
+      console.log(this, 'onPopstate sync wlp', window.location.pathname)
+
+      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
+      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
+
+      this.router.loadRoute(pathSegments)
+    }
+
+    function onNavigate(event) {
+      window.history.pushState({}, '', event.detail.pathname)
+      console.log('onNavigateSync wlp', window.location.pathname)
+
+      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
+      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
+
+      this.router.loadRoute(pathSegments)
+
+      // catch the moment when the new document state is already fully in place
+      // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
+      setTimeout(event => {}, 0)
+    }
+
+    window.addEventListener('routeLoad', event => {
+      console.log('recieved routeLoad event', event.detail.module)
+
+      const module = event.detail.module
+      module.render()
+      console.log(module)
+    })
   }
 
   forceUpgradeStorage() {

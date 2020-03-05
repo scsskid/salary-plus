@@ -1,7 +1,7 @@
 export default class BaseComponent {
   set state(state) {
     this.stateValue = state
-    this.render() // ? Too much?
+    // this.render() // ? Too much?
   }
 
   get state() {

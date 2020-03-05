@@ -3,9 +3,26 @@ import RecordsList from './records-list.js'
 import ButtonRecordNew from './record-button-new.js'
 import Calendar from './calendar.js'
 
-export default class Home extends BaseComponent {
+export default class Home {
+  set state(state) {
+    this.stateValue = state
+    // this.render() // ? Too much?
+  }
+
+  get state() {
+    return this.stateValue
+  }
+
+  init(container, state) {
+    this.container = container
+    this.state = state
+  }
+
   render() {
+    console.log('render home')
+
     this.container.innerHTML = `
+    <p>Home Comp</p>
     <header style="margin-bottom: 1rem" data-home-header />
     <section data-home-main />
     `
@@ -26,6 +43,6 @@ export default class Home extends BaseComponent {
   addEventListeners() {}
 
   constructor(container, state) {
-    super(container, state)
+    this.init(container, state)
   }
 }
