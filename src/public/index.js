@@ -27,6 +27,27 @@ class App {
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
+    this.routes = [
+      {
+        path: '/',
+        module: new Home(this.viewComponent, { displayRecords: false })
+      },
+      {
+        path: '/records',
+        module: new RecordsList(this.viewComponent)
+      },
+      {
+        path: '/2-yolo',
+        module: 'yolo>'
+      },
+      {
+        path: '/settings',
+        module: 'Settings'
+      }
+    ]
+
+    this.router = new Router(this.routes)
+
     this.addEventListeners()
     this.forceUpgradeStorage()
   }
@@ -147,25 +168,7 @@ class App {
     // todo: resolve single compoenents like toolbar in parent component like footer
     new Toolbar(document.querySelector('[data-toolbar]')).render()
 
-    this.routes = [
-      {
-        path: '/',
-        module: new Home(this.viewComponent, { displayRecords: false })
-      },
-      {
-        path: '/records',
-        module: new RecordsList(this.viewComponent)
-      },
-      {
-        path: '/2-yolo',
-        module: 'yolo>'
-      },
-      {
-        path: '/settings',
-        module: 'Settings'
-      }
-    ]
-    this.router = new Router(this.routes)
+    // this.router.loadRoute
 
     // window.onpopstate = onPopState.bind(this)
     window.addEventListener('popstate', onPopState.bind(this))
@@ -174,6 +177,7 @@ class App {
     function onPopState() {
       console.log(this, 'onPopstate sync wlp', window.location.pathname)
 
+      //! todo: refactor
       const pathnameSplit = window.location.pathname.toLowerCase().split('/')
       const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
 
@@ -184,6 +188,7 @@ class App {
       window.history.pushState({}, '', event.detail.pathname)
       console.log('onNavigateSync wlp', window.location.pathname)
 
+      // ! todo: refactor
       const pathnameSplit = window.location.pathname.toLowerCase().split('/')
       const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
 
@@ -196,10 +201,7 @@ class App {
 
     window.addEventListener('routeLoad', event => {
       console.log('recieved routeLoad event', event.detail.module)
-
-      const module = event.detail.module
-      module.render()
-      console.log(module)
+      event.detail.module.render()
     })
   }
 
