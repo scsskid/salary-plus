@@ -171,6 +171,8 @@ class App {
   render() {
     this.mainViewContainer.innerHTML = ''
     new Nav(this.navContainer)
+
+    // todo: resolve single compoenents like toolbar in parent component like footer
     new Toolbar(document.querySelector('[data-toolbar]'))
   }
 

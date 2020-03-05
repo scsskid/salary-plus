@@ -3,19 +3,19 @@ class Router {
     this.routes = [
       {
         path: '/',
-        template: '<h1>home</h1>'
+        module: 'Home'
       },
       {
         path: '/records',
-        template: 'RecordsList'
+        module: 'RecordsList'
       },
       {
         path: '/2-yolo',
-        template: '<h1>yolo</h1>'
+        module: 'yolo>'
       },
       {
-        path: '/1-huhu',
-        template: '<h1>yolo</h1>'
+        path: '/settings',
+        module: 'Settings'
       }
     ]
 
@@ -31,9 +31,9 @@ class Router {
 
     // Render Component or Fire Event to app
     if (matchedRoute != undefined) {
-      console.log('ROUTE, FOUND. TEMPLATE:', matchedRoute.template)
+      console.log('👍ROUTE, FOUND. Module:', matchedRoute.module)
     } else {
-      console.log('ROUTE NOT FOUND')
+      console.log('👎ROUTE NOT FOUND')
     }
   }
 
