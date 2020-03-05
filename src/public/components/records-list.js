@@ -8,7 +8,6 @@ var { jobs } = sampleData
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
-    this.render()
   }
 
   get state() {
