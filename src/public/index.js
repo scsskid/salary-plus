@@ -1,4 +1,5 @@
 import { Store } from './lib/store.js'
+import Routes from './data/routes.js'
 import Nav from './components/nav.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
@@ -21,30 +22,7 @@ class App {
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
-    this.routes = [
-      // ? idea: possibly extend with modules for other areas than main;
-      // ? e.g.:  modules: [ { container: this.header, file: 'special-header.js', state: { displaySth: true } }, { container: this.mainView, file: 'records-list.js' } ]
-      {
-        path: '/',
-        moduleFile: 'home.js',
-        data: { displayRecords: false }
-      },
-      // ? combine /records and /records/:recordsId
-      {
-        path: '/records',
-        moduleFile: 'records-list.js'
-      },
-      {
-        path: '/records/:recordId',
-        moduleFile: 'record.js'
-      },
-      {
-        path: '/settings',
-        moduleFile: 'settings.js'
-      }
-    ]
-
-    this.router = new Router(this.routes)
+    this.router = new Router(Routes)
 
     this.addEventListeners()
     this.forceUpgradeStorage()
@@ -56,21 +34,6 @@ class App {
     }
     this.viewComponent = this.mainViewContainer.appendChild(document.createElement('div'))
     this.viewComponent.dataset.viewComponent = ''
-  }
-
-  parseRequestURL() {
-    let url = window.location.pathname.toLowerCase() || '/'
-    let r = url.split('/').slice(1)
-    let request = {
-      resource: null,
-      id: null,
-      verb: null
-    }
-    request.resource = r[0]
-    request.id = r[1]
-    request.verb = r[2]
-
-    return request
   }
 
   addEventListeners() {
@@ -115,14 +78,13 @@ class App {
 
   render() {
     this.mainViewContainer.innerHTML = ''
-    this.prepareMainViewComponent()
 
     // todo: resolve single compoenents like toolbar in parent component like footer
     new Nav(this.navContainer).render()
     new Toolbar(document.querySelector('[data-toolbar]')).render()
 
     window.addEventListener('popstate', onPopState.bind(this))
-    document.addEventListener('navigate', onNavigate.bind(this))
+    window.addEventListener('navigate', onNavigate.bind(this))
 
     function onPopState() {
       console.log(this, 'onPopstate sync wlp', window.location.pathname)
@@ -159,6 +121,7 @@ class App {
 
       import(`./components/${route.moduleFile}`)
         .then(moduleClass => {
+          this.prepareMainViewComponent()
           const module = new moduleClass.default(this.viewComponent, state)
 
           console.log('module:', module, 'state:', state)

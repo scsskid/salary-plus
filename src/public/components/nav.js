@@ -17,6 +17,8 @@ export default class Nav extends BaseComponent {
         // console.log(url.pathname, event.target.href)
 
         // window.history.pushState({}, '', url.pathname)
+
+        // ! refactor Utils.route(path) || route()
         event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { pathname: url.pathname } }))
       }
     })

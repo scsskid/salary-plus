@@ -5,18 +5,20 @@ const settings = {
   localStorageKey: 'appData'
 }
 
+const appData = JSON.parse(localStorage.getItem(settings.localStorageKey))
+
+export function getRecord(id) {
+  var requestedRecord = appData.records.find(function(record) {
+    return record.id == id
+  })
+  return requestedRecord
+}
+
 export const Store = {
   appData: JSON.parse(localStorage.getItem(settings.localStorageKey)),
 
   appDataPresent: function() {
     return localStorage.hasOwnProperty(settings.localStorageKey)
-  },
-
-  getRecord: function(id) {
-    var requestedRecord = Store.appData.records.find(function(record) {
-      return record.id == id
-    })
-    return requestedRecord
   },
 
   get recordsMaxId() {
