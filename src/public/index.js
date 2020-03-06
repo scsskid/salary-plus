@@ -98,7 +98,7 @@ class App {
 
     function onNavigate(event) {
       window.history.pushState({}, '', event.detail.pathname)
-      console.log('onNavigateSync wlp', window.location.pathname)
+      // console.log('onNavigateSync wlp', window.location.pathname)
 
       // ! todo: refactor
       const pathnameSplit = window.location.pathname.toLowerCase().split('/')
@@ -124,7 +124,7 @@ class App {
           this.prepareMainViewComponent()
           const module = new moduleClass.default(this.viewComponent, state)
 
-          console.log('module:', module, 'state:', state)
+          // console.log('module:', module, 'state:', state)
           module.render()
         })
         .catch(err => {

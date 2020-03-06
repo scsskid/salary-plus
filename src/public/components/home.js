@@ -19,8 +19,6 @@ export default class Home {
   }
 
   render() {
-    console.log('render home', this.state)
-
     this.container.innerHTML = `
     <p>Home Comp</p>
     <header style="margin-bottom: 1rem" data-home-header />
@@ -31,8 +29,6 @@ export default class Home {
     // new Calendar(this.container.querySelector('[data-home-main]'))
 
     // New Records List
-    console.log(this.state.displayRecords)
-
     if (this.state.displayRecords) {
       var recordsListContainer = document.createElement('section')
       new RecordsList(recordsListContainer, {}).render()
