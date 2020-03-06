@@ -140,3 +140,7 @@ export default {
     return mapped
   }
 }
+
+export function route(path) {
+  window.dispatchEvent(new CustomEvent('navigate', { detail: { pathname: path } }))
+}
