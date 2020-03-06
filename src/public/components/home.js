@@ -19,7 +19,7 @@ export default class Home {
   }
 
   render() {
-    console.log('render home')
+    console.log('render home', this.state)
 
     this.container.innerHTML = `
     <p>Home Comp</p>
@@ -31,9 +31,11 @@ export default class Home {
     // new Calendar(this.container.querySelector('[data-home-main]'))
 
     // New Records List
+    console.log(this.state.displayRecords)
+
     if (this.state.displayRecords) {
       var recordsListContainer = document.createElement('section')
-      new RecordsList(recordsListContainer)
+      new RecordsList(recordsListContainer, {}).render()
       this.container.appendChild(recordsListContainer)
     }
 

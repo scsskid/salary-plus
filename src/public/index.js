@@ -2,12 +2,6 @@ import { Store } from './lib/store.js'
 import Nav from './components/nav.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
-import Home from './components/home.js'
-import RecordsList from './components/records-list.js'
-import Record from './components/record.js'
-import RecordForm from './components/record-form.js'
-import Utils from './utils.js'
-
 import Router from './components/router.js'
 
 class App {
@@ -28,25 +22,25 @@ class App {
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
     this.routes = [
+      // ? idea: possibly extend with modules for other areas than main;
+      // ? e.g.:  modules: [ { container: this.header, file: 'special-header.js', state: { displaySth: true } }, { container: this.mainView, file: 'records-list.js' } ]
       {
         path: '/',
-        module: new Home(this.viewComponent, { displayRecords: false })
+        moduleFile: 'home.js',
+        data: { displayRecords: false }
       },
+      // ? combine /records and /records/:recordsId
       {
         path: '/records',
-        module: new RecordsList(this.viewComponent)
+        moduleFile: 'records-list.js'
       },
       {
         path: '/records/:recordId',
-        module: new RecordsList(this.viewComponent)
-      },
-      {
-        path: '/2-yolo',
-        module: 'yolo>'
+        moduleFile: 'record.js'
       },
       {
         path: '/settings',
-        module: 'Settings'
+        moduleFile: 'settings.js'
       }
     ]
 
@@ -79,52 +73,7 @@ class App {
     return request
   }
 
-  // router() {
-  //   this.prepareMainViewComponent()
-  //   const request = this.parseRequestURL()
-
-  //   switch (request.resource) {
-  //     case '':
-  //       new Home(this.viewComponent, { displayRecords: true })
-  //       break
-  //     case 'records':
-  //       if (request.verb) {
-  //         switch (request.verb) {
-  //           case 'edit':
-  //             new RecordForm(this.viewComponent, { record: Store.getRecord(request.id) })
-  //             break
-
-  //           default:
-  //             break
-  //         }
-  //       } else if (request.id) {
-  //         if ('new' == request.id) {
-  //           new RecordForm(this.viewComponent, {})
-  //         } else {
-  //           // /records/${id}
-  //           new Record(this.viewComponent, Store.getRecord(request.id))
-  //         }
-  //       } else {
-  //         new RecordsList(this.viewComponent)
-  //       }
-
-  //       break
-  //     case 'calendar':
-  //       // new Calendar(this.viewComponent)
-  //       break
-  //     case 'settings':
-  //       // new Settings(this.viewComponent)
-  //       break
-
-  //     default:
-  //       break
-  //   }
-  // }
-
   addEventListeners() {
-    // document.addEventListener('navigate', this.router.bind(this))
-    // window.addEventListener('load', this.router.bind(this))
-
     window.document.addEventListener(
       'record-add-new',
       function recordAddNewHandler(event) {
@@ -167,14 +116,11 @@ class App {
   render() {
     this.mainViewContainer.innerHTML = ''
     this.prepareMainViewComponent()
-    new Nav(this.navContainer).render()
 
     // todo: resolve single compoenents like toolbar in parent component like footer
+    new Nav(this.navContainer).render()
     new Toolbar(document.querySelector('[data-toolbar]')).render()
 
-    // this.router.loadRoute
-
-    // window.onpopstate = onPopState.bind(this)
     window.addEventListener('popstate', onPopState.bind(this))
     document.addEventListener('navigate', onNavigate.bind(this))
 
@@ -200,12 +146,27 @@ class App {
 
       // catch the moment when the new document state is already fully in place
       // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
-      setTimeout(event => {}, 0)
+      // setTimeout(event => {}, 0)
     }
 
     window.addEventListener('routeLoad', event => {
-      console.log('recieved routeLoad event', event.detail.module)
-      event.detail.module.render()
+      // console.log('recieved routeLoad event', event.detail.route)
+
+      const route = event.detail.route
+      const state = { ...route.params, ...route.data }
+
+      // console.log(Object.keys(route.params).length)
+
+      import(`./components/${route.moduleFile}`)
+        .then(moduleClass => {
+          const module = new moduleClass.default(this.viewComponent, state)
+
+          console.log('module:', module, 'state:', state)
+          module.render()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     })
   }
 

@@ -6,24 +6,21 @@ class Router {
 
   loadRoute(urlSegments) {
     // Attempt to match the URL to a route.
-    console.log(urlSegments)
     const matchedRoute = this._matchUrlToRoute(urlSegments)
-    console.log('matchedRoute: ', matchedRoute)
-    const url = `/${urlSegments.join('/')}`
 
-    let moduleToLoad
-    // Render Component or Fire Event to app
-    if (matchedRoute != undefined) {
-      moduleToLoad = matchedRoute.module
-      console.log('👍ROUTE, FOUND. Module:', matchedRoute.module)
+    if (matchedRoute.moduleFile != undefined) {
+      console.log('👍FOUND. Module:', matchedRoute)
     } else {
-      moduleToLoad = 'Error404'
-      console.log('👎ROUTE NOT FOUND')
+      console.log('👎NOT FOUND')
     }
 
-    console.log('module to load', moduleToLoad)
-
-    window.dispatchEvent(new CustomEvent('routeLoad', { detail: { module: moduleToLoad } }))
+    window.dispatchEvent(
+      new CustomEvent('routeLoad', {
+        detail: {
+          route: matchedRoute
+        }
+      })
+    )
   }
 
   _matchUrlToRoute(urlSegments) {
@@ -45,23 +42,18 @@ class Router {
       })
 
       if (match) {
-        console.log(routePathSegments)
         routePathSegments.forEach((routePathSegement, i) => {
           if (routePathSegement[0] == ':') {
             const propName = routePathSegement.slice(1)
-            routeParams[propName] = urlSegments[i]
+            routeParams[propName] = decodeURIComponent(urlSegments[i])
           }
         })
-
-        console.log(routeParams)
       }
 
       return match // if callback == true find() returns the route
     })
 
-    console.log({ ...matchedRoute, routeParams })
-
-    return matchedRoute
+    return { ...matchedRoute, params: routeParams }
   }
 
   _loadInitialRoute() {
