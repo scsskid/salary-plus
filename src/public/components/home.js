@@ -20,9 +20,14 @@ export default class Home {
 
   render() {
     this.container.innerHTML = `
-    <p>Home Comp</p>
+    
     <header style="margin-bottom: 1rem" data-home-header />
-    <section data-home-main />
+    <section data-home-main>
+      <figure>
+        8000 €<br>
+        week
+      </figure>
+    </section>
     `
 
     new ButtonRecordNew(this.container.querySelector('[data-home-header]'))

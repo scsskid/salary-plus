@@ -144,3 +144,10 @@ export default {
 export function route(path) {
   window.dispatchEvent(new CustomEvent('navigate', { detail: { pathname: path } }))
 }
+
+export function routeDataSetHref(event) {
+  event.preventDefault()
+  if (event.target.dataset.href) {
+    route(event.target.dataset.href)
+  }
+}

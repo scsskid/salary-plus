@@ -12,8 +12,16 @@ export default [
     moduleFile: 'records-list.js'
   },
   {
+    path: '/records/new',
+    moduleFile: 'record-form.js'
+  },
+  {
     path: '/records/:recordId',
     moduleFile: 'record.js'
+  },
+  {
+    path: '/records/:recordId/:mode',
+    moduleFile: 'record-form.js'
   },
   {
     path: '/settings',

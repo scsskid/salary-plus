@@ -23,19 +23,17 @@ export default class RecordTools {
   }
 
   addEventListeners() {
-    this.container.querySelector('.record-edit').addEventListener('click', event => {
-      const recordEditEvent = new CustomEvent('record-edit', {
+    // Click on Link to Single Record
+    this.container.querySelector('.record-delete').addEventListener('click', handleClickDeleteRecord)
+
+    function handleClickDeleteRecord(event) {
+      const listItem = event.target.closest('.records-list-item')
+      const recordDeleteEvent = new CustomEvent('record-delete', {
         bubbles: true,
-        detail: { id: this.state.id }
+        detail: { id: listItem.dataset.id }
       })
-
-      if (event.target.dataset.href) {
-        const url = new URL(event.target.dataset.href)
-
-        window.history.pushState({}, '', url)
-        this.container.dispatchEvent(recordEditEvent)
-      }
-    })
+      listItem.dispatchEvent(recordDeleteEvent)
+    }
   }
 
   constructor(container, state) {

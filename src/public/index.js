@@ -1,9 +1,11 @@
-import { Store } from './lib/store.js'
+import { Store, StoreFn } from './lib/store.js'
 import Routes from './data/routes.js'
 import Nav from './components/nav.js'
 import sampleData from './data/sample-data.js'
 import Toolbar from './components/toolbar.js'
 import Router from './components/router.js'
+
+// console.log(new StoreFn().appData)
 
 class App {
   set state(state) {
@@ -34,46 +36,6 @@ class App {
     }
     this.viewComponent = this.mainViewContainer.appendChild(document.createElement('div'))
     this.viewComponent.dataset.viewComponent = ''
-  }
-
-  addEventListeners() {
-    window.document.addEventListener(
-      'record-add-new',
-      function recordAddNewHandler(event) {
-        this.prepareMainViewComponent()
-        new RecordForm(this.viewComponent, { mode: 'new' })
-      }.bind(this)
-    )
-
-    document.addEventListener(
-      'record-edit',
-      function editRecordHandler(event) {
-        const record = Store.getRecord(event.detail.id)
-        this.prepareMainViewComponent()
-        new RecordForm(this.viewComponent, { mode: 'edit', record })
-      }.bind(this)
-    )
-
-    document.addEventListener('record-delete', function deleteRecordHandler(event) {
-      console.log('recieved delete event', event)
-
-      Store.write.delete(event.detail.id)
-    })
-
-    document.addEventListener(
-      'save-sample-data',
-      function saveSampleDataHandler() {
-        localStorage.setItem('appData', JSON.stringify(sampleData))
-        this.render()
-      }.bind(this)
-    )
-
-    document.addEventListener(
-      'recordSubmitted',
-      function subNewRecordHandler(event) {
-        Store.write.record(event.detail.formData)
-      }.bind(this)
-    )
   }
 
   render() {
@@ -131,6 +93,29 @@ class App {
           console.log(err)
         })
     })
+  }
+
+  addEventListeners() {
+    document.addEventListener('record-delete', function deleteRecordHandler(event) {
+      console.log('recieved delete event', event)
+
+      Store.write.delete(event.detail.id)
+    })
+
+    document.addEventListener(
+      'save-sample-data',
+      function saveSampleDataHandler() {
+        localStorage.setItem('appData', JSON.stringify(sampleData))
+        this.render()
+      }.bind(this)
+    )
+
+    document.addEventListener(
+      'recordSubmitted',
+      function subNewRecordHandler(event) {
+        Store.write.record(event.detail.formData)
+      }.bind(this)
+    )
   }
 
   forceUpgradeStorage() {

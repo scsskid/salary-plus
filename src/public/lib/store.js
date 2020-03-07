@@ -7,6 +7,14 @@ const settings = {
 
 const appData = JSON.parse(localStorage.getItem(settings.localStorageKey))
 
+// Fn
+
+export function StoreFn() {}
+
+StoreFn.prototype.appData = appData
+
+// Obj
+
 export function getRecord(id) {
   var requestedRecord = appData.records.find(function(record) {
     return record.id == id

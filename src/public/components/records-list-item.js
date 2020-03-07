@@ -1,5 +1,5 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
-import utils, { route } from '../utils.js'
+import utils, { routeDataSetHref } from '../utils.js'
 import RecordTools from './record-tools.js'
 export default class RecordsListItem {
   set state(state) {
@@ -49,25 +49,7 @@ export default class RecordsListItem {
 
   addEventListeners() {
     // Click on Link to Single Record
-    this.rootEl.addEventListener('click', handleGetSingleClick)
-    // Click on Link to Single Record
-    this.rootEl.querySelector('.record-delete').addEventListener('click', handleClickDeleteRecord)
-
-    function handleGetSingleClick(event) {
-      event.preventDefault()
-      if (event.target.dataset.href) {
-        route(event.target.dataset.href)
-      }
-    }
-
-    function handleClickDeleteRecord(event) {
-      const id = event.target.closest('.records-list-item').dataset.id
-      const recordDeleteEvent = new CustomEvent('record-delete', {
-        bubbles: true,
-        detail: { id }
-      })
-      this.rootEl.dispatchEvent(recordDeleteEvent)
-    }
+    this.rootEl.addEventListener('click', routeDataSetHref)
   }
 
   constructor(container, state) {
