@@ -1,12 +1,9 @@
-import BaseComponent from './BaseComponent.js'
 import RecordsList from './RecordsList.js'
 import ButtonRecordNew from './ButtonNewRecord.js'
-import Calendar from './Calendar.js'
 
 export default class Home {
   set state(state) {
     this.stateValue = state
-    // this.render() // ? Too much?
   }
 
   get state() {

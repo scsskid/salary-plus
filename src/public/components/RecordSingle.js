@@ -1,6 +1,6 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils from '../utils.js'
-import { getRecord } from '../store.js'
+import { Store } from '../store.js'
 
 export default class Record {
   set state(state) {
@@ -18,7 +18,7 @@ export default class Record {
   }
 
   render() {
-    const record = utils.mapRecord(getRecord(this.state.recordId))
+    const record = utils.mapRecord(Store.getRecord(this.state.recordId))
     this.rootEl = document.createElement('article')
     this.rootEl.classList.add('records-list-item')
     this.rootEl.dataset.id = record.id
