@@ -17,4 +17,6 @@ var appData = {
   ]
 }
 
+export const app = appData.app
+
 export default appData

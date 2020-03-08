@@ -1,6 +1,6 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils, { routeDataSetHref } from '../utils.js'
-import RecordTools from './RecordTools.js'
+import RecordSingleTools from './RecordSingleTools.js'
 export default class RecordsListItem {
   set state(state) {
     this.stateValue = state
@@ -25,7 +25,7 @@ export default class RecordsListItem {
     this.rootEl.dataset.id = record.id
     this.container.appendChild(this.rootEl)
     this.rootEl.innerHTML = RecordsListItem.markup(record)
-    new RecordTools(this.rootEl.querySelector('.record-footer'), { id: this.state.id })
+    new RecordSingleTools(this.rootEl.querySelector('.record-footer'), { id: this.state.id })
 
     this.addEventListeners()
   }

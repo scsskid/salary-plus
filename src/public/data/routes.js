@@ -17,7 +17,7 @@ export default [
   },
   {
     path: '/records/:recordId',
-    module: 'Record'
+    module: 'RecordSingle'
   },
   {
     path: '/records/:recordId/:mode',
