@@ -1,4 +1,4 @@
-import { Store, StoreFn } from './store.js'
+import { Store, Storage } from './store.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
 import sampleData from './data/sample-data.js'
@@ -19,7 +19,6 @@ class App {
 
   init(container) {
     this.container = container
-    this.store = JSON.parse(localStorage.getItem('appData'))
     this.navContainer = this.container.querySelector('[data-main-nav]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
@@ -27,7 +26,6 @@ class App {
     this.router = new Router(Routes)
 
     this.addEventListeners()
-    this.forceUpgradeStorage()
   }
 
   prepareMainViewComponent() {
@@ -96,35 +94,16 @@ class App {
   }
 
   addEventListeners() {
-    document.addEventListener('record-delete', function deleteRecordHandler(event) {
-      console.log('recieved delete event', event)
+    document.addEventListener('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
+    document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
 
-      Store.write.delete(event.detail.id)
+    document.addEventListener('save-sample-data', () => {
+      localStorage.setItem('sp_app', JSON.stringify(sampleData.app))
+      localStorage.setItem('sp_user', JSON.stringify(sampleData.user))
+      localStorage.setItem('sp_records', JSON.stringify(sampleData.records))
+      localStorage.setItem('sp_jobs', JSON.stringify(sampleData.jobs))
+      this.render()
     })
-
-    document.addEventListener(
-      'save-sample-data',
-      function saveSampleDataHandler() {
-        localStorage.setItem('appData', JSON.stringify(sampleData))
-        this.render()
-      }.bind(this)
-    )
-
-    document.addEventListener(
-      'recordSubmitted',
-      function subNewRecordHandler(event) {
-        Store.write.record(event.detail.formData)
-      }.bind(this)
-    )
-  }
-
-  forceUpgradeStorage() {
-    if (this.appDataPresent) {
-      if (!this.store.app) {
-        localStorage.removeItem('appData')
-        this.render()
-      }
-    }
   }
 
   constructor(container) {
@@ -135,3 +114,4 @@ class App {
 const app = new App(document.documentElement)
 window.app = app
 window.store = Store
+window.storage = Storage

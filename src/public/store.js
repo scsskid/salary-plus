@@ -1,75 +1,69 @@
 import Utils from './utils.js'
-// ? Rewrite to Function
 
 const settings = {
-  localStorageKey: 'appData'
+  localStoragePrefix: 'sp_'
 }
 
-const appData = JSON.parse(localStorage.getItem(settings.localStorageKey))
+export function Store() {}
 
-// Fn
+Store.get = function(key) {
+  return JSON.parse(localStorage.getItem(`${settings.localStoragePrefix}${key}`))
+}
 
-export function StoreFn() {}
+Store.set = function(key, data) {
+  return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data))
+}
 
-StoreFn.prototype.appData = appData
+export const Storage = {
+  user: { ...Store.get('user') },
+  records: [...Store.get('records')],
+  jobs: [...Store.get('jobs')]
+}
 
-// Obj
+Store.setRecord = function(submittedRecord) {
+  let records = [...Store.get('records')]
+  submittedRecord = Utils.processRecordFormData(submittedRecord)
 
-export function getRecord(id) {
-  var requestedRecord = appData.records.find(function(record) {
+  if (submittedRecord.id == 'undefined') {
+    // new
+    submittedRecord.id = Store.recordsMaxId + 1
+    records.push(submittedRecord)
+  } else {
+    // update existing
+    const targetIndex = records.findIndex(el => {
+      return el.id == submittedRecord.id
+    })
+    records[targetIndex] = submittedRecord
+  }
+  Store.set('records', records)
+}
+
+Store.deleteRecord = function(id) {
+  let records = [...Store.get('records')]
+  console.log('delete', id)
+
+  const targetIndex = records.findIndex(el => {
+    return el.id == id
+  })
+
+  records.splice(targetIndex, 1)
+
+  Store.set('records', records)
+}
+
+Store.getRecord = function(id) {
+  var requestedRecordObj = Store.get('records').find(function(record) {
     return record.id == id
   })
-  return requestedRecord
+  return requestedRecordObj
 }
 
-export const Store = {
-  appData: JSON.parse(localStorage.getItem(settings.localStorageKey)),
-
-  appDataPresent: function() {
-    return localStorage.hasOwnProperty(settings.localStorageKey)
-  },
-
-  get recordsMaxId() {
-    var maxId = 0
-    this.appData.records.forEach(record => {
-      if (maxId < record.id) {
-        maxId = record.id
-      }
-    })
-    return maxId
-  },
-
-  write: {
-    appData: function(appData) {
-      localStorage.setItem('appData', JSON.stringify(appData))
-    },
-    record: function(submittedRecord) {
-      let appData = { ...Store.appData }
-      submittedRecord = Utils.processRecordFormData(submittedRecord)
-
-      if (submittedRecord.id == 'undefined') {
-        // new
-        submittedRecord.id = Store.recordsMaxId + 1
-        appData.records.push(submittedRecord)
-      } else {
-        // update existing
-        const targetIndex = Store.appData.records.findIndex(el => {
-          return el.id == submittedRecord.id
-        })
-        Store.appData.records[targetIndex] = submittedRecord
-      }
-      localStorage.setItem('appData', JSON.stringify(appData))
-    },
-    delete: function(id) {
-      console.log('delete', id)
-      let appData = { ...Store.appData }
-      const targetIndex = Store.appData.records.findIndex(el => {
-        return el.id == id
-      })
-
-      Store.appData.records.splice(targetIndex, 1)
-
-      localStorage.setItem('appData', JSON.stringify(appData))
+Store.getRecordsMaxId = function() {
+  var maxId = 0
+  Store.get('records').forEach(record => {
+    if (maxId < record.id) {
+      maxId = record.id
     }
-  }
+  })
+  return maxId
 }

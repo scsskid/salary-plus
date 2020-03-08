@@ -17,6 +17,6 @@ var appData = {
   ]
 }
 
-export const app = appData.app
+export const { app, user, records, jobs } = appData
 
 export default appData

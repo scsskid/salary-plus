@@ -1,4 +1,5 @@
 import settings from './data/settings.js'
+import { Store } from './store.js'
 
 export default {
   formatDate: {
@@ -117,7 +118,7 @@ export default {
         timeEnd: this.formatTime(record.end)
       }
     } else if (mode == 'display') {
-      var { jobs } = JSON.parse(localStorage.getItem('appData'))
+      var jobs = Store.get('jobs')
       var job = jobs.find(job => {
         return job.id == record.jobId
       })

@@ -1,10 +1,5 @@
 import RecordsListItem from './RecordsListItem.js'
-import sampleData from '../data/sample-data.js'
-// import Store from './store.js'
-// const sampleData = {}
-
-var { jobs } = sampleData
-
+import { Store } from '../store.js'
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
@@ -16,9 +11,9 @@ export default class RecordsList {
 
   init(container) {
     this.container = container
-    const storedAppData = JSON.parse(localStorage.getItem('appData'))
+    const storedAppData = JSON.parse(localStorage.getItem('sp_'))
 
-    this.state = storedAppData ? { records: storedAppData.records, jobs: storedAppData.jobs } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
+    this.state = Store.get('app') ? { records: Store.get('records'), jobs: Store.get('jobs') } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
   }
 
   render() {
