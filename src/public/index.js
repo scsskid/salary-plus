@@ -1,9 +1,9 @@
 import { Store, StoreFn } from './lib/store.js'
 import Routes from './data/routes.js'
-import Nav from './components/nav.js'
+import Nav from './components/MainNav.js'
 import sampleData from './data/sample-data.js'
-import Toolbar from './components/toolbar.js'
-import Router from './components/router.js'
+import Toolbar from './components/Toolbar.js'
+import Router from './lib/router.js'
 
 // console.log(new StoreFn().appData)
 
@@ -81,7 +81,7 @@ class App {
 
       // console.log(Object.keys(route.params).length)
 
-      import(`./components/${route.moduleFile}`)
+      import(`./components/${route.module}.js`)
         .then(moduleClass => {
           this.prepareMainViewComponent()
           const module = new moduleClass.default(this.viewComponent, state)

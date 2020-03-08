@@ -1,5 +1,5 @@
-import BaseComponent from './base-component.js'
-export default class Nav extends BaseComponent {
+import BaseComponent from './BaseComponent.js'
+export default class MainNav extends BaseComponent {
   render() {
     this.container.innerHTML = `
       <ul class="main-nav-menu" data-nav-menu>

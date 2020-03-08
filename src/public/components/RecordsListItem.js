@@ -1,6 +1,6 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils, { routeDataSetHref } from '../utils.js'
-import RecordTools from './record-tools.js'
+import RecordTools from './RecordTools.js'
 export default class RecordsListItem {
   set state(state) {
     this.stateValue = state

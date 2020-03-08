@@ -1,7 +1,7 @@
-import BaseComponent from './base-component.js'
-import RecordsList from './records-list.js'
-import ButtonRecordNew from './record-button-new.js'
-import Calendar from './calendar.js'
+import BaseComponent from './BaseComponent.js'
+import RecordsList from './RecordsList.js'
+import ButtonRecordNew from './ButtonNewRecord.js'
+import Calendar from './Calendar.js'
 
 export default class Home {
   set state(state) {

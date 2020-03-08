@@ -1,4 +1,4 @@
-import RecordsListItem from './records-list-item.js'
+import RecordsListItem from './RecordsListItem.js'
 import sampleData from '../data/sample-data.js'
 // import Store from './store.js'
 // const sampleData = {}

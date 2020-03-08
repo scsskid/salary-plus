@@ -8,7 +8,7 @@ class Router {
     // Attempt to match the URL to a route.
     const matchedRoute = this._matchUrlToRoute(urlSegments)
 
-    if (matchedRoute.moduleFile != undefined) {
+    if (matchedRoute.module != undefined) {
       console.log('👍FOUND. Module:', matchedRoute)
     } else {
       console.log('👎NOT FOUND')
