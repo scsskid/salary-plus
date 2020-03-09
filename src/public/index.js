@@ -1,4 +1,4 @@
-import { Store, Storage } from './store.js'
+import { Store } from './store.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
 import sampleData from './data/sample-data.js'
@@ -95,7 +95,11 @@ class App {
 
   addEventListeners() {
     document.addEventListener('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
-    document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
+    document.addEventListener('record-delete', deleteRecord) // Main Target: List Item ot others
+
+    function deleteRecord() {
+      Store.deleteRecord(event.detail.id)
+    }
 
     document.addEventListener('save-sample-data', () => {
       localStorage.setItem('sp_app', JSON.stringify(sampleData.app))

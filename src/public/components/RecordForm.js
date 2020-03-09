@@ -1,7 +1,7 @@
 import BaseComponent from './BaseComponent.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import Utils from '../utils.js'
-import { Store, Storage } from '../store.js'
+import { Store } from '../store.js'
 
 // todo: eval populateForm() on stateChange ?
 /*
@@ -25,12 +25,12 @@ class RecordForm extends BaseComponent {
     // If no record prop in state, mode is 'new', otherwise 'edit
     console.log(Storage)
 
-    this.state = { jobs: Storage.jobs, ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
+    this.state = { jobs: Store.get('jobs'), ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
 
     // Defaults
 
     this.defaultFormValues = {
-      jobId: Storage.user.settings.defaultJobId,
+      jobId: Store.get('user').settings.defaultJobId,
       dateBegin: Utils.formatDate.rfc3339(new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00'
@@ -65,10 +65,6 @@ class RecordForm extends BaseComponent {
     this.inputDate.value = this.state.record.dateBegin
     this.inputBeginTime.value = this.state.record.timeBegin
     this.inputEndTime.value = this.state.record.timeEnd
-  }
-
-  log() {
-    console.log('okay')
   }
 
   addEventListeners() {

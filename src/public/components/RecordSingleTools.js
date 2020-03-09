@@ -15,8 +15,8 @@ export default class RecordTools {
 
   render() {
     const markup = `
-      <button class="record-edit" data-href="${window.location.origin}/records/${this.state.id}/edit">Edit Compo</button>
-      <button class="record-delete">0 Delete</button>
+      <button class="record-edit" data-href="${window.location.origin}/records/${this.state.id}/edit">Edit</button>
+      <button class="record-delete">Delete</button>
     `
     this.container.insertAdjacentHTML('beforeend', markup)
     this.addEventListeners()

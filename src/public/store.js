@@ -11,13 +11,7 @@ Store.get = function(key) {
 }
 
 Store.set = function(key, data) {
-  return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data))
-}
-
-export const Storage = {
-  user: { ...Store.get('user') },
-  records: [...Store.get('records')],
-  jobs: [...Store.get('jobs')]
+  return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 }
 
 Store.setRecord = function(submittedRecord) {
@@ -39,13 +33,11 @@ Store.setRecord = function(submittedRecord) {
 }
 
 Store.deleteRecord = function(id) {
-  let records = [...Store.get('records')]
-  console.log('delete', id)
+  const records = [...Store.get('records')]
 
   const targetIndex = records.findIndex(el => {
     return el.id == id
   })
-
   records.splice(targetIndex, 1)
 
   Store.set('records', records)
