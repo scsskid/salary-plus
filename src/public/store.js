@@ -7,7 +7,9 @@ const settings = {
 export function Store() {}
 
 Store.get = function(key) {
-  return JSON.parse(localStorage.getItem(`${settings.localStoragePrefix}${key}`))
+  const item = localStorage.getItem(`${settings.localStoragePrefix}${key}`)
+  const result = item ? JSON.parse(item) : null
+  return result
 }
 
 Store.set = function(key, data) {
