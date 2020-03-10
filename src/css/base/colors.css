@@ -1,13 +1,83 @@
-/* Colors */
-
-:root {
-  --link-color: hsl(47, 82%, 40%)
+/* Colors --------------- */
+@define-mixin commonColorProperties {
+  --hue-main: 228;
+  --hue-accent: 123;
+  --color-active: hsl(var(--hue-main), 50%, 50%);
 }
 
+@define-mixin lightColorProperties {
+  --color-text: hsl(var(--hue-main), 10%, 25%);
+  --color-text--high-contrast: hsl(var(--hue-main), 10%, 5%);
+  --color-text--low-contrast: var(--color-text);
+  --color-background: hsl(var(--hue-main), 7%, 97.5%);
+  --color-background--high-contrast: hsl(220, 20%, 95%);
 
+  /* Button */
+  --button-box-shadow: 0 1px 4px -2px hsla(var(--hue-main), 0%, 2%, 0.4);
+  --button-background-color: white;
+}
+
+@define-mixin darkColorProperties {
+  --color-text: hsl(var(--hue-main), 20%, 80%);
+  --color-text--high-contrast: hsl(var(--hue-main), 20%, 90%);
+  --color-text--low-contrast: hsl(var(--hue-main), 10%, 50%);
+  --color-background: hsl(var(--hue-main), 15%, 12%);
+  --color-background--high-contrast: hsl(220, 20%, 14%);
+
+  /* Button */
+  --button-box-shadow: inset 0 0 0 1px currentColor;
+  --button-background-color: transparent;
+}
+
+html {
+  @mixin commonColorProperties;
+  @mixin lightColorProperties;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    -webkit-font-smoothing: antialiased;
+
+    @mixin darkColorProperties;
+  }
+}
+
+[data-color-theme='dark'] {
+  -webkit-font-smoothing: antialiased;
+
+  @mixin darkColorProperties;
+}
+
+[data-color-theme='light'] {
+  @mixin lightColorProperties;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-background);
+}
 
 a {
-  color: var(--link-color);
+  color: var(--color-link);
+}
+
+.site-branding a {
+  /* color: var(--color-text--low-contrast); */
+}
+
+@media (prefers-color-scheme: dark) {
+  img {
+    opacity: 0.75;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  img:hover {
+    opacity: 1;
+  }
+}
+
+a {
+  color: var(--color-link);
   & .special {
     color: red;
   }
@@ -16,51 +86,20 @@ a {
 button {
   all: unset;
   cursor: pointer;
-  padding: 0rem 1rem; 
+  padding: 0 1rem;
   box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 2px 2px 0 hsl(0, 0%, 90%);
   border-radius: 2px;
 }
 
 button:hover {
-  background: hsla(0, 0%, 100%, .2);
+  background: hsla(0, 0%, 100%, 0.2);
   box-shadow: 0 0 0 1px hsl(0, 0%, 30%), 0 2px 2px 0 hsl(0, 0%, 95%);
 }
 
-
-body {
-  background: #eee;
-  color: #222;
-}
-
 .container {
-  background: #fff;
+  /* background: #fff; */
 }
 
 .main-footer {
   padding-top: 2rem;
-}
-
-@media (prefers-color-scheme: dark) {
-
-  :root {
-    --link-color: hsl(47, 72%, 56%)
-  }
-
-  body {
-    background: #111;
-    color: #ddd;
-  }
-  
-  .container {
-    background: #222;
-  }
-  button {
-    box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
-  }
-  
-  button:hover {
-    background: hsla(0, 0%, 100%, .1);
-    box-shadow: 0 0 0 1px hsl(0, 0%, 100%);
-  }
-  
 }

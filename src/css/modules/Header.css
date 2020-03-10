@@ -1,0 +1,13 @@
+.main-header {
+  padding: 1rem var(--inner-margin);
+  display: flex;
+  flex-direction: column;
+  background: hsl(var(--hue-main), 20%, 20%);
+  color: #fff;
+}
+
+.app-branding {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}

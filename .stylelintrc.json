@@ -1,7 +1,7 @@
 {
   "extends": [
     "stylelint-config-standard",
-    "./node_modules/prettier-stylelint/config.js"
+    "stylelint-config-prettier"
   ],
   "rules": {
     "at-rule-no-unknown": [
@@ -20,6 +20,7 @@
       }
     ],
     "block-no-empty": null,
-    "no-duplicate-selectors": null
+    "no-duplicate-selectors": null,
+    "max-empty-lines": 1
   }
 }

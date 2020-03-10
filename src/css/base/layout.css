@@ -1,0 +1,53 @@
+:root {
+  --inner-margin: 1rem;
+}
+
+/* Grid */
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+[data-main-view] {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ETC */
+
+.container {
+  /* max-width: 34rem;
+  margin-left: auto;
+  margin-right: auto; */
+
+  /*  */
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+section:last-child {
+  margin-bottom: 0;
+}
+
+/* Forms */
+
+input {
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 1px hsl(0, 0%, 80%), inset 0 2px 2px 0 hsl(0, 0%, 96%);
+  padding: 0.25rem 0.5rem;
+  border-radius: 2px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.form-el {
+  margin-bottom: 1rem;
+}

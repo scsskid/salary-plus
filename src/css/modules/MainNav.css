@@ -1,0 +1,16 @@
+[data-main-nav] {
+  /* background: #eee; */
+}
+
+.main-nav-menu {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+}
+
+.main-nav-menu > li {
+  /* margin-right: 0.5rem; */
+  border: 1px solid rebeccapurple;
+}
