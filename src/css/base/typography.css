@@ -1,0 +1,22 @@
+
+/* Typography */
+
+body {
+  font-family: "system-ui";
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, p {
+  margin-top: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+h2 {
+  font-size: 1rem;
+  padding-bottom: .25rem;
+  box-shadow: 0 1px 0 hsl(0, 0%, 90%);
+}

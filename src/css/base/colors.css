@@ -1,0 +1,66 @@
+/* Colors */
+
+:root {
+  --link-color: hsl(47, 82%, 40%)
+}
+
+
+
+a {
+  color: var(--link-color);
+  & .special {
+    color: red;
+  }
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  padding: 0rem 1rem; 
+  box-shadow: 0 0 0 1px hsl(0, 0%, 80%), 0 2px 2px 0 hsl(0, 0%, 90%);
+  border-radius: 2px;
+}
+
+button:hover {
+  background: hsla(0, 0%, 100%, .2);
+  box-shadow: 0 0 0 1px hsl(0, 0%, 30%), 0 2px 2px 0 hsl(0, 0%, 95%);
+}
+
+
+body {
+  background: #eee;
+  color: #222;
+}
+
+.container {
+  background: #fff;
+}
+
+.main-footer {
+  padding-top: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  :root {
+    --link-color: hsl(47, 72%, 56%)
+  }
+
+  body {
+    background: #111;
+    color: #ddd;
+  }
+  
+  .container {
+    background: #222;
+  }
+  button {
+    box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
+  }
+  
+  button:hover {
+    background: hsla(0, 0%, 100%, .1);
+    box-shadow: 0 0 0 1px hsl(0, 0%, 100%);
+  }
+  
+}
