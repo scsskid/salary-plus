@@ -53,7 +53,8 @@ class Router {
       return match // if callback == true find() returns the route
     })
 
-    return { ...matchedRoute, params: routeParams }
+    // Merge Hardcoded Route Params with Get Params
+    return { ...matchedRoute, params: { ...routeParams, ...matchedRoute.params } }
   }
 
   _loadInitialRoute() {

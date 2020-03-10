@@ -4,7 +4,7 @@ export default [
   {
     path: '/',
     module: 'Home',
-    data: { displayRecords: false }
+    params: { displayRecords: false }
   },
   // ? combine /records and /records/:recordsId
   {

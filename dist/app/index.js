@@ -75,7 +75,8 @@ class App {
       // console.log('recieved routeLoad event', event.detail.route)
 
       const route = event.detail.route
-      const state = { ...route.params, ...route.data }
+      // const state = { ...route.params, ...route.data }
+      const state = { ...route.params }
 
       // console.log(Object.keys(route.params).length)
 
