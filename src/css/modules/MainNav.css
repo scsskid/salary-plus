@@ -6,11 +6,36 @@
   list-style: none;
   padding-left: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, calc(25% - 0.1rem));
   justify-content: center;
+
+  /* margin-left: auto;
+  margin-right: auto; */
+
+  /* width: 100%; */
+
+  grid-gap: 0.4rem;
 }
 
 .main-nav-menu > li {
-  /* margin-right: 0.5rem; */
-  border: 1px solid rebeccapurple;
+  border: 1px solid #000;
+}
+
+.main-nav-menu a {
+  /* size: 3rem; */
+  padding: 1.5rem 0.5rem 0.5rem;
+  height: 100%;
+
+  /* padding: 0.5rem; */
+  display: block;
+  background: hsl(var(--hue-main), 20%, 25%);
+
+  /* text-align: center; */
+  border-radius: 4px;
+
+  /* hyphens: auto; */
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

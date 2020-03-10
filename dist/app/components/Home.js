@@ -1,6 +1,8 @@
 import RecordsList from './RecordsList.js'
 import ButtonRecordNew from './ButtonNewRecord.js'
 
+import { dispatchEvent } from './../utils.js'
+
 export default class Home {
   set state(state) {
     this.stateValue = state
@@ -20,10 +22,7 @@ export default class Home {
     
     <header style="margin-bottom: 1rem" data-home-header />
     <section data-home-main>
-      <figure>
-        8000 €<br>
-        week
-      </figure>
+
     </section>
     `
 
@@ -38,6 +37,8 @@ export default class Home {
     }
 
     this.addEventListeners()
+
+    dispatchEvent('render', this.container, { title: 'Overview' })
   }
 
   addEventListeners() {}

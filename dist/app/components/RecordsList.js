@@ -1,5 +1,6 @@
 import RecordsListItem from './RecordsListItem.js'
 import { Store } from '../store.js'
+import { dispatchEvent } from './../utils.js'
 export default class RecordsList {
   set state(state) {
     this.stateValue = state
@@ -34,6 +35,8 @@ export default class RecordsList {
         this.recordsListItem = new RecordsListItem(this.recordsListItemContainer, record)
       })
     }
+
+    dispatchEvent('render', this.container, { title: 'List' })
   }
 
   static markup(records) {

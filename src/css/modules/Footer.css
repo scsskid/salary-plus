@@ -1,7 +1,7 @@
 @import './MainNav.css';
 
 .main-footer {
-  padding: 1rem var(--inner-margin);
+  padding: 0.5rem var(--inner-margin);
   display: flex;
   flex-direction: column;
   background: hsl(var(--hue-main), 20%, 20%);

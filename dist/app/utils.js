@@ -145,6 +145,11 @@ export function route(path) {
   window.dispatchEvent(new CustomEvent('navigate', { detail: { pathname: path } }))
 }
 
+// !todo rewrite ...spread
+export function dispatchEvent(name, target, detail = {}, bubbles = true) {
+  target.dispatchEvent(new CustomEvent(name, { bubbles, detail }))
+}
+
 export function routeDataSetHref(event) {
   event.preventDefault()
   if (event.target.dataset.href) {

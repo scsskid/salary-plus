@@ -4,9 +4,10 @@ module.exports = ctx => ({
   plugins: {
     'postcss-import': { root: ctx.file.dirname },
     'postcss-mixins': {},
+    'postcss-size': {},
     'postcss-preset-env': {
       // browsers: 'last 2 versions',
-      stage: 2, // 0: polyfill all, 4: polyfill none, but polyfill the following features: { 'nesting-rules': true}
+      stage: 0, // 0: polyfill all, 4: polyfill none, but polyfill the following features: { 'nesting-rules': true}
       features: {
         'nesting-rules': true,
         'custom-selectors': true
