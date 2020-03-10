@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent.js.js'
+import BaseComponent from './BaseComponent.js'
 
 class Calendar extends BaseComponent {
   render() {

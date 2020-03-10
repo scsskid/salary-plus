@@ -1,7 +1,7 @@
-import BaseComponent from './BaseComponent.js.js'
+import BaseComponent from './BaseComponent.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
-import Utils from '../utils.js.js'
-import { Store } from '../store.js.js'
+import Utils from '../utils.js'
+import { Store } from '../store.js'
 
 // todo: eval populateForm() on stateChange ?
 /*

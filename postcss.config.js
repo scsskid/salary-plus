@@ -4,10 +4,7 @@ module.exports = ctx => ({
   plugins: {
     // 'postcss-import': { root: ctx.file.dirname },
     'postcss-preset-env': {
-      stage: 0
-      // features: {
-      //   'nesting-rules': true
-      // }
+      stage: 4 // 0: polyfill all, 4: polyfill none, but [features: { 'nesting-rules': true}]
     },
     cssnano: ctx.env === 'production' ? {} : false
   }

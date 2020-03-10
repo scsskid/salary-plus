@@ -1,5 +1,5 @@
-import settings from './data/settings.js.js'
-import { Store } from './store.js.js'
+import settings from './data/settings.js'
+import { Store } from './store.js'
 
 export default {
   formatDate: {

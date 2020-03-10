@@ -9,6 +9,8 @@
   --link-color: hsl(47, 82%, 40%)
 }
 
+
+
 /* Colors */
 a {
   color: var(--link-color);

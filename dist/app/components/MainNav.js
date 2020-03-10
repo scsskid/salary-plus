@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent.js.js'
+import BaseComponent from './BaseComponent.js'
 export default class MainNav extends BaseComponent {
   render() {
     this.container.innerHTML = `

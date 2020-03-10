@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "css": "postcss src/css --dir dist/css --base src/css --watch",
-    "start": "run-p serve:light",
+    "start": "run-p css serve:light",
     "build": "npm run css",
     "serve:express": "node server.js",
     "serve:light": "light-server -c .lightserverrc",
