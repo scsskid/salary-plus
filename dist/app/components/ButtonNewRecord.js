@@ -1,4 +1,4 @@
-import { routeDataSetHref } from '../utils.js'
+import { routeDataSetHref } from '../utils.js.js'
 
 export default class ButtonRecordNew {
   set state(state) {

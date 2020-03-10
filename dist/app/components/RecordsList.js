@@ -1,5 +1,5 @@
-import RecordsListItem from './RecordsListItem.js'
-import { Store } from '../store.js'
+import RecordsListItem from './RecordsListItem.js.js'
+import { Store } from '../store.js.js'
 export default class RecordsList {
   set state(state) {
     this.stateValue = state

@@ -1,5 +1,5 @@
-import RecordsList from './RecordsList.js'
-import ButtonRecordNew from './ButtonNewRecord.js'
+import RecordsList from './RecordsList.js.js'
+import ButtonRecordNew from './ButtonNewRecord.js.js'
 
 export default class Home {
   set state(state) {

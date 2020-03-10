@@ -1,6 +1,6 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
-import utils from '../utils.js'
-import { Store } from '../store.js'
+import utils from '../utils.js.js'
+import { Store } from '../store.js.js'
 
 export default class Record {
   set state(state) {

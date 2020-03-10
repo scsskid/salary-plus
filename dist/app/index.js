@@ -1,9 +1,9 @@
-import { Store } from './store.js'
-import Routes from './data/routes.js'
-import Nav from './components/MainNav.js'
-import sampleData from './data/sample-data.js'
-import Toolbar from './components/Toolbar.js'
-import Router from './router.js'
+import { Store } from './store.js.js'
+import Routes from './data/routes.js.js'
+import Nav from './components/MainNav.js.js'
+import sampleData from './data/sample-data.js.js'
+import Toolbar from './components/Toolbar.js.js'
+import Router from './router.js.js'
 
 // console.log(new StoreFn().appData)
 

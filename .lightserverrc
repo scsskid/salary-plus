@@ -1,15 +1,15 @@
 {
   "port": 4000,
   // "proxy": "http://localhost:8080",
-  "serve": "src",
+  "serve": "dist",
   "bind": "0.0.0.0",
   "delay": 0,
   "quiet": true,
   "watchexps": [
-    "src/**/*.js",
-    "src/assets/css/**/*.css # # reloadcss",
-    "src/**/*.html",
-    "src/images/"
+    "dist/**/*.js",
+    "dist/assets/css/**/*.css # # reloadcss",
+    "dist/**/*.html",
+    "dist/images/"
   ],
   "http2": false,
   "open": false,

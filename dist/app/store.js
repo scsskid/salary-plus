@@ -1,4 +1,4 @@
-import Utils from './utils.js'
+import Utils from './utils.js.js'
 
 const settings = {
   localStoragePrefix: 'sp_'
