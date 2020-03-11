@@ -5,6 +5,10 @@ class Calendar extends BaseComponent {
     this.container = container
     this.state = state
 
+    this.state = {
+      inputDate: '1966-04'
+    }
+
     this.createCalendar = createCalendar
   }
 
@@ -22,15 +26,15 @@ class Calendar extends BaseComponent {
         }
       </style>
       <section data-calendar>
-        <h2>Cal</h2>
+        <h2>Year: ${this.state.inputDate.split('-')[0]} / Month: ${this.state.inputDate.split('-')[1]}</h2>
       </section>
     `
 
     this.calendar = this.container.querySelector('[data-calendar]')
 
     // Construct Cal
-    const date = new Date()
-    this.createCalendar(date.getFullYear(), date.getMonth())
+    const inputDate = new Date(this.state.inputDate || null) // new Date(null) == now
+    this.createCalendar(inputDate.getFullYear(), inputDate.getMonth())
   }
 }
 
