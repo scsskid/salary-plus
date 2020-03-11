@@ -79,17 +79,16 @@ class App {
 
       // console.log(Object.keys(route.params).length)
 
-      import(`./components/${route.module}.js`)
-        .then(moduleClass => {
-          this.prepareMainViewComponent()
-          const module = new moduleClass.default(this.viewComponent, state)
+      import(`./components/${route.module}.js`).then(moduleClass => {
+        this.prepareMainViewComponent()
+        const module = new moduleClass.default(this.viewComponent, state)
 
-          // console.log('module:', module, 'state:', state)
-          module.render()
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        console.log('module:', module, 'state:', state)
+        // module.render()
+      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
     })
 
     window.addEventListener('render', event => {

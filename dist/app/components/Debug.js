@@ -1,21 +1,7 @@
-import RecordsList from './RecordsList.js'
-
+import BaseComponent from './BaseComponent.js'
 import { dispatchEvent } from './../utils.js'
 
-export default class Debug {
-  set state(state) {
-    this.stateValue = state
-  }
-
-  get state() {
-    return this.stateValue
-  }
-
-  init(container, state) {
-    this.container = container
-    this.state = state
-  }
-
+class Debug extends BaseComponent {
   render() {
     this.container.innerHTML = ''
 
@@ -40,7 +26,9 @@ export default class Debug {
     })
   }
 
-  constructor(container, state) {
-    this.init(container, state)
+  constructor(container) {
+    super(container)
   }
 }
+
+export default Debug

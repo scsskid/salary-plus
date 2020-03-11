@@ -1,18 +1,13 @@
 import BaseComponent from './BaseComponent.js'
 
 class Calendar extends BaseComponent {
-  init(container, state) {
-    this.container = container
-    this.state = state
+  render() {
+    const inputDate = this.state.inputDate !== undefined ? new Date(this.state.inputDate) : new Date() // new Date(null) == now
 
-    this.state = {
-      inputDate: '1966-04'
-    }
+    console.log('CAL inputDate', inputDate)
+    // console.log(inputDate.toLocaleDateString('en', { month: 'long' }))
 
     this.createCalendar = createCalendar
-  }
-
-  render() {
     this.container.innerHTML = `
       <style>
         [data-calendar] table {
@@ -26,15 +21,15 @@ class Calendar extends BaseComponent {
         }
       </style>
       <section data-calendar>
-        <h2>Year: ${this.state.inputDate.split('-')[0]} / Month: ${this.state.inputDate.split('-')[1]}</h2>
+        <p>Year: ${inputDate.getFullYear()} / Month: ${inputDate.toLocaleDateString('en', { month: '2-digit' })}</p>
       </section>
     `
 
     this.calendar = this.container.querySelector('[data-calendar]')
 
     // Construct Cal
-    const inputDate = new Date(this.state.inputDate || null) // new Date(null) == now
-    this.createCalendar(inputDate.getFullYear(), inputDate.getMonth())
+
+    this.createCalendar(inputDate)
   }
 }
 
@@ -42,13 +37,23 @@ export default Calendar
 
 // Calendar Helper Functions
 
-function createCalendar(year, month) {
-  const inputDate = new Date(year, month)
+function createCalendar(inputDate) {
+  // const inputDate = new Date(date)
+  console.log('create Cal Fn', inputDate)
+
   // save firstWeekDay Int (Sun to Sat) to check for later
   // and Adjust that Mon = 0
-  const firstDay = (inputDate.getDay() + 6) % 7 // Mo = 0; Sun = 6
 
-  console.log(year, month, firstDay)
+  {
+    const copyDate = new Date(inputDate.getTime())
+    copyDate.setDate(1)
+    console.log(copyDate)
+
+    var firstDay = (copyDate.getDay() + 6) % 7 // Mo = 0; Sun = 6
+    console.log((inputDate.getDay() + 6) % 7)
+  }
+
+  // console.log(year, month, firstDay)
 
   const table = createTableOuter()
 
@@ -59,7 +64,7 @@ function createCalendar(year, month) {
 
     // Create Rows
     for (let j = 0; j < 7; j++) {
-      console.log(j)
+      // console.log(j)
 
       const cell = document.createElement('td')
       let cellText
@@ -67,9 +72,8 @@ function createCalendar(year, month) {
       // check if is first row, and interationCount is less than firstDay
       // todo: fill with last month dates
       if (i == 0 && j < firstDay) {
-        console.log('empty')
         cellText = document.createTextNode('😴')
-      } else if (date > daysInMonth(year, month)) {
+      } else if (date > daysInMonth(inputDate)) {
         cellText = document.createTextNode('😱')
       } else {
         cellText = document.createTextNode(date)
@@ -101,6 +105,8 @@ function createTableOuter() {
   return table
 }
 
-function daysInMonth(iYear, iMonth) {
-  return 32 - new Date(iYear, iMonth, 32).getDate()
+function daysInMonth(date) {
+  console.log('daysInMonth Fn', date.getMonth())
+
+  return 32 - new Date(date.getFullYear(), date.getMonth(), 32).getDate()
 }

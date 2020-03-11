@@ -1,20 +1,11 @@
 import RecordsListItem from './RecordsListItem.js'
+import BaseComponent from './BaseComponent.js'
 import { Store } from '../store.js'
 import { dispatchEvent } from './../utils.js'
 
-export default class RecordsList {
-  set state(state) {
-    this.stateValue = state
-  }
-
-  get state() {
-    return this.stateValue
-  }
-
+class RecordsList extends BaseComponent {
   init(container) {
     this.container = container
-    const storedAppData = JSON.parse(localStorage.getItem('sp_'))
-
     this.state = Store.get('app') ? { records: Store.get('records'), jobs: Store.get('jobs') } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
   }
 
@@ -47,6 +38,8 @@ export default class RecordsList {
   }
 
   constructor(container) {
-    this.init(container)
+    super(container)
   }
 }
+
+export default RecordsList

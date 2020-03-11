@@ -6,6 +6,10 @@ class Calendar extends BaseComponent {
 
     dispatchEvent('render', this.container, { title: 'Settings' })
   }
+
+  constructor(container) {
+    super(container)
+  }
 }
 
 export default Calendar

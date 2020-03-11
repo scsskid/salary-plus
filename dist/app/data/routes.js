@@ -3,8 +3,8 @@ export default [
   // ? e.g.:  modules: [ { container: this.header, file: 'special-header.js', state: { displaySth: true } }, { container: this.mainView, file: 'records-list.js' } ]
   {
     path: '/',
-    module: 'Home',
-    params: { displayRecords: false }
+    module: 'Home'
+    // params: { displayRecords: false }
   },
   // ? combine /records and /records/:recordsId
   {
