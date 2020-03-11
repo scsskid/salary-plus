@@ -8,12 +8,12 @@ var appData = {
     { id: 4, jobId: 1, begin: '2020-02-10T14:30:00.000Z', end: '2020-02-10T22:22:00.000Z' },
     { id: 5, jobId: 2, begin: '2020-03-02T01:44:00.000Z', end: '2020-03-02T01:44:00.000Z' },
     { id: 6, jobId: 2, begin: '2020-03-02T01:44:00.000Z', end: '2020-03-02T01:44:00.000Z' },
-    { id: 7, jobId: 1, begin: '2020-03-02T01:46:00.000Z', end: '2020-03-02T01:46:00.000Z' }
+    { id: 7, jobId: 1, begin: '2020-03-02T01:46:00.000Z', end: '2020-03-02T01:46:00.000Z', bonus: 27.5 }
   ],
   jobs: [
     { id: 1, name: 'Bundesnachrichtendienst', rate: 88.5, interval: 'hourly' },
-    { id: 2, name: 'Palsta Old', rate: 13.5, interval: 'hourly' },
-    { id: 3, name: 'Palsta', rate: 15.5, interval: 'hourly' }
+    { id: 2, name: 'Palsta', rate: 13.5, interval: 'hourly' },
+    { id: 3, name: 'Palsta Fake', rate: 15.5, interval: 'hourly' }
   ]
 }
 
