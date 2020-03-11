@@ -10,6 +10,11 @@ class Home extends BaseComponent {
 
   render() {
     this.container.innerHTML = `
+      <style>
+        [data-calendar-controls] button {
+          touch-action: manipulation;
+        }
+      </style>
       <div data-calendar-controls>
         <button data-month-decrease>prev</button>
         <button data-month-increase>next</button>
