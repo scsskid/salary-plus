@@ -6,6 +6,7 @@ class Home extends BaseComponent {
   init(container, state) {
     this.container = container
     this.state = state
+    this.calendarContainer = this.container.querySelector('[data-home-calendar]')
   }
 
   render() {
@@ -38,6 +39,10 @@ class Home extends BaseComponent {
       } else if ('monthReset' in event.target.dataset) {
         this.calendar.state = { ...this.calendar.state, inputDate: new Date() }
       }
+    })
+
+    this.container.addEventListener('click', event => {
+      console.log(event.target)
     })
   }
 

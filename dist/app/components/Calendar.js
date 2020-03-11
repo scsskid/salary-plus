@@ -72,6 +72,8 @@ function createCalendar(inputDate) {
       } else if (date > daysInMonth(inputDate)) {
         cellText = document.createTextNode('😱')
       } else {
+        console.log(inputDate)
+
         cellText = document.createElement('span')
         cellText.appendChild(document.createTextNode(date))
 
