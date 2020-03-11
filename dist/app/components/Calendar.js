@@ -16,7 +16,9 @@ class Calendar extends BaseComponent {
         }
 
         [data-calendar] td {
-          background: #EEE;
+          border: 1px dotted hsla(208, 20%, 20%, .8);
+          text-align: center;
+          width: calc(100% / 7);
         }
       </style>
       <section data-calendar>
@@ -26,12 +28,8 @@ class Calendar extends BaseComponent {
 
     this.calendar = this.container.querySelector('[data-calendar]')
 
-    // const firstDay = new Date(year, month).getDay()
-
     // Construct Cal
-
     const date = new Date()
-
     this.createCalendar(date.getFullYear(), date.getMonth())
   }
 }
