@@ -83,7 +83,7 @@ class App {
         this.prepareMainViewComponent()
         const module = new moduleClass.default(this.viewComponent, state)
 
-        console.log('module:', module, 'state:', state)
+        // console.log('module:', module, 'state:', state)
         // module.render()
       })
       // .catch(err => {
@@ -92,7 +92,7 @@ class App {
     })
 
     window.addEventListener('render', event => {
-      console.log(event)
+      // console.log(event)
       document.querySelector('[data-view-title]').innerHTML = event.detail.title
     })
   }
