@@ -1,6 +1,7 @@
 import RecordsListItem from './RecordsListItem.js'
 import { Store } from '../store.js'
 import { dispatchEvent } from './../utils.js'
+
 export default class RecordsList {
   set state(state) {
     this.stateValue = state

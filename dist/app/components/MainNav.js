@@ -3,10 +3,11 @@ export default class MainNav extends BaseComponent {
   render() {
     this.container.innerHTML = `
       <ul class="main-nav-menu" data-nav-menu>
-        <li><a data-nav-target="home" href="${window.location.origin}/">Overview</a></li>
-        <li><a data-nav-target="records" href="${window.location.origin}/records">List</a></li>
-        <li><a data-nav-target="settings" href="${window.location.origin}/settings">Settings</a></li>
-        <li><a data-nav-target="debug" href="${window.location.origin}/debug">Debug</a></li>
+        <li><a href="${window.location.origin}/">Overview</a></li>
+        <li><a href="${window.location.origin}/records">List</a></li>
+        <li><a href="${window.location.origin}/records/new">Add</a></li>
+        <li><a href="${window.location.origin}/settings">Settings</a></li>
+        <li><a href="${window.location.origin}/debug">Debug</a></li>
       </ul>
     `
 

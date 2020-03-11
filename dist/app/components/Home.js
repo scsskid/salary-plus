@@ -1,6 +1,4 @@
-import RecordsList from './RecordsList.js'
-import ButtonRecordNew from './ButtonNewRecord.js'
-
+import Calendar from './Calendar.js'
 import { dispatchEvent } from './../utils.js'
 
 export default class Home {
@@ -19,29 +17,13 @@ export default class Home {
 
   render() {
     this.container.innerHTML = `
-    
-    <header style="margin-bottom: 1rem" data-home-header />
-    <section data-home-main>
-
-    </section>
+      <section data-home-calendar></section>
     `
 
-    new ButtonRecordNew(this.container.querySelector('[data-home-header]'))
-    // new Calendar(this.container.querySelector('[data-home-main]'))
-
-    // New Records List
-    if (this.state.displayRecords) {
-      var recordsListContainer = document.createElement('section')
-      new RecordsList(recordsListContainer, {}).render()
-      this.container.appendChild(recordsListContainer)
-    }
-
-    this.addEventListeners()
+    new Calendar(this.container.querySelector('[data-home-calendar]')).render()
 
     dispatchEvent('render', this.container, { title: 'Overview' })
   }
-
-  addEventListeners() {}
 
   constructor(container, state) {
     this.init(container, state)
