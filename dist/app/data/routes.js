@@ -26,5 +26,9 @@ export default [
   {
     path: '/settings',
     module: 'Settings'
+  },
+  {
+    path: '/debug',
+    module: 'Debug'
   }
 ]

@@ -2,7 +2,6 @@ import { Store } from './store.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
 import sampleData from './data/sample-data.js'
-import Toolbar from './components/Toolbar.js'
 import Router from './router.js'
 
 // console.log(new StoreFn().appData)
@@ -42,7 +41,6 @@ class App {
 
     // todo: resolve single compoenents like toolbar in parent component like footer
     new Nav(this.navContainer).render()
-    // new Toolbar(document.querySelector('[data-toolbar]'))
 
     window.addEventListener('popstate', onPopState.bind(this))
     window.addEventListener('navigate', onNavigate.bind(this))
@@ -113,7 +111,10 @@ class App {
       localStorage.setItem('sp_user', JSON.stringify(sampleData.user))
       localStorage.setItem('sp_records', JSON.stringify(sampleData.records))
       localStorage.setItem('sp_jobs', JSON.stringify(sampleData.jobs))
-      this.render()
+    })
+
+    document.addEventListener('clear-storage', () => {
+      localStorage.clear()
     })
   }
 
