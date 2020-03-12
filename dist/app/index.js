@@ -28,13 +28,15 @@ class App {
     this.fixHeight()
   }
 
-  prepareMainViewComponent() {
-    if (this.viewComponent) {
-      this.viewComponent.remove()
-    }
-    this.viewComponent = this.mainViewContainer.appendChild(document.createElement('div'))
-    this.viewComponent.dataset.viewComponent = ''
-  }
+  // prepareMainViewComponent() {
+  //   if (this.viewComponent) {
+  //     console.log(this.viewComponent, this.viewComponent.dataset.ref)
+  //     // this.viewComponent.remove()
+  //     this.viewComponent.style.display = 'none'
+  //   }
+  //   this.viewComponent = this.mainViewContainer.appendChild(document.createElement('div'))
+  //   this.viewComponent.dataset.viewComponent = ''
+  // }
 
   render() {
     this.mainViewContainer.innerHTML = ''
@@ -71,21 +73,53 @@ class App {
     }
 
     window.addEventListener('routeLoad', event => {
-      // console.log('recieved routeLoad event', event.detail.route)
-
       const route = event.detail.route
-      // const state = { ...route.params, ...route.data }
       const state = { ...route.params }
+      const viewComponents = document.querySelectorAll('[data-view-component]')
+      console.log('requesting', route.module)
+      console.log(viewComponents.length + ' view Components present ')
 
-      // console.log(Object.keys(route.params).length)
+      if (viewComponents) {
+        viewComponents.forEach(el => {
+          console.log('hiding... ', el)
+
+          el.style.display = 'none'
+        })
+      }
+
+      {
+      }
 
       import(`./components/${route.module}.js`).then(moduleClass => {
-        this.prepareMainViewComponent()
-        const module = new moduleClass.default(this.viewComponent, state)
+        // ! move code outside of import
+
+        // look for existing
+        const existingContainer = Array.from(viewComponents).find(el => {
+          return (el.dataset.module = route.module)
+        })
+
+        console.log(existingContainer)
+        {
+          let moduleContainer
+          if (typeof existingContainer === 'undefined') {
+            this.viewComponent = document.createElement('div')
+            this.viewComponent.dataset.viewComponent = route.module
+            this.viewComponent.dataset.module = route.module
+            // ? append after instanciation, not before?
+            this.mainViewContainer.appendChild(this.viewComponent)
+            moduleContainer = this.viewComponent
+            const module = new moduleClass.default(moduleContainer, state)
+          } else {
+            moduleContainer = existingContainer
+            existingContainer.style.display = 'block'
+          }
+        }
+        // new instance
 
         // console.log('module:', module, 'state:', state)
         // module.render()
       })
+
       // .catch(err => {
       //   console.log(err)
       // })

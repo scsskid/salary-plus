@@ -72,7 +72,7 @@ function createCalendar(inputDate) {
       } else if (date > daysInMonth(inputDate)) {
         cellText = document.createTextNode('😱')
       } else {
-        console.log(inputDate)
+        // console.log(inputDate)
 
         cellText = document.createElement('span')
         cellText.dataset.dateString = `${inputDate.getFullYear()}-${inputDate.getMonth() + 1}-${date}`
