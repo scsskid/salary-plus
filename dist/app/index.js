@@ -44,33 +44,8 @@ class App {
     // todo: resolve single compoenents like toolbar in parent component like footer
     new Nav(this.navContainer).render()
 
-    window.addEventListener('popstate', onPopState.bind(this))
-    window.addEventListener('navigate', onNavigate.bind(this))
-
-    function onPopState() {
-      console.log(this, 'onPopstate sync wlp', window.location.pathname)
-
-      //! todo: refactor
-      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
-      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-
-      this.router.loadRoute(pathSegments)
-    }
-
-    function onNavigate(event) {
-      window.history.pushState({}, '', event.detail.pathname)
-      // console.log('onNavigateSync wlp', window.location.pathname)
-
-      // ! todo: refactor
-      const pathnameSplit = window.location.pathname.toLowerCase().split('/')
-      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-
-      this.router.loadRoute(pathSegments)
-
-      // catch the moment when the new document state is already fully in place
-      // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
-      // setTimeout(event => {}, 0)
-    }
+    window.addEventListener('popstate', this.onNavigate.bind(this))
+    window.addEventListener('navigate', this.onNavigate.bind(this))
 
     window.addEventListener('routeLoad', event => {
       const route = event.detail.route
@@ -87,16 +62,14 @@ class App {
         })
       }
 
-      {
-      }
+      const existingContainer = Array.from(viewComponents).find(el => {
+        return (el.dataset.module = route.module)
+      })
 
       import(`./components/${route.module}.js`).then(moduleClass => {
         // ! move code outside of import
 
         // look for existing
-        const existingContainer = Array.from(viewComponents).find(el => {
-          return (el.dataset.module = route.module)
-        })
 
         console.log(existingContainer)
         {
@@ -167,6 +140,23 @@ class App {
       let vh = window.innerHeight * 0.01
       document.documentElement.style.setProperty('--vh', `${vh}px`)
     })
+  }
+
+  onNavigate(event) {
+    if (event.detail && event.detail.pathname) {
+      window.history.pushState({}, '', event.detail.pathname)
+    }
+    // console.log('onNavigateSync wlp', window.location.pathname)
+
+    // ! todo: refactor
+    const pathnameSplit = window.location.pathname.toLowerCase().split('/')
+    const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
+
+    this.router.loadRoute(pathSegments)
+
+    // catch the moment when the new document state is already fully in place
+    // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
+    // setTimeout(event => {}, 0)
   }
 }
 
