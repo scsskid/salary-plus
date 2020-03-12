@@ -75,6 +75,7 @@ function createCalendar(inputDate) {
         console.log(inputDate)
 
         cellText = document.createElement('span')
+        cellText.dataset.dateString = `${inputDate.getFullYear()}-${inputDate.getMonth() + 1}-${date}`
         cellText.appendChild(document.createTextNode(date))
 
         if (date == dateNow.getDate() && inputDate.getFullYear() == dateNow.getFullYear() && inputDate.getMonth() == dateNow.getMonth()) {
