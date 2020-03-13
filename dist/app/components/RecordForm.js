@@ -19,8 +19,8 @@ class RecordForm extends BaseComponent {
     return this.stateValue
   }
 
-  init(container, state) {
-    this.container = container
+  init(tag, state) {
+    this.container = document.createElement(tag)
 
     // If no record prop in state, mode is 'new', otherwise 'edit
     console.log(Storage)
@@ -99,7 +99,7 @@ class RecordForm extends BaseComponent {
       // this.container.dataset.ref = undefined
       // this.container.innerHTML = ''
       console.log(this.container)
-      this.init(this.container, { record: this.defaultFormValues })
+      this.init('div', { record: this.defaultFormValues })
 
       // var newForm = new RecordForm(this.container, { record: formDataTransport })
       // console.log(newForm)
@@ -149,8 +149,8 @@ class RecordForm extends BaseComponent {
     `
   }
 
-  constructor(container, state) {
-    super(container, state)
+  constructor(tag, state) {
+    super(tag, state)
   }
 }
 

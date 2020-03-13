@@ -16,11 +16,10 @@ class App {
 
   init(container) {
     this.container = container
-    this.navContainer = this.container.querySelector('[data-main-nav]')
+    this.mainFooter = this.container.querySelector('[data-main-footer]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
-
-    this.viewComponents = []
+    this.moduleRegistry = []
     this.router = new Router(Routes)
 
     this.addEventListeners()
@@ -31,7 +30,8 @@ class App {
     this.mainViewContainer.innerHTML = ''
 
     // todo: resolve single compoenents like toolbar in parent component like footer
-    new Nav(this.navContainer)
+    this.mainFooter.appendChild(new Nav('main-navigation').container)
+
     window.addEventListener('popstate', this.onNavigate.bind(this))
     window.addEventListener('navigate', this.onNavigate.bind(this))
 
@@ -56,40 +56,31 @@ class App {
   onRouteLoad(event) {
     const route = event.detail.route
     const state = { ...route.params }
-    const viewComponents = this.viewComponents
 
     // has this type of module already a container registered?
     console.log('--- NEW Route Load ---')
-    console.log('existing Modules', this.viewComponents.length, this.viewComponents)
 
-    const existingContainer = this.viewComponents.find(viewComponentsEl => {
-      return viewComponentsEl.dataset.module == route.module
+    const existingModule = this.moduleRegistry.find(moduleRegistryEl => {
+      return moduleRegistryEl.id == route.module
     })
 
-    // ! disconnect existing (examin if state is preserved eg calendar month)
-    // or even push modules in regsitry instead of containsers
-    // create (inner) containers mit refs inside module
-    this.hideAllViewComponents(viewComponents)
+    console.log('existing?', existingModule)
 
-    // todo insert 'loading' or spinner
+    document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
+      el.remove()
+    })
 
-    if (typeof existingContainer === 'undefined') {
-      // No Existing found in viewComponents; Create New Container
-      var moduleContainer = document.createElement('div')
-      moduleContainer.dataset.module = route.module
-      this.viewComponents.push(moduleContainer)
-
-      // insert module container into DOM
-      this.mainViewContainer.appendChild(moduleContainer)
-
+    if (typeof existingModule === 'undefined') {
       import(`./components/${route.module}.js`).then(moduleClass => {
-        // todo remove spinner
-        new moduleClass.default(moduleContainer, state)
+        const importedModule = new moduleClass.default('div', state)
+        importedModule.id = route.module // toString() ?
+        this.moduleRegistry.push(importedModule)
+        this.mainViewContainer.append(importedModule.container)
+
+        console.log('ModuleRegistry', this.moduleRegistry.length, this.moduleRegistry)
       })
     } else {
-      // Use Existing COntainer from viewComponents Array
-      // ! re append (src componentrregsistry)
-      existingContainer.style.display = 'block'
+      this.mainViewContainer.appendChild(existingModule.container)
     }
   }
 
@@ -113,7 +104,7 @@ class App {
   hideAllViewComponents(DOMList) {
     if (DOMList.length > 0) {
       DOMList.forEach(el => {
-        el.style.display = 'none'
+        el.remove()
       })
     }
   }

@@ -4,8 +4,8 @@ import { Store } from '../store.js'
 import { dispatchEvent } from './../utils.js'
 
 class RecordsList extends BaseComponent {
-  init(container) {
-    this.container = container
+  init(tag, state) {
+    this.container = document.createElement(tag)
     this.state = Store.get('app') ? { records: Store.get('records'), jobs: Store.get('jobs') } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
   }
 
@@ -36,8 +36,8 @@ class RecordsList extends BaseComponent {
       <div class="records-list"></div>`
   }
 
-  constructor(container) {
-    super(container)
+  constructor(container, tag) {
+    super(container, tag)
   }
 }
 

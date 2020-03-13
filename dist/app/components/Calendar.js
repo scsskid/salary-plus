@@ -1,8 +1,8 @@
 import BaseComponent from './BaseComponent.js'
 
 class Calendar extends BaseComponent {
-  init(container, state) {
-    this.container = container
+  init(tag, state) {
+    this.container = document.createElement(tag)
     this.state = { ...state, inputDate: state.inputDate !== undefined ? new Date(state.inputDate) : new Date() }
   }
 
@@ -34,8 +34,8 @@ class Calendar extends BaseComponent {
 
     this.createCalendar(inputDate)
   }
-  constructor(container, state) {
-    super(container, state)
+  constructor(tag, state) {
+    super(tag, state)
   }
 }
 

@@ -3,19 +3,15 @@ import Calendar from './Calendar.js'
 import { dispatchEvent } from './../utils.js'
 
 class Home extends BaseComponent {
-  init(container, state) {
-    this.container = container
-    this.state = state
-    this.calendarContainer = this.container.querySelector('[data-home-calendar]')
-  }
-
   render() {
+    this.container.dataset.render = 'true'
     this.container.innerHTML = `
       <style>
         [data-calendar-controls] button {
           touch-action: manipulation;
         }
       </style>
+      
       <div data-calendar-controls>
         <button data-month-decrease>prev</button>
         <button data-month-increase>next</button>
@@ -24,7 +20,8 @@ class Home extends BaseComponent {
       <section data-home-calendar></section>
     `
     // this.calendar = new Calendar(this.container.querySelector('[data-home-calendar]'), { inputDate: '1999-12' })
-    this.calendar = new Calendar(this.container.querySelector('[data-home-calendar]'), {})
+    this.calendar = new Calendar('calendar-tag', {})
+    this.container.appendChild(this.calendar.container)
     dispatchEvent('render', this.container, { title: 'Overview' })
     this.addEventListeners()
   }
@@ -46,8 +43,8 @@ class Home extends BaseComponent {
     })
   }
 
-  constructor(container, state) {
-    super(container, state)
+  constructor(tag, state) {
+    super(tag, state)
   }
 }
 

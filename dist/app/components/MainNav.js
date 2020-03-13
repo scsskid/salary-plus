@@ -32,7 +32,7 @@ export default class MainNav extends BaseComponent {
 
   addEventListeners() {}
 
-  constructor(container, state) {
-    super(container, state)
+  constructor(tag, state) {
+    super(tag, state)
   }
 }

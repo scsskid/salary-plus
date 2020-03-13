@@ -8,26 +8,17 @@ export default class BaseComponent {
     return this.stateValue
   }
 
-  init(container, state) {
-    this.container = container
+  init(tag, state) {
+    console.log(tag, state)
+
+    this.container = document.createElement(tag)
     this.state = state
+    this.refs = {}
   }
   render() {
     console.error('no render specified')
   }
-  constructor(container, state) {
-    // The constructor should only contain the boiler plate code for finding or creating the reference.
-    if (typeof container.dataset.ref === 'undefined') {
-      // console.log('constructur call of ', this)
-      this.ref = Math.random()
-      BaseComponent.refs[this.ref] = this
-      container.dataset.ref = this.ref
-      this.init(container, state)
-    } else {
-      // If this element has already been instantiated, use the existing reference.
-      return BaseComponent.refs[container.dataset.ref]
-    }
+  constructor(tag, state) {
+    this.init(tag, state)
   }
 }
-
-BaseComponent.refs = {}
