@@ -1,0 +1,27 @@
+/* Typography */
+
+@custom-selector :--heading h1, h2, h3, h4, h5, h6;
+@custom-selector :--typographic :--heading, p, ul, figure;
+
+/* 
+   General
+   .................................
+*/
+
+body {
+  font-family: 'system-ui';
+  line-height: 1.5;
+}
+
+:--typographic {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+:--typographic:last-child {
+  margin-bottom: 0;
+}
+
+:--heading {
+  font-size: 1.2rem;
+}

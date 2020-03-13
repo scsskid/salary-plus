@@ -1,0 +1,33 @@
+/* Records List Section */
+
+.records h2 {
+  display: flex;
+}
+
+[data-records-list-count] {
+  margin-left: auto;
+}
+
+.records-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.records-list-item {
+  /* display: flex; */
+  box-shadow: 0 1px 0 hsl(0, 0%, 90%);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.record-header h3 {
+  margin-bottom: 0.5rem;
+}
+
+.records-list-item:last-child {
+  box-shadow: none;
+}
+
+.record-time-elapsed {
+  opacity: 0.5;
+}

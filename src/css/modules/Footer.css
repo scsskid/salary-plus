@@ -1,0 +1,9 @@
+@import './MainNav.css';
+
+.main-footer {
+  padding: 0.5rem var(--inner-margin);
+  display: flex;
+  flex-direction: column;
+  background: hsl(var(--hue-main), 20%, 20%);
+  color: #fff;
+}

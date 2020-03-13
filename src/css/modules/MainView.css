@@ -1,0 +1,3 @@
+[data-main-view] > * {
+  padding: 1rem var(--inner-margin);
+}

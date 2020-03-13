@@ -1,15 +1,17 @@
 {
- "port": 4000,
- "serve": "src",
- "bind": "0.0.0.0",
- "delay": 100,
- "quiet": true,
- "watchexps": [
-    "src/**/*.js",
-    "src/assets/css/**/*.css # # reloadcss",
-    "src/**/*.html",
-    "src/images/"
- ],
- "http2": false,
- "open": false
+  "port": 4000,
+  // "proxy": "http://localhost:8080",
+  "serve": "dist",
+  "bind": "0.0.0.0",
+  "delay": 100,
+  "quiet": true,
+  "watchexps": [
+    "dist/**/*.js",
+    "dist/css/**/*.css # # reloadcss",
+    "dist/**/*.html",
+    "dist/images/"
+  ],
+  "http2": false,
+  "open": false,
+  "historyindex": "/index.html"
 }
