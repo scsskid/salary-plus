@@ -84,6 +84,7 @@ class App {
       import(`./components/${route.module}.js`).then(moduleClass => {
         // todo remove spinner
         new moduleClass.default(moduleContainer, state)
+        // push new Module() to registry
       })
     } else {
       this.mainViewContainer.appendChild(existingContainer)

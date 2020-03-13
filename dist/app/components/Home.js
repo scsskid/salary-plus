@@ -6,7 +6,6 @@ class Home extends BaseComponent {
   init(container, state) {
     this.container = container
     this.state = state
-    this.calendarContainer = this.container.querySelector('[data-home-calendar]')
   }
 
   render() {
