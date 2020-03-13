@@ -68,6 +68,8 @@ class App {
 
     this.hideAllViewComponents(viewComponents)
 
+    // todo insert 'loading' or spinner
+
     if (typeof existingContainer === 'undefined') {
       // No Existing found in viewComponents; Create New Container
       var moduleContainer = document.createElement('div')
@@ -78,6 +80,7 @@ class App {
       this.mainViewContainer.appendChild(moduleContainer)
 
       import(`./components/${route.module}.js`).then(moduleClass => {
+        // todo remove spinner
         new moduleClass.default(moduleContainer, state)
       })
     } else {
