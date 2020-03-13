@@ -68,29 +68,22 @@ class App {
 
     this.hideAllViewComponents(viewComponents)
 
-    let moduleContainer
-
     if (typeof existingContainer === 'undefined') {
       // No Existing found in viewComponents; Create New Container
-
-      const module2 = document.createElement('div')
-      module2.dataset.module = route.module
-
-      this.viewComponents.push(module2)
+      var moduleContainer = document.createElement('div')
+      moduleContainer.dataset.module = route.module
+      this.viewComponents.push(moduleContainer)
 
       // insert module container into DOM
-      this.mainViewContainer.appendChild(module2)
+      this.mainViewContainer.appendChild(moduleContainer)
 
-      moduleContainer = module2
+      import(`./components/${route.module}.js`).then(moduleClass => {
+        new moduleClass.default(moduleContainer, state)
+      })
     } else {
       // Use Existing COntainer from viewComponents Array
-      moduleContainer = existingContainer
       existingContainer.style.display = 'block'
     }
-
-    import(`./components/${route.module}.js`).then(moduleClass => {
-      new moduleClass.default(moduleContainer, state)
-    })
   }
 
   onNavigate(event) {
