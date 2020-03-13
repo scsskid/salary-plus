@@ -66,6 +66,7 @@ class App {
       return viewComponentsEl.dataset.module == route.module
     })
 
+    // ! disconnect existing (examin if state is preserved eg calendar month)
     this.hideAllViewComponents(viewComponents)
 
     // todo insert 'loading' or spinner
@@ -85,6 +86,7 @@ class App {
       })
     } else {
       // Use Existing COntainer from viewComponents Array
+      // ! re append (src componentrregsistry)
       existingContainer.style.display = 'block'
     }
   }
