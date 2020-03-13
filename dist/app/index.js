@@ -67,6 +67,8 @@ class App {
     })
 
     // ! disconnect existing (examin if state is preserved eg calendar month)
+    // or even push modules in regsitry instead of containsers
+    // create (inner) containers mit refs inside module
     this.hideAllViewComponents(viewComponents)
 
     // todo insert 'loading' or spinner
