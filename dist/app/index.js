@@ -38,6 +38,7 @@ class App {
     window.addEventListener('routeLoad', this.onRouteLoad.bind(this))
 
     // Set Component Title
+    // todo promise render, then emmit event, then (in index.js listener) title innerhtml change
     window.addEventListener('render', event => {
       document.querySelector('[data-view-title]').innerHTML = event.detail.title
     })
@@ -57,20 +58,17 @@ class App {
     const route = event.detail.route
     const state = { ...route.params }
 
-    // has this type of module already a container registered?
-    console.log('--- NEW Route Load ---')
-
-    const existingModule = this.moduleRegistry.find(moduleRegistryEl => {
+    const registeredModule = this.moduleRegistry.find(moduleRegistryEl => {
       return moduleRegistryEl.id == route.module
     })
 
-    console.log('existing?', existingModule)
+    console.log('existing?', registeredModule)
 
     document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
       el.remove()
     })
 
-    if (typeof existingModule === 'undefined') {
+    if (typeof registeredModule === 'undefined') {
       import(`./components/${route.module}.js`).then(moduleClass => {
         const importedModule = new moduleClass.default('div', state)
         importedModule.id = route.module // toString() ?
@@ -80,7 +78,7 @@ class App {
         console.log('ModuleRegistry', this.moduleRegistry.length, this.moduleRegistry)
       })
     } else {
-      this.mainViewContainer.appendChild(existingModule.container)
+      this.mainViewContainer.appendChild(registeredModule.container)
     }
   }
 
@@ -99,14 +97,6 @@ class App {
     // catch the moment when the new document state is already fully in place
     // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
     // setTimeout(event => {}, 0)
-  }
-
-  hideAllViewComponents(DOMList) {
-    if (DOMList.length > 0) {
-      DOMList.forEach(el => {
-        el.remove()
-      })
-    }
   }
 
   fixHeight() {
