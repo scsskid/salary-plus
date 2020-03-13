@@ -1,6 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 import Calendar from './Calendar.js'
-import { dispatchEvent } from './../utils.js'
+import { dispatchEvent, events } from './../utils.js'
 
 class Home extends BaseComponent {
   init(tag, state) {
@@ -34,6 +34,7 @@ class Home extends BaseComponent {
   addEventListeners() {
     this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
       const inputDate = this.calendar.state.inputDate
+
       if ('monthDecrease' in event.target.dataset) {
         this.calendar.state = { ...this.calendar.state, inputDate: changeMonth(inputDate, -1) }
       } else if ('monthIncrease' in event.target.dataset) {
@@ -45,6 +46,7 @@ class Home extends BaseComponent {
 
     this.container.addEventListener('click', event => {
       console.log(event.target)
+      events.emit('holy', { my: 'bad' })
     })
   }
 

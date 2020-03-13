@@ -147,8 +147,6 @@ export function route(path) {
 
 // !todo rewrite ...spread
 export function dispatchEvent(name, target, detail = {}, bubbles = true) {
-  console.log(target, name)
-
   target.dispatchEvent(new CustomEvent(name, { bubbles, detail }))
 }
 
@@ -156,5 +154,22 @@ export function routeDataSetHref(event) {
   event.preventDefault()
   if (event.target.dataset.href) {
     route(event.target.dataset.href)
+  }
+}
+
+export const events = {
+  events: {},
+  on: function(eventName, fn) {
+    console.log('subscribe to', eventName)
+
+    this.events[eventName] = this.events[eventName] || []
+    this.events[eventName].push(fn)
+  },
+  emit: function(eventName, data) {
+    console.log('emit', eventName, data)
+    this.events[eventName].forEach(fn => {
+      console.log(fn)
+      fn()
+    })
   }
 }

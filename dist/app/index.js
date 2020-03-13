@@ -2,6 +2,7 @@ import { Store } from './store.js'
 import Router from './router.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
+import { events } from './utils.js'
 
 class App {
   set state(state) {
@@ -21,11 +22,11 @@ class App {
     this.moduleRegistry = []
     this.router = new Router(Routes)
 
+    // window.events = new events()
+
     this.addEventListeners()
     this.fixHeight()
     window.addEventListener('render', event => {
-      console.log('here', event)
-
       document.querySelector('[data-view-title]').innerHTML = event.detail.title
     })
   }
@@ -44,6 +45,10 @@ class App {
   }
 
   addEventListeners() {
+    events.on('holy', () => {
+      console.log('recieved holy cow')
+    })
+
     document.addEventListener('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
     document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
     document.addEventListener('save-sample-data', this.saveSampleData)
@@ -54,6 +59,8 @@ class App {
   }
 
   onRouteLoad(event) {
+    console.log(events)
+
     const route = event.detail.route
     const state = { ...route.params }
 

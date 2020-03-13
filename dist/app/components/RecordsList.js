@@ -1,7 +1,7 @@
 import RecordsListItem from './RecordsListItem.js'
 import BaseComponent from './BaseComponent.js'
 import { Store } from '../store.js'
-import { dispatchEvent } from './../utils.js'
+import { dispatchEvent, events } from './../utils.js'
 
 class RecordsList extends BaseComponent {
   init(tag, state) {
@@ -28,6 +28,9 @@ class RecordsList extends BaseComponent {
     }
 
     dispatchEvent('render', window, { title: 'List of all Records' })
+    // events.events['hollyyyy-cow'] = ['func1', 'func2']
+
+    // console.log(events)
   }
 
   static markup(records) {
