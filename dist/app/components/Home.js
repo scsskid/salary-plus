@@ -4,17 +4,21 @@ import { dispatchEvent } from './../utils.js'
 
 class Home extends BaseComponent {
   init(container, state) {
-    this.container = container
+    this.container = document.createElement('div')
     this.state = state
+
+    console.log(this.ref)
   }
 
   render() {
+    this.container.dataset.render = 'true'
     this.container.innerHTML = `
       <style>
         [data-calendar-controls] button {
           touch-action: manipulation;
         }
       </style>
+      
       <div data-calendar-controls>
         <button data-month-decrease>prev</button>
         <button data-month-increase>next</button>

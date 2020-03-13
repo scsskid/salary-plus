@@ -16,7 +16,7 @@ class App {
 
   init(container) {
     this.container = container
-    this.navContainer = this.container.querySelector('[data-main-nav]')
+    this.mainFooter = this.container.querySelector('[data-main-footer]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
@@ -32,7 +32,8 @@ class App {
     this.mainViewContainer.innerHTML = ''
 
     // todo: resolve single compoenents like toolbar in parent component like footer
-    new Nav(this.navContainer)
+    this.mainFooter.appendChild(new Nav('main-navigation').container)
+
     window.addEventListener('popstate', this.onNavigate.bind(this))
     window.addEventListener('navigate', this.onNavigate.bind(this))
 
@@ -60,7 +61,6 @@ class App {
 
     // has this type of module already a container registered?
     console.log('--- NEW Route Load ---')
-    console.log('existing Modules', this.viewComponents.length, this.viewComponents)
 
     const existingContainer = this.viewComponents.find(viewComponentsEl => {
       return viewComponentsEl.dataset.module == route.module
@@ -76,15 +76,21 @@ class App {
       // No Existing found in viewComponents; Create New Container
       var moduleContainer = document.createElement('div')
       moduleContainer.dataset.module = route.module
-      this.viewComponents.push(moduleContainer)
+      // this.viewComponents.push(moduleContainer)
 
       // insert module container into DOM
       this.mainViewContainer.appendChild(moduleContainer)
 
       import(`./components/${route.module}.js`).then(moduleClass => {
         // todo remove spinner
-        new moduleClass.default(moduleContainer, state)
+        const importedModule = new moduleClass.default(moduleContainer, state)
+
+        this.moduleRegistry.push(importedModule)
+        this.mainViewContainer.append(importedModule.container)
         // push new Module() to registry
+
+        console.log('Module Containers', this.viewComponents.length, this.viewComponents)
+        console.log('ModuleRegistry', this.moduleRegistry.length, this.moduleRegistry)
       })
     } else {
       this.mainViewContainer.appendChild(existingContainer)
