@@ -12,7 +12,6 @@ class RecordsList extends BaseComponent {
   render() {
     // console.log('RecordsList render()', this.state.records)
     if (!this.state || !this.state.records) {
-      console.log('RecordsList State undefined')
       this.container.innerHTML = `
         <p>No Data.</p>
       `

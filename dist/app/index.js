@@ -58,47 +58,34 @@ class App {
   onRouteLoad(event) {
     const route = event.detail.route
     const state = { ...route.params }
-    const viewComponentsAll = document.querySelectorAll('[data-view-component]')
-    const existingContainer = Array.from(viewComponentsAll).find(el => {
-      console.log(el.dataset.module, route.module)
+    const viewComponents = this.viewComponents
 
-      return (el.dataset.module = route.module)
+    // has this type of module already a container registered?
+    console.log('--- NEW Route Load ---')
+    console.log('existing Modules', this.viewComponents.length, this.viewComponents)
+
+    const existingContainer = this.viewComponents.find(viewComponentsEl => {
+      return viewComponentsEl.dataset.module == route.module
     })
 
-    console.log('requesting', route.module)
-    console.log(viewComponentsAll.length + ' view Components present ')
-    console.log('existingCOntainer, ', existingContainer)
-
-    function hideAllViewComponents() {
-      console.log(viewComponentsAll)
-
-      if (viewComponentsAll.length > 0) {
-        viewComponentsAll.forEach(el => {
-          console.log('hiding... ', el)
-
-          el.style.display = 'none'
-        })
-      } else {
-        console.log('no viewComponents found.')
-      }
-    }
-
-    hideAllViewComponents()
+    this.hideAllViewComponents(viewComponents)
 
     let moduleContainer
+
     if (typeof existingContainer === 'undefined') {
-      // create dom el
-      const module = document.createElement('div')
-      module.dataset.viewComponent = route.module
+      // No Existing found in viewComponents; Create New Container
 
-      // push to registry
-      this.viewComponents.push(module)
+      const module2 = document.createElement('div')
+      module2.dataset.module = route.module
 
-      // insert module container
-      this.mainViewContainer.appendChild(module)
+      this.viewComponents.push(module2)
 
-      moduleContainer = module
+      // insert module container into DOM
+      this.mainViewContainer.appendChild(module2)
+
+      moduleContainer = module2
     } else {
+      // Use Existing COntainer from viewComponents Array
       moduleContainer = existingContainer
       existingContainer.style.display = 'block'
     }
@@ -123,6 +110,14 @@ class App {
     // catch the moment when the new document state is already fully in place
     // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
     // setTimeout(event => {}, 0)
+  }
+
+  hideAllViewComponents(DOMList) {
+    if (DOMList.length > 0) {
+      DOMList.forEach(el => {
+        el.style.display = 'none'
+      })
+    }
   }
 
   fixHeight() {
