@@ -19,8 +19,6 @@ class App {
     this.mainFooter = this.container.querySelector('[data-main-footer]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
-
-    this.viewComponents = []
     this.moduleRegistry = []
     this.router = new Router(Routes)
 
@@ -62,38 +60,27 @@ class App {
     // has this type of module already a container registered?
     console.log('--- NEW Route Load ---')
 
-    const existingContainer = this.viewComponents.find(viewComponentsEl => {
-      return viewComponentsEl.dataset.module == route.module
+    const existingModule = this.moduleRegistry.find(moduleRegistryEl => {
+      return moduleRegistryEl.id == route.module
     })
 
-    // todo: push modules in regsitry (no extra containers)
-    // or create (inner) containers mit refs inside module
-    this.hideAllViewComponents(this.viewComponents)
+    console.log('existing?', existingModule)
 
-    // todo insert 'loading' or spinner
+    document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
+      el.remove()
+    })
 
-    if (typeof existingContainer === 'undefined') {
-      // No Existing found in viewComponents; Create New Container
-      var moduleContainer = document.createElement('div')
-      moduleContainer.dataset.module = route.module
-      // this.viewComponents.push(moduleContainer)
-
-      // insert module container into DOM
-      this.mainViewContainer.appendChild(moduleContainer)
-
+    if (typeof existingModule === 'undefined') {
       import(`./components/${route.module}.js`).then(moduleClass => {
-        // todo remove spinner
-        const importedModule = new moduleClass.default(moduleContainer, state)
-
+        const importedModule = new moduleClass.default('div', state)
+        importedModule.id = route.module // toString() ?
         this.moduleRegistry.push(importedModule)
         this.mainViewContainer.append(importedModule.container)
-        // push new Module() to registry
 
-        console.log('Module Containers', this.viewComponents.length, this.viewComponents)
         console.log('ModuleRegistry', this.moduleRegistry.length, this.moduleRegistry)
       })
     } else {
-      this.mainViewContainer.appendChild(existingContainer)
+      this.mainViewContainer.appendChild(existingModule.container)
     }
   }
 
