@@ -22,6 +22,7 @@ class App {
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
+    this.viewComponents = []
     this.router = new Router(Routes)
 
     this.addEventListeners()
@@ -57,52 +58,54 @@ class App {
   onRouteLoad(event) {
     const route = event.detail.route
     const state = { ...route.params }
-    const viewComponents = document.querySelectorAll('[data-view-component]')
-    console.log('requesting', route.module)
-    console.log(viewComponents.length + ' view Components present ')
+    const viewComponentsAll = document.querySelectorAll('[data-view-component]')
+    const existingContainer = Array.from(viewComponentsAll).find(el => {
+      console.log(el.dataset.module, route.module)
 
-    if (viewComponents) {
-      viewComponents.forEach(el => {
-        console.log('hiding... ', el)
-
-        el.style.display = 'none'
-      })
-    }
-
-    const existingContainer = Array.from(viewComponents).find(el => {
       return (el.dataset.module = route.module)
     })
 
-    import(`./components/${route.module}.js`).then(moduleClass => {
-      // ! move code outside of import
+    console.log('requesting', route.module)
+    console.log(viewComponentsAll.length + ' view Components present ')
+    console.log('existingCOntainer, ', existingContainer)
 
-      // look for existing
+    function hideAllViewComponents() {
+      console.log(viewComponentsAll)
 
-      console.log(existingContainer)
-      {
-        let moduleContainer
-        if (typeof existingContainer === 'undefined') {
-          this.viewComponent = document.createElement('div')
-          this.viewComponent.dataset.viewComponent = route.module
-          this.viewComponent.dataset.module = route.module
-          // ? append after instanciation, not before?
-          this.mainViewContainer.appendChild(this.viewComponent)
-          moduleContainer = this.viewComponent
-          const module = new moduleClass.default(moduleContainer, state)
-        } else {
-          moduleContainer = existingContainer
-          existingContainer.style.display = 'block'
-        }
+      if (viewComponentsAll.length > 0) {
+        viewComponentsAll.forEach(el => {
+          console.log('hiding... ', el)
+
+          el.style.display = 'none'
+        })
+      } else {
+        console.log('no viewComponents found.')
       }
-      // new instance
+    }
 
-      // console.log('module:', module, 'state:', state)
-      // module.render()
+    hideAllViewComponents()
+
+    let moduleContainer
+    if (typeof existingContainer === 'undefined') {
+      // create dom el
+      const module = document.createElement('div')
+      module.dataset.viewComponent = route.module
+
+      // push to registry
+      this.viewComponents.push(module)
+
+      // insert module container
+      this.mainViewContainer.appendChild(module)
+
+      moduleContainer = module
+    } else {
+      moduleContainer = existingContainer
+      existingContainer.style.display = 'block'
+    }
+
+    import(`./components/${route.module}.js`).then(moduleClass => {
+      new moduleClass.default(moduleContainer, state)
     })
-
-    // .catch(err => {
-    //   console.log(err)
-    // })
   }
 
   onNavigate(event) {
