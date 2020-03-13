@@ -21,6 +21,7 @@ class App {
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
 
     this.viewComponents = []
+    this.moduleRegistry = []
     this.router = new Router(Routes)
 
     this.addEventListeners()
@@ -56,7 +57,6 @@ class App {
   onRouteLoad(event) {
     const route = event.detail.route
     const state = { ...route.params }
-    const viewComponents = this.viewComponents
 
     // has this type of module already a container registered?
     console.log('--- NEW Route Load ---')
@@ -66,10 +66,9 @@ class App {
       return viewComponentsEl.dataset.module == route.module
     })
 
-    // ! disconnect existing (examin if state is preserved eg calendar month)
-    // or even push modules in regsitry instead of containsers
-    // create (inner) containers mit refs inside module
-    this.hideAllViewComponents(viewComponents)
+    // todo: push modules in regsitry (no extra containers)
+    // or create (inner) containers mit refs inside module
+    this.hideAllViewComponents(this.viewComponents)
 
     // todo insert 'loading' or spinner
 
@@ -87,9 +86,7 @@ class App {
         new moduleClass.default(moduleContainer, state)
       })
     } else {
-      // Use Existing COntainer from viewComponents Array
-      // ! re append (src componentrregsistry)
-      existingContainer.style.display = 'block'
+      this.mainViewContainer.appendChild(existingContainer)
     }
   }
 
@@ -113,7 +110,7 @@ class App {
   hideAllViewComponents(DOMList) {
     if (DOMList.length > 0) {
       DOMList.forEach(el => {
-        el.style.display = 'none'
+        el.remove()
       })
     }
   }
