@@ -4,8 +4,6 @@ import Nav from './components/MainNav.js'
 import sampleData from './data/sample-data.js'
 import Router from './router.js'
 
-// console.log(new StoreFn().appData)
-
 class App {
   set state(state) {
     this.stateValue = state
@@ -134,6 +132,7 @@ class App {
     })
   }
 
+  // todo: move fn to Store Module
   saveSampleData() {
     localStorage.setItem('sp_app', JSON.stringify(sampleData.app))
     localStorage.setItem('sp_user', JSON.stringify(sampleData.user))
