@@ -147,6 +147,8 @@ export function route(path) {
 
 // !todo rewrite ...spread
 export function dispatchEvent(name, target, detail = {}, bubbles = true) {
+  console.log(target, name)
+
   target.dispatchEvent(new CustomEvent(name, { bubbles, detail }))
 }
 

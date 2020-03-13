@@ -23,6 +23,11 @@ class App {
 
     this.addEventListeners()
     this.fixHeight()
+    window.addEventListener('render', event => {
+      console.log('here', event)
+
+      document.querySelector('[data-view-title]').innerHTML = event.detail.title
+    })
   }
 
   render() {
@@ -36,9 +41,6 @@ class App {
 
     // Set Component Title
     // todo promise render, then emmit event, then (in index.js listener) title innerhtml change
-    window.addEventListener('render', event => {
-      document.querySelector('[data-view-title]').innerHTML = event.detail.title
-    })
   }
 
   addEventListeners() {
@@ -67,6 +69,7 @@ class App {
       import(`./components/${route.module}.js`).then(moduleClass => {
         const importedModule = new moduleClass.default('div', state)
         importedModule.id = route.module // toString() ?
+        importedModule.container.dataset.id = route.module // toString() ?
         this.moduleRegistry.push(importedModule)
         this.mainViewContainer.append(importedModule.container)
       })

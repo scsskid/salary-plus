@@ -27,7 +27,7 @@ class RecordsList extends BaseComponent {
       })
     }
 
-    dispatchEvent('render', this.container, { title: 'List' })
+    dispatchEvent('render', window, { title: 'List of all Records' })
   }
 
   static markup(records) {

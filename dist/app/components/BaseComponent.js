@@ -9,7 +9,7 @@ export default class BaseComponent {
   }
 
   init(tag, state) {
-    console.log(tag, state)
+    // console.log(tag, state)
 
     this.container = document.createElement(tag)
     this.state = state
