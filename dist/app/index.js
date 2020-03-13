@@ -1,8 +1,7 @@
 import { Store } from './store.js'
+import Router from './router.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
-import sampleData from './data/sample-data.js'
-import Router from './router.js'
 
 class App {
   set state(state) {
@@ -28,8 +27,6 @@ class App {
 
   render() {
     this.mainViewContainer.innerHTML = ''
-
-    // todo: resolve single compoenents like toolbar in parent component like footer
     this.mainFooter.appendChild(new Nav('main-navigation').container)
 
     window.addEventListener('popstate', this.onNavigate.bind(this))
@@ -62,8 +59,6 @@ class App {
       return moduleRegistryEl.id == route.module
     })
 
-    console.log('existing?', registeredModule)
-
     document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
       el.remove()
     })
@@ -74,8 +69,6 @@ class App {
         importedModule.id = route.module // toString() ?
         this.moduleRegistry.push(importedModule)
         this.mainViewContainer.append(importedModule.container)
-
-        console.log('ModuleRegistry', this.moduleRegistry.length, this.moduleRegistry)
       })
     } else {
       this.mainViewContainer.appendChild(registeredModule.container)
@@ -86,12 +79,8 @@ class App {
     if (event.detail && event.detail.pathname) {
       window.history.pushState({}, '', event.detail.pathname)
     }
-    // console.log('onNavigateSync wlp', window.location.pathname)
-
-    // ! todo: refactor
     const pathnameSplit = window.location.pathname.toLowerCase().split('/')
     const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-
     this.router.loadRoute(pathSegments)
 
     // catch the moment when the new document state is already fully in place
@@ -114,12 +103,6 @@ class App {
   }
 
   // todo: move fn to Store Module
-  saveSampleData() {
-    localStorage.setItem('sp_app', JSON.stringify(sampleData.app))
-    localStorage.setItem('sp_user', JSON.stringify(sampleData.user))
-    localStorage.setItem('sp_records', JSON.stringify(sampleData.records))
-    localStorage.setItem('sp_jobs', JSON.stringify(sampleData.jobs))
-  }
 
   constructor(container) {
     this.init(container)

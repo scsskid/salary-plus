@@ -1,4 +1,5 @@
 import Utils from './utils.js'
+import sampleData from './data/sample-data.js'
 
 const settings = {
   localStoragePrefix: 'sp_'
@@ -60,4 +61,11 @@ Store.getRecordsMaxId = function() {
     }
   })
   return maxId
+}
+
+Store.saveSampleData = function() {
+  localStorage.setItem('sp_app', JSON.stringify(sampleData.app))
+  localStorage.setItem('sp_user', JSON.stringify(sampleData.user))
+  localStorage.setItem('sp_records', JSON.stringify(sampleData.records))
+  localStorage.setItem('sp_jobs', JSON.stringify(sampleData.jobs))
 }
