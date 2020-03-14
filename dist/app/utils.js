@@ -165,11 +165,11 @@ export const events = {
     this.events[eventName] = this.events[eventName] || []
     this.events[eventName].push(fn)
   },
-  emit: function(eventName, data) {
+  dispatch: function(eventName, data) {
     console.log('emit', eventName, data)
     this.events[eventName].forEach(fn => {
       console.log(fn)
-      fn()
+      fn(data)
     })
   }
 }

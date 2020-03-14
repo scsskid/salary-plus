@@ -18,17 +18,15 @@ class App {
     this.container = container
     this.mainFooter = this.container.querySelector('[data-main-footer]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
+    this.viewTitle = document.querySelector('[data-view-title]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
     this.moduleRegistry = []
-    this.router = new Router(Routes)
 
     // window.events = new events()
 
     this.addEventListeners()
+    this.router = new Router(Routes)
     this.fixHeight()
-    window.addEventListener('render', event => {
-      document.querySelector('[data-view-title]').innerHTML = event.detail.title
-    })
   }
 
   render() {
@@ -41,13 +39,11 @@ class App {
     window.addEventListener('routeLoad', this.onRouteLoad.bind(this))
 
     // Set Component Title
-    // todo promise render, then emmit event, then (in index.js listener) title innerhtml change
   }
 
   addEventListeners() {
-    events.on('holy', () => {
-      console.log('recieved holy cow')
-    })
+    events.on('routeLoad', this.onRouteLoad.bind(this))
+    events.on('update-view-title', handleUpdateViewTitle.bind(this))
 
     document.addEventListener('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
     document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
@@ -56,12 +52,14 @@ class App {
     document.addEventListener('clear-storage', () => {
       localStorage.clear()
     })
+
+    function handleUpdateViewTitle(data) {
+      this.viewTitle.innerHTML = data.title
+    }
   }
 
-  onRouteLoad(event) {
-    console.log(events)
-
-    const route = event.detail.route
+  onRouteLoad(data) {
+    const route = data.route
     const state = { ...route.params }
 
     const registeredModule = this.moduleRegistry.find(moduleRegistryEl => {
@@ -72,16 +70,22 @@ class App {
       el.remove()
     })
 
-    if (typeof registeredModule === 'undefined') {
-      import(`./components/${route.module}.js`).then(moduleClass => {
-        const importedModule = new moduleClass.default('div', state)
-        importedModule.id = route.module // toString() ?
-        importedModule.container.dataset.id = route.module // toString() ?
-        this.moduleRegistry.push(importedModule)
-        this.mainViewContainer.append(importedModule.container)
-      })
-    } else {
-      this.mainViewContainer.appendChild(registeredModule.container)
+    // todo promise render, then emmit event, then (in index.js listener) title innerhtml change
+    // todo general refactor
+    {
+      if (typeof registeredModule === 'undefined') {
+        import(`./components/${route.module}.js`).then(moduleClass => {
+          const importedModule = new moduleClass.default('div', state)
+          importedModule.id = route.module // toString() ?
+          importedModule.container.dataset.id = route.module // toString() ?
+          events.dispatch('update-view-title', importedModule.meta)
+          this.moduleRegistry.push(importedModule)
+          this.mainViewContainer.appendChild(importedModule.container)
+        })
+      } else {
+        this.mainViewContainer.appendChild(registeredModule.container)
+        events.dispatch('update-view-title', registeredModule.meta)
+      }
     }
   }
 

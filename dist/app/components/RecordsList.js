@@ -7,6 +7,9 @@ class RecordsList extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = Store.get('app') ? { records: Store.get('records'), jobs: Store.get('jobs') } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
+    this.meta = {
+      title: 'Overview sasas'
+    }
   }
 
   render() {
@@ -27,7 +30,8 @@ class RecordsList extends BaseComponent {
       })
     }
 
-    dispatchEvent('render', window, { title: 'List of all Records' })
+    // dispatchEvent('render', window, { title: 'List of all Records' })
+    // events.dispatch('update-title', { title: 'List Of ...' })
     // events.events['hollyyyy-cow'] = ['func1', 'func2']
 
     // console.log(events)

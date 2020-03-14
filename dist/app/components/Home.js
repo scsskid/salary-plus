@@ -7,6 +7,9 @@ class Home extends BaseComponent {
     this.container = document.createElement(tag)
     this.state = state
     this.refs = {}
+    this.meta = {
+      title: 'Overview Meta'
+    }
   }
   render() {
     this.container.innerHTML = `

@@ -1,3 +1,5 @@
+import { events } from './utils.js'
+
 class Router {
   constructor(routes) {
     this.routes = routes
@@ -14,13 +16,15 @@ class Router {
     //   console.log('👎NOT FOUND')
     // }
 
-    window.dispatchEvent(
-      new CustomEvent('routeLoad', {
-        detail: {
-          route: matchedRoute
-        }
-      })
-    )
+    events.dispatch('routeLoad', { route: matchedRoute })
+
+    // window.dispatchEvent(
+    //   new CustomEvent('routeLoad', {
+    //     detail: {
+    //       route: matchedRoute
+    //     }
+    //   })
+    // )
   }
 
   _matchUrlToRoute(urlSegments) {
