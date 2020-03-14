@@ -23,7 +23,7 @@ Store.setRecord = function(submittedRecord) {
 
   if (submittedRecord.id == 'undefined') {
     // new
-    submittedRecord.id = Store.recordsMaxId + 1
+    submittedRecord.id = Store.getRecordsMaxId() + 1
     records.push(submittedRecord)
   } else {
     // update existing

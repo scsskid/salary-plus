@@ -42,6 +42,7 @@ class App {
   }
 
   addEventListeners() {
+    // Routing
     events.on('routeLoad', this.onRouteLoad.bind(this))
     events.on('update-view-title', handleUpdateViewTitle.bind(this))
 
@@ -51,10 +52,7 @@ class App {
     document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
     events.on('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
 
-    document.addEventListener('save-sample-data', Store.saveSampleData)
     events.on('save-sample-data', Store.saveSampleData)
-
-    document.addEventListener('clear-storage', () => localStorage.clear())
     events.on('clear-storage', () => localStorage.clear())
 
     function handleUpdateViewTitle(data) {

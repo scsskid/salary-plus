@@ -27,12 +27,12 @@ class RecordForm extends BaseComponent {
 
     // If no record prop in state, mode is 'new', otherwise 'edit
 
-    this.state = { jobs: Store.get('jobs'), ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
+    this.state = { jobs: Store.get('jobs') || [], ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
 
     // Defaults
 
     this.defaultFormValues = {
-      jobId: Store.get('user').settings.defaultJobId,
+      jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
       dateBegin: Utils.formatDate.rfc3339(new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00'
@@ -90,14 +90,8 @@ class RecordForm extends BaseComponent {
       // this.state.record = formData
 
       // ! trying to reconstruct Form (not working)
-      // this.container.dataset.ref = undefined
-      // this.container.innerHTML = ''
-      this.init('div', { record: this.defaultFormValues })
 
-      // var newForm = new RecordForm(this.container, { record: formDataTransport })
-      // console.log(newForm)
-      // new this.constructor(this.container, { record: formDataTransport })
-      // new this.constructor()
+      this.init('div', { record: this.defaultFormValues })
     })
   }
 
@@ -111,6 +105,8 @@ class RecordForm extends BaseComponent {
         `
     })
 
+    console.log(jobsOptionsMarkup.length)
+
     return `
       <section class="edit-record" data-id>
         <h2><b>--${state.mode}--</b> Record</h2>
@@ -118,7 +114,7 @@ class RecordForm extends BaseComponent {
           <div class="form-el">
             <label for="entry-job">Job</label>
             <select name="jobId" id="entry-job" type="date">
-              ${jobsOptionsMarkup}
+              ${jobsOptionsMarkup.length > 0 ? jobsOptionsMarkup.length : `<option>!! No Jobs present</option>`}
             </select>
           </div>        
           <div class="form-el">
