@@ -70,7 +70,7 @@ export default {
     let end = new Date(record.dateEnd + ' ' + record.timeEnd).toISOString()
 
     return {
-      id: record.id,
+      id: parseInt(record.id),
       jobId: parseInt(record.jobId),
       begin,
       end
