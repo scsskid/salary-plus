@@ -54,7 +54,7 @@ class App {
     })
 
     function handleUpdateViewTitle(data) {
-      this.viewTitle.innerHTML = data.title
+      this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View'
     }
   }
 
