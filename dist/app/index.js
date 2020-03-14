@@ -34,9 +34,9 @@ class App {
     this.mainFooter.appendChild(new Nav('main-navigation').container)
 
     window.addEventListener('popstate', this.onNavigate.bind(this))
-    window.addEventListener('navigate', this.onNavigate.bind(this))
+    events.on('navigate', this.onNavigate.bind(this))
 
-    window.addEventListener('routeLoad', this.onRouteLoad.bind(this))
+    // window.addEventListener('routeLoad', this.onRouteLoad.bind(this))
 
     // Set Component Title
   }
@@ -89,9 +89,9 @@ class App {
     }
   }
 
-  onNavigate(event) {
-    if (event.detail && event.detail.pathname) {
-      window.history.pushState({}, '', event.detail.pathname)
+  onNavigate(data) {
+    if (data && data.pathname) {
+      window.history.pushState({}, '', data.pathname)
     }
     const pathnameSplit = window.location.pathname.toLowerCase().split('/')
     const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''

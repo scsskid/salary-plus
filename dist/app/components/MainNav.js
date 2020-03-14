@@ -1,4 +1,5 @@
 import BaseComponent from './BaseComponent.js'
+import { events } from './../utils.js'
 export default class MainNav extends BaseComponent {
   render() {
     this.container.innerHTML = `
@@ -21,7 +22,8 @@ export default class MainNav extends BaseComponent {
         // window.history.pushState({}, '', url.pathname)
 
         // ! refactor Utils.route(path) || route()
-        event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { pathname: url.pathname } }))
+        // event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { pathname: url.pathname } }))
+        events.dispatch('navigate', { pathname: url.pathname })
       }
     })
   }

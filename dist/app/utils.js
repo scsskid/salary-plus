@@ -160,15 +160,15 @@ export function routeDataSetHref(event) {
 export const events = {
   events: {},
   on: function(eventName, fn) {
-    console.log('subscribe to', eventName)
+    // console.log('subscribe to', eventName)
 
     this.events[eventName] = this.events[eventName] || []
     this.events[eventName].push(fn)
   },
   dispatch: function(eventName, data) {
-    console.log('emit', eventName, data)
+    // console.log('emit', eventName, data)
     this.events[eventName].forEach(fn => {
-      console.log(fn)
+      // console.log(fn)
       fn(data)
     })
   }
