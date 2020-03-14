@@ -44,53 +44,61 @@ class App {
   addEventListeners() {
     // Routing
     events.on('routeLoad', this.onRouteLoad.bind(this))
-    events.on('update-view-title', handleUpdateViewTitle.bind(this))
+    events.on('update-view-title', data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View'))
 
-    // From Record Form
+    // Process Form Data
     events.on('record-submitted', data => Store.setRecord(data.formData))
+    events.on('record-delete', data => Store.deleteRecord(data.id))
 
-    document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
-    events.on('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
-
+    // Admin Tools
     events.on('save-sample-data', Store.saveSampleData)
     events.on('clear-storage', () => localStorage.clear())
-
-    function handleUpdateViewTitle(data) {
-      this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View'
-    }
   }
 
   onRouteLoad(data) {
     const route = data.route
     const state = { ...route.params }
 
-    const moduleIsInRegistry = this.moduleRegistry.find(moduleRegistryEl => {
+    // Check if module was loaded before and pushed to registry
+    const module = this.moduleRegistry.find(moduleRegistryEl => {
       return moduleRegistryEl.id == route.module
     })
 
-    // Should be only one:
+    // Remove existing viewContainer from Dom (It remains in Regsitry)
     document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
       el.remove()
     })
 
-    // todo promise render, then emmit event, then (in index.js listener) title innerhtml change
-    // todo general refactor
+    // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
     {
-      if (typeof moduleIsInRegistry === 'undefined') {
-        import(`./components/${route.module}.js`).then(moduleClass => {
-          const importedModule = new moduleClass.default('div', state)
-          importedModule.id = route.module
-          importedModule.container.dataset.id = route.module
-          events.publish('update-view-title', importedModule.content)
-          if (route.module != 'RecordForm') {
-            this.moduleRegistry.push(importedModule)
-          }
-          this.mainViewContainer.appendChild(importedModule.container)
-        })
+      if (typeof module === 'undefined') {
+        import(`./components/${route.module}.js`)
+          .then(processImportedModule.bind(this))
+          .then(updateViewTitle)
       } else {
-        this.mainViewContainer.appendChild(moduleIsInRegistry.container)
-        events.publish('update-view-title', moduleIsInRegistry.content)
+        this.mainViewContainer.appendChild(module.container)
+        events.publish('update-view-title', module.content)
       }
+    }
+
+    function processImportedModule(moduleClass) {
+      const module = new moduleClass.default('div', state)
+
+      module.id = route.module
+      module.container.dataset.id = route.module
+
+      // Dont Register Record Form
+      if (route.module != 'RecordForm') {
+        this.moduleRegistry.push(module)
+      }
+      this.mainViewContainer.appendChild(module.container)
+      updateViewTitle(module)
+
+      return module
+    }
+
+    function updateViewTitle(module) {
+      events.publish('update-view-title', module.content)
     }
   }
 
@@ -103,7 +111,8 @@ class App {
     this.router.loadRoute(pathSegments)
 
     // catch the moment when the new document state is already fully in place
-    // by pushing the setTimeout CB to be processed at the end of the browser event loop (see mdn popstateEvent#historyStack)
+    // by pushing the setTimeout CB to be processed at the end of the browser event loop
+    // (see mdn popstateEvent#historyStack)
     // setTimeout(event => {}, 0)
   }
 

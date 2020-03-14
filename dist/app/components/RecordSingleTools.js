@@ -1,3 +1,5 @@
+import { events } from './../utils.js'
+
 export default class RecordTools {
   set state(state) {
     this.stateValue = state
@@ -24,7 +26,7 @@ export default class RecordTools {
 
   addEventListeners() {
     // Click on Link to Single Record
-    this.container.querySelector('.record-delete').addEventListener('click', handleClickDeleteRecord)
+    this.container.querySelector('.record-delete').addEventListener('click', todo)
 
     function handleClickDeleteRecord(event) {
       const listItem = event.target.closest('.records-list-item')
@@ -33,6 +35,11 @@ export default class RecordTools {
         detail: { id: listItem.dataset.id }
       })
       listItem.dispatchEvent(recordDeleteEvent)
+    }
+
+    function todo(event) {
+      const listItem = event.target.closest('.records-list-item')
+      events.publish('record-delete', { id: listItem.dataset.id })
     }
   }
 
