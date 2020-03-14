@@ -13,7 +13,8 @@ export default [
   },
   {
     path: '/records/new',
-    module: 'RecordForm'
+    module: 'RecordForm',
+    setState: true
   },
   {
     path: '/records/:recordId',
@@ -21,7 +22,8 @@ export default [
   },
   {
     path: '/records/:recordId/:mode',
-    module: 'RecordForm'
+    module: 'RecordForm',
+    setState: true
   },
   {
     path: '/settings',

@@ -20,6 +20,8 @@ class RecordForm extends BaseComponent {
   }
 
   init(tag, state) {
+    console.log('Form Init', state)
+
     this.content = {
       title: 'Form'
     }
@@ -27,7 +29,7 @@ class RecordForm extends BaseComponent {
 
     // If no record prop in state, mode is 'new', otherwise 'edit
 
-    this.state = { jobs: Store.get('jobs') || [], ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
+    this.state = { jobs: Store.get('jobs') || [], ...state, ...{ mode: state.recordId != undefined ? 'edit' : 'new' } } || {}
 
     // Defaults
 
@@ -44,7 +46,7 @@ class RecordForm extends BaseComponent {
       record = this.defaultFormValues
     } else if (this.state.mode == 'edit') {
       // map data from localstorage to format of form
-      record = Utils.mapRecord(this.state.record, 'form')
+      record = Utils.mapRecord(Store.getRecord(this.state.recordId), 'form')
     }
     this.state = { ...this.state, ...{ record } }
 
@@ -83,7 +85,7 @@ class RecordForm extends BaseComponent {
       formData.id = event.target.dataset.id
 
       // Dispatch Event /w attached unaltered formData
-      events.dispatch('record-submitted', {
+      events.publish('record-submitted', {
         formData: formData
       })
 
@@ -104,8 +106,6 @@ class RecordForm extends BaseComponent {
         <option ${selected}value="${job.id}">#${job.id} ${job.name} (rate: ${job.rate})</option>
         `
     })
-
-    console.log(jobsOptionsMarkup.length)
 
     return `
       <section class="edit-record" data-id>

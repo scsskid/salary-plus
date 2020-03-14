@@ -16,7 +16,7 @@ class Router {
     //   console.log('👎NOT FOUND')
     // }
 
-    events.dispatch('routeLoad', { route: matchedRoute })
+    events.publish('routeLoad', { route: matchedRoute })
 
     // window.dispatchEvent(
     //   new CustomEvent('routeLoad', {

@@ -142,7 +142,7 @@ export default {
 }
 
 export function route(path) {
-  events.dispatch('navigate', { pathname: path })
+  events.publish('navigate', { pathname: path })
 }
 
 // !todo rewrite ...spread
@@ -166,7 +166,7 @@ export const events = {
     this.events[eventName] = this.events[eventName] || []
     this.events[eventName].push(fn)
   },
-  dispatch: function(eventName, data) {
+  publish: function(eventName, data) {
     // console.log('emit', eventName, data)
     if (this.events[eventName]) {
       this.events[eventName].forEach(fn => {
@@ -174,7 +174,7 @@ export const events = {
         fn(data)
       })
     } else {
-      console.log(`events.dispatch('${eventName}'): No Functions are registered for ${eventName}`)
+      console.log(`events.publish('${eventName}'): No Functions are registered for ${eventName}`)
     }
   }
 }

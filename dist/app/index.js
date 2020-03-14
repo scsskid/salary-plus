@@ -64,10 +64,11 @@ class App {
     const route = data.route
     const state = { ...route.params }
 
-    const registeredModule = this.moduleRegistry.find(moduleRegistryEl => {
+    const moduleIsInRegistry = this.moduleRegistry.find(moduleRegistryEl => {
       return moduleRegistryEl.id == route.module
     })
 
+    // Should be only one:
     document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
       el.remove()
     })
@@ -75,18 +76,20 @@ class App {
     // todo promise render, then emmit event, then (in index.js listener) title innerhtml change
     // todo general refactor
     {
-      if (typeof registeredModule === 'undefined') {
+      if (typeof moduleIsInRegistry === 'undefined') {
         import(`./components/${route.module}.js`).then(moduleClass => {
           const importedModule = new moduleClass.default('div', state)
-          importedModule.id = route.module // toString() ?
-          importedModule.container.dataset.id = route.module // toString() ?
-          events.dispatch('update-view-title', importedModule.content)
-          this.moduleRegistry.push(importedModule)
+          importedModule.id = route.module
+          importedModule.container.dataset.id = route.module
+          events.publish('update-view-title', importedModule.content)
+          if (route.module != 'RecordForm') {
+            this.moduleRegistry.push(importedModule)
+          }
           this.mainViewContainer.appendChild(importedModule.container)
         })
       } else {
-        this.mainViewContainer.appendChild(registeredModule.container)
-        events.dispatch('update-view-title', registeredModule.content)
+        this.mainViewContainer.appendChild(moduleIsInRegistry.container)
+        events.publish('update-view-title', moduleIsInRegistry.content)
       }
     }
   }

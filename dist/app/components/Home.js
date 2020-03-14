@@ -47,7 +47,6 @@ class Home extends BaseComponent {
 
     this.container.addEventListener('click', event => {
       console.log(event.target)
-      events.emit('holy', { my: 'bad' })
     })
   }
 

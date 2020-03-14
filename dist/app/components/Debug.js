@@ -18,15 +18,15 @@ class Debug extends BaseComponent {
 
     this.addEventListeners()
 
-    // events.dispatch('update-view-title', { title: Debug.common.title })
+    // events.publish('update-view-title', { title: Debug.common.title })
   }
 
   addEventListeners() {
     this.container.addEventListener('click', event => {
       if ('saveSampleData' in event.target.dataset) {
-        events.dispatch('save-sample-data')
+        events.publish('save-sample-data')
       } else if ('clearStorage' in event.target.dataset) {
-        events.dispatch('clear-storage')
+        events.publish('clear-storage')
       }
     })
   }

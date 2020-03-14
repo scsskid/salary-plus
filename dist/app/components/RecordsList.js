@@ -31,7 +31,7 @@ class RecordsList extends BaseComponent {
     }
 
     // dispatchEvent('render', window, { title: 'List of all Records' })
-    // events.dispatch('update-title', { title: 'List Of ...' })
+    // events.publish('update-title', { title: 'List Of ...' })
     // events.events['hollyyyy-cow'] = ['func1', 'func2']
 
     // console.log(events)
