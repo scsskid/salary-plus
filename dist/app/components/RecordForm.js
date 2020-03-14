@@ -114,7 +114,7 @@ class RecordForm extends BaseComponent {
           <div class="form-el">
             <label for="entry-job">Job</label>
             <select name="jobId" id="entry-job" type="date">
-              ${jobsOptionsMarkup.length > 0 ? jobsOptionsMarkup.length : `<option>!! No Jobs present</option>`}
+              ${jobsOptionsMarkup.length > 0 ? jobsOptionsMarkup : `<option>!! No Jobs present</option>`}
             </select>
           </div>        
           <div class="form-el">
