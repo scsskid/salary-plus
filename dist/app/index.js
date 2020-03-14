@@ -89,7 +89,8 @@ class App {
 
       // Dont Register Record Form
       if (route.module != 'RecordForm') {
-        this.moduleRegistry.push(module)
+        // preserve Views
+        // this.moduleRegistry.push(module)
       }
       this.mainViewContainer.appendChild(module.container)
       updateViewTitle(module)
