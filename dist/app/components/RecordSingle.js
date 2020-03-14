@@ -1,22 +1,9 @@
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import utils from '../utils.js'
 import { Store } from '../store.js'
+import BaseComponent from './BaseComponent.js'
 
-export default class Record {
-  set state(state) {
-    this.stateValue = state
-    // this.render()
-  }
-
-  get state() {
-    return this.stateValue
-  }
-
-  init(container, state) {
-    this.container = container
-    this.state = state
-  }
-
+export default class Record extends BaseComponent {
   render() {
     const record = utils.mapRecord(Store.getRecord(this.state.recordId))
     this.rootEl = document.createElement('article')
@@ -59,7 +46,7 @@ export default class Record {
     })
   }
 
-  constructor(container, state) {
-    this.init(container, state)
+  constructor(tag, state) {
+    super(tag, state)
   }
 }

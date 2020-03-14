@@ -142,7 +142,7 @@ export default {
 }
 
 export function route(path) {
-  window.dispatchEvent(new CustomEvent('navigate', { detail: { pathname: path } }))
+  events.dispatch('navigate', { pathname: path })
 }
 
 // !todo rewrite ...spread
