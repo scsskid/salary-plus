@@ -41,7 +41,11 @@ Store.deleteRecord = function(id) {
   const targetIndex = records.findIndex(el => {
     return el.id == id
   })
-  records.splice(targetIndex, 1)
+  console.log(targetIndex)
+
+  if (targetIndex != -1) {
+    records.splice(targetIndex, 1)
+  }
 
   Store.set('records', records)
 }
