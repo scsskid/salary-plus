@@ -1,6 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
-import Utils, { dispatchEvent } from '../utils.js'
+import Utils, { dispatchEvent, events } from '../utils.js'
 import { Store } from '../store.js'
 
 // todo: eval populateForm() on stateChange ?
@@ -26,7 +26,6 @@ class RecordForm extends BaseComponent {
     this.container = document.createElement(tag)
 
     // If no record prop in state, mode is 'new', otherwise 'edit
-    console.log(Storage)
 
     this.state = { jobs: Store.get('jobs'), ...state, ...{ mode: state.record != undefined ? 'edit' : 'new' } } || {}
 
@@ -74,32 +73,25 @@ class RecordForm extends BaseComponent {
     this.container.addEventListener('submit', event => {
       event.preventDefault()
       const form = event.target
+      const formData = {}
 
-      var formData = new FormData(form)
-      const formDataTransport = {}
-      for (var [formElementName, value] of formData.entries()) {
-        formDataTransport[formElementName] = value
+      for (var [formElementName, value] of new FormData(form).entries()) {
+        formData[formElementName] = value
       }
 
       // add id from form.dataset
-      formDataTransport.id = event.target.dataset.id
+      formData.id = event.target.dataset.id
 
       // Dispatch Event /w attached unaltered formData
-      event.target.dispatchEvent(
-        new CustomEvent('recordSubmitted', {
-          bubbles: true,
-          detail: {
-            formData: formDataTransport
-          }
-        })
-      )
+      events.dispatch('record-submitted', {
+        formData: formData
+      })
 
-      this.state.record = formDataTransport
+      // this.state.record = formData
 
       // ! trying to reconstruct Form (not working)
       // this.container.dataset.ref = undefined
       // this.container.innerHTML = ''
-      console.log(this.container)
       this.init('div', { record: this.defaultFormValues })
 
       // var newForm = new RecordForm(this.container, { record: formDataTransport })

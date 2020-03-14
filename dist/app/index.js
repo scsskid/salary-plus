@@ -45,8 +45,9 @@ class App {
     events.on('routeLoad', this.onRouteLoad.bind(this))
     events.on('update-view-title', handleUpdateViewTitle.bind(this))
 
-    document.addEventListener('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
-    events.on('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
+    // From Record Form
+    events.on('record-submitted', data => Store.setRecord(data.formData))
+
     document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
     events.on('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
 
