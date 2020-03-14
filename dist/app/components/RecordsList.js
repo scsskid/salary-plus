@@ -8,7 +8,7 @@ class RecordsList extends BaseComponent {
     this.container = document.createElement(tag)
     this.state = Store.get('app') ? { records: Store.get('records'), jobs: Store.get('jobs') } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
     this.meta = {
-      title: 'Overview sasas'
+      title: 'List'
     }
   }
 

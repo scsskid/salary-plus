@@ -8,7 +8,7 @@ class Home extends BaseComponent {
     this.state = state
     this.refs = {}
     this.meta = {
-      title: 'Overview Meta'
+      title: 'Overview'
     }
   }
   render() {
