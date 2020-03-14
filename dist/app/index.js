@@ -46,12 +46,15 @@ class App {
     events.on('update-view-title', handleUpdateViewTitle.bind(this))
 
     document.addEventListener('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
+    events.on('recordSubmitted', event => Store.setRecord(event.detail.formData)) // Main Target: Form
     document.addEventListener('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
-    document.addEventListener('save-sample-data', this.saveSampleData)
+    events.on('record-delete', event => Store.deleteRecord(event.detail.id)) // Main Target: List Item ot others
 
-    document.addEventListener('clear-storage', () => {
-      localStorage.clear()
-    })
+    document.addEventListener('save-sample-data', Store.saveSampleData)
+    events.on('save-sample-data', Store.saveSampleData)
+
+    document.addEventListener('clear-storage', () => localStorage.clear())
+    events.on('clear-storage', () => localStorage.clear())
 
     function handleUpdateViewTitle(data) {
       this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View'
@@ -78,13 +81,13 @@ class App {
           const importedModule = new moduleClass.default('div', state)
           importedModule.id = route.module // toString() ?
           importedModule.container.dataset.id = route.module // toString() ?
-          events.dispatch('update-view-title', importedModule.meta)
+          events.dispatch('update-view-title', importedModule.content)
           this.moduleRegistry.push(importedModule)
           this.mainViewContainer.appendChild(importedModule.container)
         })
       } else {
         this.mainViewContainer.appendChild(registeredModule.container)
-        events.dispatch('update-view-title', registeredModule.meta)
+        events.dispatch('update-view-title', registeredModule.content)
       }
     }
   }

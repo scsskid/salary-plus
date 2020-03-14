@@ -1,7 +1,7 @@
 export default class BaseComponent {
   set state(state) {
     this.stateValue = state || {}
-    this.render() // ? Too much?
+    this.render()
   }
 
   get state() {
@@ -9,11 +9,8 @@ export default class BaseComponent {
   }
 
   init(tag, state) {
-    // console.log(tag, state)
-
     this.container = document.createElement(tag)
     this.state = state
-    this.refs = {}
   }
   render() {
     console.error('no render specified')

@@ -167,10 +167,14 @@ export const events = {
     this.events[eventName].push(fn)
   },
   dispatch: function(eventName, data) {
-    // console.log('emit', eventName, data)
-    this.events[eventName].forEach(fn => {
-      // console.log(fn)
-      fn(data)
-    })
+    console.log('emit', eventName, data)
+    if (this.events[eventName]) {
+      this.events[eventName].forEach(fn => {
+        // console.log(fn)
+        fn(data)
+      })
+    } else {
+      console.log(`events.dispatch('${eventName}'): No Functions are registered for ${eventName}`)
+    }
   }
 }

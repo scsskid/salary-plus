@@ -18,11 +18,7 @@ export default class MainNav extends BaseComponent {
       if (event.target.href) {
         const url = new URL(event.target.href)
         // console.log(url.pathname, event.target.href)
-
-        // window.history.pushState({}, '', url.pathname)
-
         // ! refactor Utils.route(path) || route()
-        // event.target.dispatchEvent(new CustomEvent('navigate', { bubbles: true, detail: { pathname: url.pathname } }))
         events.dispatch('navigate', { pathname: url.pathname })
       }
     })

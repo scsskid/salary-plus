@@ -6,8 +6,7 @@ class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
-    this.refs = {}
-    this.meta = {
+    this.content = {
       title: 'Overview'
     }
   }
@@ -30,7 +29,6 @@ class Home extends BaseComponent {
     this.calendar = new Calendar('div', {})
     this.container.appendChild(this.calendar.container)
 
-    dispatchEvent('render', window, { title: 'Overview' })
     this.addEventListeners()
   }
 

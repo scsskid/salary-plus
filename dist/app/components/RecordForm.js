@@ -20,6 +20,9 @@ class RecordForm extends BaseComponent {
   }
 
   init(tag, state) {
+    this.content = {
+      title: 'Form'
+    }
     this.container = document.createElement(tag)
 
     // If no record prop in state, mode is 'new', otherwise 'edit
@@ -58,8 +61,6 @@ class RecordForm extends BaseComponent {
 
     this.populateForm()
     this.addEventListeners()
-
-    dispatchEvent('render', this.container, { title: 'Form' })
   }
 
   populateForm() {

@@ -1,7 +1,15 @@
 import BaseComponent from './BaseComponent.js'
-import { dispatchEvent } from './../utils.js'
+import { dispatchEvent, events } from './../utils.js'
 
 class Debug extends BaseComponent {
+  init(tag, state) {
+    this.container = document.createElement(tag)
+    this.state = state
+    this.content = {
+      title: 'Debug'
+    }
+  }
+
   render() {
     this.container.innerHTML = ''
 
@@ -10,18 +18,15 @@ class Debug extends BaseComponent {
 
     this.addEventListeners()
 
-    dispatchEvent('render', this.container, { title: 'Debug' })
+    // events.dispatch('update-view-title', { title: Debug.common.title })
   }
 
   addEventListeners() {
     this.container.addEventListener('click', event => {
-      event.preventDefault()
-
       if ('saveSampleData' in event.target.dataset) {
-        dispatchEvent('save-sample-data', this.container)
-      }
-      if ('clearStorage' in event.target.dataset) {
-        dispatchEvent('clear-storage', this.container)
+        events.dispatch('save-sample-data')
+      } else if ('clearStorage' in event.target.dataset) {
+        events.dispatch('clear-storage')
       }
     })
   }
