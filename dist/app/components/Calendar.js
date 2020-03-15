@@ -1,23 +1,16 @@
 import BaseComponent from './BaseComponent.js'
+import Utils, { events } from './../utils.js'
 
 class Calendar extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
-    // this.observe()
+    this.addEventListeners()
   }
 
   render() {
     // console.log(this.state)
-    // todo: rewrite to reduce() ?
-    this.recordsMap = {}
-    this.state.records.forEach(record => {
-      const mapDateKey = `${new Date(record.begin).getFullYear()}-${new Date(record.begin).getMonth() + 1}-${new Date(record.begin).getDate()}`
-      if (typeof this.recordsMap[mapDateKey] === 'undefined') {
-        this.recordsMap[mapDateKey] = []
-      }
-      this.recordsMap[mapDateKey].push(record)
-    })
+    this.createRecordsMap()
 
     console.log(this.state.records)
     console.log(this.recordsMap)
@@ -50,10 +43,42 @@ class Calendar extends BaseComponent {
         <p style="text-align: center; padding-top: 1rem"><b>${inputDate.toLocaleDateString('en', { month: 'long' })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
-    setTimeout(() => {
-      this.createCalendar(inputDate)
-    }, 0)
+    this.createCalendar(inputDate)
+
+    console.log(this.container)
+
+    // setTimeout(() => {}, 0)
   }
+
+  selectDefaultDate() {
+    // today if is current month, 1st of month if other
+    events.publish('select-date', { date: this.state.inputDate })
+  }
+
+  addEventListeners() {
+    this.container.addEventListener('click', event => {
+      console.log(this.state.inputDate)
+      const dateString = event.target.dataset.dateString
+      if (dateString) {
+        events.publish('select-date', { date: new Date(dateString) })
+      }
+      // select(Day)
+    })
+  }
+
+  createRecordsMap() {
+    // map date of Records to days of calendar
+    // todo: rewrite to reduce() ?
+    this.recordsMap = {}
+    this.state.records.forEach(record => {
+      const mapDateKey = `${new Date(record.begin).getFullYear()}-${new Date(record.begin).getMonth() + 1}-${new Date(record.begin).getDate()}`
+      if (typeof this.recordsMap[mapDateKey] === 'undefined') {
+        this.recordsMap[mapDateKey] = []
+      }
+      this.recordsMap[mapDateKey].push(record)
+    })
+  }
+
   constructor(tag, state) {
     super(tag, state)
   }
@@ -100,7 +125,8 @@ function createCalendar(inputDate) {
         cellText = document.createTextNode('')
       } else {
         // Insert a Day [1] [2] ...
-        const dateString = `${inputDateFullYear}-${inputDateMonth + 1}-${date}`
+        const dateString = `${inputDateFullYear}-${(inputDateMonth + 1).toString().padStart(2, '0')}-${date}`
+
         const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
         cellText = document.createElement('span')
         cellText.classList.add('date-item')
@@ -129,7 +155,11 @@ function createCalendar(inputDate) {
   }
 
   // Append Table to Dom
+
   this.container.querySelector('[data-calendar]').appendChild(table)
+  setTimeout(() => {
+    this.selectDefaultDate()
+  }, 0)
 }
 
 function createTableOuter() {

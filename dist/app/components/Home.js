@@ -1,6 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 import Calendar from './Calendar.js'
-import { events } from './../utils.js'
+import Utils, { events } from './../utils.js'
 import { Store } from '../store.js'
 import CalendarDayView from './CalendarDayView.js'
 
@@ -47,6 +47,42 @@ class Home extends BaseComponent {
   }
 
   addEventListeners() {
+    events.on('select-date', data => {
+      const dateItems = document.querySelectorAll('.date-item')
+      const date = data.date
+
+      console.log('on:select-date')
+
+      // clear day view
+      dateItems.forEach(el => delete el.dataset.dateSelected)
+
+      this.dayView.container.remove()
+
+      // todo: select date visually
+      console.log(Utils.getTimeZoneAwareIsoString(date))
+
+      const dateToBeSelected = Array.from(dateItems).find(dateItem => {
+        return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(date)
+      })
+
+      console.log(dateToBeSelected)
+
+      // .dataset.dateSelected = ''
+
+      const recordsOfDate = Store.get('records').filter(record => {
+        const dateBegin = new Date(record.begin)
+        return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
+      })
+      if (recordsOfDate.length) {
+        const dayView = this.dayView
+        dayView.state = { records: recordsOfDate }
+        console.log(dayView)
+
+        this.container.appendChild(dayView.container)
+        console.log(recordsOfDate)
+      }
+    })
+
     this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
       this.dayView.container.remove()
       let inputDate = this.calendar.state.inputDate
@@ -63,27 +99,27 @@ class Home extends BaseComponent {
       }
     })
 
-    this.container.addEventListener('click', event => {
-      const dateString = event.target.dataset.dateString
-      const date = new Date(dateString)
-      document.querySelectorAll('.date-item').forEach(el => delete el.dataset.dateSelected)
-      this.dayView.container.remove()
-      if (dateString) {
-        event.target.dataset.dateSelected = ''
-        const recordsOfDate = Store.get('records').filter(record => {
-          const dateBegin = new Date(record.begin)
-          return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
-        })
-        if (recordsOfDate.length) {
-          const dayView = this.dayView
-          dayView.state = { records: recordsOfDate }
-          console.log(dayView)
+    // this.container.addEventListener('click', event => {
+    //   const dateString = event.target.dataset.dateString
+    //   const date = new Date(dateString)
+    //   document.querySelectorAll('.date-item').forEach(el => delete el.dataset.dateSelected)
+    //   this.dayView.container.remove()
+    //   if (dateString) {
+    //     event.target.dataset.dateSelected = ''
+    //     const recordsOfDate = Store.get('records').filter(record => {
+    //       const dateBegin = new Date(record.begin)
+    //       return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
+    //     })
+    //     if (recordsOfDate.length) {
+    //       const dayView = this.dayView
+    //       dayView.state = { records: recordsOfDate }
+    //       console.log(dayView)
 
-          this.container.appendChild(dayView.container)
-          console.log(recordsOfDate)
-        }
-      }
-    })
+    //       this.container.appendChild(dayView.container)
+    //       console.log(recordsOfDate)
+    //     }
+    //   }
+    // })
   }
 
   constructor(tag, state) {
