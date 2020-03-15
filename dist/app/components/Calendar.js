@@ -4,30 +4,23 @@ class Calendar extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
-    this.observe()
-  }
-
-  observe() {
-    this.observer = new MutationObserver(handleMutation.bind(this))
-    this.observer.observe(this.container, { childList: true, subtree: true })
-
-    function handleMutation(mutationRecord) {
-      const table = mutationRecord[0].addedNodes[0]
-      const dateItems = table.querySelectorAll('span.date-item')
-      // console.log(this)
-
-      for (const item of dateItems) {
-        const dateItemDateString = item.dataset.dateString
-        const todaysRecords = this.state.records.filter(record => {
-          return new Date(record.begin).getDate() == new Date(dateItemDateString).getDate()
-        })
-        console.log(todaysRecords)
-      }
-    }
+    // this.observe()
   }
 
   render() {
     // console.log(this.state)
+    // todo: rewrite to reduce() ?
+    this.recordsMap = {}
+    this.state.records.forEach(record => {
+      const mapDateKey = new Date(record.begin).getDate()
+      if (typeof this.recordsMap[mapDateKey] === 'undefined') {
+        this.recordsMap[mapDateKey] = []
+      }
+      this.recordsMap[mapDateKey].push(record)
+    })
+
+    console.log(this.state.records)
+    console.log(this.recordsMap)
 
     const inputDate = this.state.inputDate
 
@@ -43,6 +36,10 @@ class Calendar extends BaseComponent {
           border: 1px dotted hsla(208, 20%, 20%, .8);
           text-align: center;
           width: calc(100% / 7);
+        }
+
+        [data-calendar] .date-item {
+          display: block
         }
 
         [data-is-today] {
@@ -104,11 +101,18 @@ function createCalendar(inputDate, cb) {
         cellText = document.createTextNode('')
       } else {
         // Insert a Day [1] [2] ...
-        // console.log(this.state, getTodaysRecords(date).bind(this), date)
-
+        const dateHasRecords = typeof this.recordsMap[date] !== 'undefined'
         cellText = document.createElement('span')
         cellText.classList.add('date-item')
         cellText.dataset.dateString = `${inputDateFullYear}-${inputDateMonth + 1}-${date}`
+
+        if (dateHasRecords) {
+          for (const item of this.recordsMap[date]) {
+            console.log(item)
+            cellText.insertAdjacentHTML('beforeend', '🥵')
+          }
+        }
+
         cellText.appendChild(document.createTextNode(date))
 
         if (date == dateNowDate && inputDateFullYear == dateNowFullYear && inputDateMonth == dateNowMonth) {

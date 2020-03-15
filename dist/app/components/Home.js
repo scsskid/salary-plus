@@ -27,18 +27,18 @@ class Home extends BaseComponent {
       <section data-home-calendar></section>
     `
     // this.calendar = new Calendar(this.container.querySelector('[data-home-calendar]'), { inputDate: '1999-12' })
-    this.calendar = new Calendar('div', { inputDate: new Date(), records: recordsOfMonth() })
+    this.calendar = new Calendar('div', { inputDate: new Date(), records: this.recordsOfMonth() })
     this.container.appendChild(this.calendar.container)
 
     this.addEventListeners()
 
-    function recordsOfMonth(date = new Date()) {
-      return Store.get('records').filter(record => {
-        return new Date(record.begin).getMonth() == date.getMonth()
-      })
-    }
-
     // console.log(recordsOfMonth())
+  }
+
+  recordsOfMonth(date = new Date()) {
+    return Store.get('records').filter(record => {
+      return new Date(record.begin).getMonth() == date.getMonth()
+    })
   }
 
   addEventListeners() {
@@ -47,13 +47,13 @@ class Home extends BaseComponent {
 
       if ('monthDecrease' in event.target.dataset) {
         inputDate = changeMonth(inputDate, -1)
-        this.calendar.state = { ...this.calendar.state, inputDate }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth(inputDate) }
       } else if ('monthIncrease' in event.target.dataset) {
         inputDate = changeMonth(inputDate, 1)
-        this.calendar.state = { ...this.calendar.state, inputDate }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth(inputDate) }
       } else if ('monthReset' in event.target.dataset) {
         inputDate = new Date()
-        this.calendar.state = { ...this.calendar.state, inputDate }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth() }
       }
     })
 
