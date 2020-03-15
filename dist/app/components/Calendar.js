@@ -25,7 +25,6 @@ class Calendar extends BaseComponent {
     const inputDate = this.state.inputDate
 
     this.createCalendar = createCalendar
-    this.insertRecords = insertRecords
     this.container.innerHTML = `
       <style>
         [data-calendar] table {
@@ -52,7 +51,7 @@ class Calendar extends BaseComponent {
       </section>
     `
     setTimeout(() => {
-      this.createCalendar(inputDate, this.insertRecords.bind(this))
+      this.createCalendar(inputDate)
     }, 0)
   }
   constructor(tag, state) {
@@ -64,7 +63,7 @@ export default Calendar
 
 // Calendar Helper Functions
 
-function createCalendar(inputDate, cb) {
+function createCalendar(inputDate) {
   const table = createTableOuter()
 
   const inputDateMonth = inputDate.getMonth()
@@ -131,14 +130,6 @@ function createCalendar(inputDate, cb) {
 
   // Append Table to Dom
   this.container.querySelector('[data-calendar]').appendChild(table)
-}
-
-function insertRecords() {
-  console.log(this, this.dateItemsLive, this.dateItemsLive.length, Array.from(this.dateItemsLive))
-  // setTimeout(() => {}, timeout)
-  // for (const item of Array.from(this.dateItemsLive)) {
-  //   console.log('foo', item)
-  // }
 }
 
 function createTableOuter() {

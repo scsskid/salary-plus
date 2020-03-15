@@ -24,7 +24,7 @@ class Home extends BaseComponent {
         <button data-month-increase>next</button>
         <button data-month-reset>today</button>
       </div>
-      <section data-home-calendar></section>
+
     `
     // this.calendar = new Calendar(this.container.querySelector('[data-home-calendar]'), { inputDate: '1999-12' })
     this.calendar = new Calendar('div', { inputDate: new Date(), records: this.recordsOfMonth() })
@@ -58,11 +58,10 @@ class Home extends BaseComponent {
     })
 
     this.container.addEventListener('click', event => {
-      const date = event.target.dataset.dateString
-      if (date) {
-        console.log(date)
+      const dateString = event.target.dataset.dateString
+      if (dateString) {
+        console.log(dateString)
         // Get Records which begin-date = date
-        console.log(Store.get('records'))
       }
     })
   }
