@@ -120,7 +120,7 @@ function createCalendar(inputDate) {
 
           if (dateHasRecords) {
             for (const item of this.recordsMap[dateString]) {
-              cellText.insertAdjacentHTML('beforeend', '🥵')
+              cellText.insertAdjacentHTML('beforeend', '🍩')
             }
           }
 
