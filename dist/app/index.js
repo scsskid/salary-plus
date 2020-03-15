@@ -25,11 +25,12 @@ class App {
     this.addEventListeners()
     this.router = new Router(Routes)
 
+    /*
     if (Store.get('user') == null) {
       console.log('NO USER IN STATE')
       events.publish('navigate', { pathname: '/welcome' })
-      // this.router.loadRoute('/seeeed')
     }
+    */
 
     this.fixHeight()
   }
