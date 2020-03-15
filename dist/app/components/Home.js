@@ -34,7 +34,7 @@ class Home extends BaseComponent {
 
     `
 
-    this.calendar = new Calendar('div', { inputDate: this.inputDate, records: this.getRecordsOfMonth(this.inputDate) })
+    this.calendar = new Calendar('div', { inputDate: this.inputDate, records: this.getRecordsOfMonth(this.inputDate) || [] })
     this.container.appendChild(this.calendar.container)
 
     this.addEventListeners()
@@ -42,9 +42,13 @@ class Home extends BaseComponent {
 
   // getRecordsOfMonth(date = new Date()) {
   getRecordsOfMonth(date) {
-    return Store.get('records').filter(record => {
-      return new Date(record.begin).getMonth() == date.getMonth()
-    })
+    if (Store.get('records')) {
+      return Store.get('records').filter(record => {
+        return new Date(record.begin).getMonth() == date.getMonth()
+      })
+    } else {
+      return false
+    }
   }
 
   addEventListeners() {
@@ -66,10 +70,12 @@ class Home extends BaseComponent {
       dateToBeSelected.dataset.dateSelected = ''
 
       // find records of date
-      const recordsOfDate = Store.get('records').filter(record => {
-        const dateBegin = new Date(record.begin)
-        return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
-      })
+      const recordsOfDate = Store.get('records')
+        ? Store.get('records').filter(record => {
+            const dateBegin = new Date(record.begin)
+            return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
+          })
+        : []
 
       // display dayview
       if (recordsOfDate.length) {

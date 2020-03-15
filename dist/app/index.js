@@ -20,12 +20,17 @@ class App {
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.viewTitle = document.querySelector('[data-view-title]')
     this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
+
     this.moduleRegistry = []
-
-    // window.events = new events()
-
     this.addEventListeners()
     this.router = new Router(Routes)
+
+    if (Store.get('user') == null) {
+      console.log('NO USER IN STATE')
+      events.publish('navigate', { pathname: '/welcome' })
+      // this.router.loadRoute('/seeeed')
+    }
+
     this.fixHeight()
   }
 
