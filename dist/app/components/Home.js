@@ -1,7 +1,8 @@
 import BaseComponent from './BaseComponent.js'
 import Calendar from './Calendar.js'
-import { dispatchEvent, events } from './../utils.js'
+import { events } from './../utils.js'
 import { Store } from '../store.js'
+import CalendarDayView from './CalendarDayView.js'
 
 class Home extends BaseComponent {
   init(tag, state) {
@@ -10,12 +11,16 @@ class Home extends BaseComponent {
     this.content = {
       title: 'Overview'
     }
+    this.dayView = new CalendarDayView('div')
   }
   render() {
     this.container.innerHTML = `
       <style>
         [data-calendar-controls] button {
           touch-action: manipulation;
+        }
+        [data-date-selected] {
+          background: green;
         }
       </style>
       
@@ -43,6 +48,7 @@ class Home extends BaseComponent {
 
   addEventListeners() {
     this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
+      this.dayView.container.remove()
       let inputDate = this.calendar.state.inputDate
 
       if ('monthDecrease' in event.target.dataset) {
@@ -59,9 +65,22 @@ class Home extends BaseComponent {
 
     this.container.addEventListener('click', event => {
       const dateString = event.target.dataset.dateString
+      const date = new Date(dateString)
+      document.querySelectorAll('.date-item').forEach(el => delete el.dataset.dateSelected)
       if (dateString) {
-        console.log(dateString)
-        // Get Records which begin-date = date
+        event.target.dataset.dateSelected = ''
+        const recordsOfDate = Store.get('records').filter(record => {
+          const dateBegin = new Date(record.begin)
+          return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
+        })
+        if (recordsOfDate.length) {
+          const dayView = this.dayView
+          dayView.state = { records: recordsOfDate }
+          console.log(dayView)
+
+          this.container.appendChild(dayView.container)
+          console.log(recordsOfDate)
+        }
       }
     })
   }
