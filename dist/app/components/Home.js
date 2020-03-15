@@ -1,6 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 import Calendar from './Calendar.js'
-import { events } from './../utils.js'
+import Utils, { events } from './../utils.js'
 import { Store } from '../store.js'
 import CalendarDayView from './CalendarDayView.js'
 
@@ -47,6 +47,38 @@ class Home extends BaseComponent {
   }
 
   addEventListeners() {
+    events.on('select-date', data => {
+      console.log('on:select-date')
+      const dateItems = document.querySelectorAll('.date-item')
+      const date = data.date
+
+      // unselect current selected day
+      dateItems.forEach(el => delete el.dataset.dateSelected)
+      // clear day view
+      this.dayView.container.remove()
+
+      // find dateToBeSelected
+      const dateToBeSelected = Array.from(dateItems).find(dateItem => {
+        return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(date)
+      })
+
+      dateToBeSelected.dataset.dateSelected = ''
+
+      // find records of date
+      const recordsOfDate = Store.get('records').filter(record => {
+        const dateBegin = new Date(record.begin)
+        return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
+      })
+
+      // display dayview
+      if (recordsOfDate.length) {
+        const dayView = this.dayView
+        dayView.state = { records: recordsOfDate }
+        this.container.appendChild(dayView.container)
+        console.log(recordsOfDate)
+      }
+    })
+
     this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
       this.dayView.container.remove()
       let inputDate = this.calendar.state.inputDate
@@ -60,28 +92,6 @@ class Home extends BaseComponent {
       } else if ('monthReset' in event.target.dataset) {
         inputDate = new Date()
         this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth() }
-      }
-    })
-
-    this.container.addEventListener('click', event => {
-      const dateString = event.target.dataset.dateString
-      const date = new Date(dateString)
-      document.querySelectorAll('.date-item').forEach(el => delete el.dataset.dateSelected)
-      this.dayView.container.remove()
-      if (dateString) {
-        event.target.dataset.dateSelected = ''
-        const recordsOfDate = Store.get('records').filter(record => {
-          const dateBegin = new Date(record.begin)
-          return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
-        })
-        if (recordsOfDate.length) {
-          const dayView = this.dayView
-          dayView.state = { records: recordsOfDate }
-          console.log(dayView)
-
-          this.container.appendChild(dayView.container)
-          console.log(recordsOfDate)
-        }
       }
     })
   }
