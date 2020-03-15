@@ -6,14 +6,20 @@ import CalendarDayView from './CalendarDayView.js'
 
 class Home extends BaseComponent {
   init(tag, state) {
+    const inputDate = new Date()
+
     this.container = document.createElement(tag)
-    this.state = state
+    this.state = { ...state, calendar: { inputDate: inputDate, records: this.getRecordsOfMonth(inputDate) } }
+
+    this.dayView = new CalendarDayView('div')
+
     this.content = {
       title: 'Overview'
     }
-    this.dayView = new CalendarDayView('div')
   }
   render() {
+    console.log(this.state)
+
     this.container.innerHTML = `
       <style>
         [data-calendar-controls] button {
@@ -31,16 +37,16 @@ class Home extends BaseComponent {
       </div>
 
     `
-    // this.calendar = new Calendar(this.container.querySelector('[data-home-calendar]'), { inputDate: '1999-12' })
-    this.calendar = new Calendar('div', { inputDate: new Date(), records: this.recordsOfMonth() })
+
+    this.calendar = new Calendar('div', this.state.calendar)
     this.container.appendChild(this.calendar.container)
 
     this.addEventListeners()
 
-    // console.log(recordsOfMonth())
+    // console.log(getRecordsOfMonth())
   }
 
-  recordsOfMonth(date = new Date()) {
+  getRecordsOfMonth(date = new Date()) {
     return Store.get('records').filter(record => {
       return new Date(record.begin).getMonth() == date.getMonth()
     })
@@ -85,13 +91,13 @@ class Home extends BaseComponent {
 
       if ('monthDecrease' in event.target.dataset) {
         inputDate = changeMonth(inputDate, -1)
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth(inputDate) }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
       } else if ('monthIncrease' in event.target.dataset) {
         inputDate = changeMonth(inputDate, 1)
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth(inputDate) }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
       } else if ('monthReset' in event.target.dataset) {
         inputDate = new Date()
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth() }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth() }
       }
     })
   }
