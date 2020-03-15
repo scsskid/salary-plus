@@ -43,9 +43,13 @@ class Calendar extends BaseComponent {
         <p style="text-align: center; padding-top: 1rem"><b>${inputDate.toLocaleDateString('en', { month: 'long' })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
-    this.createCalendar(inputDate)
+    this.createCalendar(inputDate).then(resp => {
+      console.log('created', resp)
+      const table = document.querySelector('table')
+      this.selectDefaultDate()
 
-    console.log(this.container)
+      table.querySelector('th:nth-child(3)').remove()
+    })
 
     // setTimeout(() => {}, 0)
   }
@@ -89,70 +93,77 @@ export default Calendar
 // Calendar Helper Functions
 
 function createCalendar(inputDate) {
-  const table = createTableOuter()
+  return new Promise((resolve, reject) => {
+    const table = createTableOuter()
 
-  const inputDateMonth = inputDate.getMonth()
-  const inputDateFullYear = inputDate.getFullYear()
+    const inputDateMonth = inputDate.getMonth()
+    const inputDateFullYear = inputDate.getFullYear()
 
-  var dateNow = new Date()
-  const dateNowDate = dateNow.getDate()
-  const dateNowMonth = dateNow.getMonth()
-  const dateNowFullYear = dateNow.getFullYear()
-  // save firstWeekDay Int (Sun to Sat) to check for later
-  // and Adjust that Mon = 0
+    var dateNow = new Date()
+    const dateNowDate = dateNow.getDate()
+    const dateNowMonth = dateNow.getMonth()
+    const dateNowFullYear = dateNow.getFullYear()
+    // save firstWeekDay Int (Sun to Sat) to check for later
+    // and Adjust that Mon = 0
 
-  {
-    const copyDate = new Date(inputDate.getTime())
-    copyDate.setDate(1)
-    var firstDay = (copyDate.getDay() + 6) % 7 // Mo = 0; Sun = 6
-  }
-
-  let date = 1
-  for (let i = 0; i < 6; i++) {
-    const row = document.createElement('tr')
-    table.appendChild(row)
-
-    // Create Rows
-    for (let j = 0; j < 7; j++) {
-      const cell = document.createElement('td')
-      let cellText
-      // fill empty cells until first date of manth is nth day
-      // check if is first row, and interationCount is less than firstDay
-      // todo: fill with last month dates
-      if (i == 0 && j < firstDay) {
-        cellText = document.createTextNode('')
-      } else if (date > daysInMonth(inputDate)) {
-        cellText = document.createTextNode('')
-      } else {
-        // Insert a Day [1] [2] ...
-        const dateString = `${inputDateFullYear}-${(inputDateMonth + 1).toString().padStart(2, '0')}-${date}`
-
-        const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
-        cellText = document.createElement('span')
-        cellText.classList.add('date-item')
-        cellText.dataset.dateString = dateString
-
-        if (dateHasRecords) {
-          for (const item of this.recordsMap[dateString]) {
-            console.log(item)
-            cellText.insertAdjacentHTML('beforeend', '🥵')
-          }
-        }
-
-        cellText.appendChild(document.createTextNode(date))
-
-        if (date == dateNowDate && inputDateFullYear == dateNowFullYear && inputDateMonth == dateNowMonth) {
-          cellText.dataset.isToday = ''
-          // cellText.insertAdjacentHTML('beforeEnd', ` *`)
-        }
-
-        date++
-      }
-
-      cell.appendChild(cellText)
-      row.appendChild(cell)
+    {
+      const copyDate = new Date(inputDate.getTime())
+      copyDate.setDate(1)
+      var firstDay = (copyDate.getDay() + 6) % 7 // Mo = 0; Sun = 6
     }
-  }
+
+    let date = 1
+    for (let i = 0; i < 6; i++) {
+      const row = document.createElement('tr')
+      table.appendChild(row)
+
+      // Create Rows
+      for (let j = 0; j < 7; j++) {
+        const cell = document.createElement('td')
+        let cellText
+        // fill empty cells until first date of manth is nth day
+        // check if is first row, and interationCount is less than firstDay
+        // todo: fill with last month dates
+        if (i == 0 && j < firstDay) {
+          cellText = document.createTextNode('')
+        } else if (date > daysInMonth(inputDate)) {
+          cellText = document.createTextNode('')
+        } else {
+          // Insert a Day [1] [2] ...
+          const dateString = `${inputDateFullYear}-${(inputDateMonth + 1).toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`
+
+          const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
+          cellText = document.createElement('span')
+          cellText.classList.add('date-item')
+          cellText.dataset.dateString = dateString
+
+          if (dateHasRecords) {
+            for (const item of this.recordsMap[dateString]) {
+              console.log(item)
+              cellText.insertAdjacentHTML('beforeend', '🥵')
+            }
+          }
+
+          cellText.appendChild(document.createTextNode(date))
+
+          if (date == dateNowDate && inputDateFullYear == dateNowFullYear && inputDateMonth == dateNowMonth) {
+            cellText.dataset.isToday = ''
+            // cellText.insertAdjacentHTML('beforeEnd', ` *`)
+          }
+
+          date++
+        }
+
+        cell.appendChild(cellText)
+        row.appendChild(cell)
+      }
+    }
+
+    const resp = this.container.querySelector('[data-calendar]').appendChild(table)
+    if (resp) {
+      resolve({ msg: 'huhu', el: resp })
+    }
+  })
 
   // Append Table to Dom
 

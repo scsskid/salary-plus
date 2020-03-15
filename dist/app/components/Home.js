@@ -49,6 +49,8 @@ class Home extends BaseComponent {
   addEventListeners() {
     events.on('select-date', data => {
       const dateItems = document.querySelectorAll('.date-item')
+      console.log(dateItems)
+
       const date = data.date
 
       console.log('on:select-date')
@@ -66,7 +68,7 @@ class Home extends BaseComponent {
       })
 
       console.log(dateToBeSelected)
-
+      dateToBeSelected.dataset.dateSelected = ''
       // .dataset.dateSelected = ''
 
       const recordsOfDate = Store.get('records').filter(record => {
