@@ -75,7 +75,10 @@ class Calendar extends BaseComponent {
     // todo: rewrite to reduce() ?
     this.recordsMap = {}
     this.state.records.forEach(record => {
-      const mapDateKey = `${new Date(record.begin).getFullYear()}-${new Date(record.begin).getMonth() + 1}-${new Date(record.begin).getDate()}`
+      const mapDateKey = `${new Date(record.begin).getFullYear()}-${(new Date(record.begin).getMonth() + 1).toString().padStart(2, '0')}-${new Date(record.begin)
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`
       if (typeof this.recordsMap[mapDateKey] === 'undefined') {
         this.recordsMap[mapDateKey] = []
       }

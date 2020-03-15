@@ -100,28 +100,6 @@ class Home extends BaseComponent {
         this.calendar.state = { ...this.calendar.state, inputDate, records: this.recordsOfMonth() }
       }
     })
-
-    // this.container.addEventListener('click', event => {
-    //   const dateString = event.target.dataset.dateString
-    //   const date = new Date(dateString)
-    //   document.querySelectorAll('.date-item').forEach(el => delete el.dataset.dateSelected)
-    //   this.dayView.container.remove()
-    //   if (dateString) {
-    //     event.target.dataset.dateSelected = ''
-    //     const recordsOfDate = Store.get('records').filter(record => {
-    //       const dateBegin = new Date(record.begin)
-    //       return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
-    //     })
-    //     if (recordsOfDate.length) {
-    //       const dayView = this.dayView
-    //       dayView.state = { records: recordsOfDate }
-    //       console.log(dayView)
-
-    //       this.container.appendChild(dayView.container)
-    //       console.log(recordsOfDate)
-    //     }
-    //   }
-    // })
   }
 
   constructor(tag, state) {
