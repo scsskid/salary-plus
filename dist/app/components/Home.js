@@ -48,38 +48,32 @@ class Home extends BaseComponent {
 
   addEventListeners() {
     events.on('select-date', data => {
+      console.log('on:select-date')
       const dateItems = document.querySelectorAll('.date-item')
-      console.log(dateItems)
-
       const date = data.date
 
-      console.log('on:select-date')
-
-      // clear day view
+      // unselect current selected day
       dateItems.forEach(el => delete el.dataset.dateSelected)
-
+      // clear day view
       this.dayView.container.remove()
 
-      // todo: select date visually
-      console.log(Utils.getTimeZoneAwareIsoString(date))
-
+      // find dateToBeSelected
       const dateToBeSelected = Array.from(dateItems).find(dateItem => {
         return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(date)
       })
 
-      console.log(dateToBeSelected)
       dateToBeSelected.dataset.dateSelected = ''
-      // .dataset.dateSelected = ''
 
+      // find records of date
       const recordsOfDate = Store.get('records').filter(record => {
         const dateBegin = new Date(record.begin)
         return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
       })
+
+      // display dayview
       if (recordsOfDate.length) {
         const dayView = this.dayView
         dayView.state = { records: recordsOfDate }
-        console.log(dayView)
-
         this.container.appendChild(dayView.container)
         console.log(recordsOfDate)
       }

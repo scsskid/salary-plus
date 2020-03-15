@@ -5,7 +5,6 @@ export default class CalendarDayView extends BaseComponent {
     this.container = document.createElement(tag)
     this.container.dataset.module = 'calendar-day-view'
     this.state = state
-    console.log(state)
   }
   render() {
     this.container.innerHTML = ''

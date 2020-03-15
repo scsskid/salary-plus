@@ -9,15 +9,10 @@ class Calendar extends BaseComponent {
   }
 
   render() {
-    // console.log(this.state)
     this.createRecordsMap()
-
-    console.log(this.state.records)
-    console.log(this.recordsMap)
-
     const inputDate = this.state.inputDate
-
     this.createCalendar = createCalendar
+
     this.container.innerHTML = `
       <style>
         [data-calendar] table {
@@ -43,30 +38,15 @@ class Calendar extends BaseComponent {
         <p style="text-align: center; padding-top: 1rem"><b>${inputDate.toLocaleDateString('en', { month: 'long' })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
-    this.createCalendar(inputDate).then(resp => {
-      console.log('created', resp)
-      const table = document.querySelector('table')
-      this.selectDefaultDate()
-
-      table.querySelector('th:nth-child(3)').remove()
-    })
-
-    // setTimeout(() => {}, 0)
-  }
-
-  selectDefaultDate() {
-    // today if is current month, 1st of month if other
-    events.publish('select-date', { date: this.state.inputDate })
+    this.createCalendar(inputDate).then(_ => events.publish('select-date', { date: this.state.inputDate }))
   }
 
   addEventListeners() {
     this.container.addEventListener('click', event => {
-      console.log(this.state.inputDate)
       const dateString = event.target.dataset.dateString
       if (dateString) {
         events.publish('select-date', { date: new Date(dateString) })
       }
-      // select(Day)
     })
   }
 
@@ -98,24 +78,22 @@ export default Calendar
 function createCalendar(inputDate) {
   return new Promise((resolve, reject) => {
     const table = createTableOuter()
-
     const inputDateMonth = inputDate.getMonth()
     const inputDateFullYear = inputDate.getFullYear()
-
-    var dateNow = new Date()
+    const dateNow = new Date()
     const dateNowDate = dateNow.getDate()
     const dateNowMonth = dateNow.getMonth()
     const dateNowFullYear = dateNow.getFullYear()
+    let date = 1
+
     // save firstWeekDay Int (Sun to Sat) to check for later
     // and Adjust that Mon = 0
-
     {
       const copyDate = new Date(inputDate.getTime())
       copyDate.setDate(1)
       var firstDay = (copyDate.getDay() + 6) % 7 // Mo = 0; Sun = 6
     }
 
-    let date = 1
     for (let i = 0; i < 6; i++) {
       const row = document.createElement('tr')
       table.appendChild(row)
@@ -142,7 +120,6 @@ function createCalendar(inputDate) {
 
           if (dateHasRecords) {
             for (const item of this.recordsMap[dateString]) {
-              console.log(item)
               cellText.insertAdjacentHTML('beforeend', '🥵')
             }
           }
@@ -167,13 +144,6 @@ function createCalendar(inputDate) {
       resolve({ msg: 'huhu', el: resp })
     }
   })
-
-  // Append Table to Dom
-
-  this.container.querySelector('[data-calendar]').appendChild(table)
-  setTimeout(() => {
-    this.selectDefaultDate()
-  }, 0)
 }
 
 function createTableOuter() {
@@ -189,7 +159,6 @@ function createTableOuter() {
     }
     table.appendChild(row)
   }
-
   return table
 }
 
