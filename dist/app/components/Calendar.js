@@ -12,7 +12,7 @@ class Calendar extends BaseComponent {
     // todo: rewrite to reduce() ?
     this.recordsMap = {}
     this.state.records.forEach(record => {
-      const mapDateKey = new Date(record.begin).getDate()
+      const mapDateKey = `${new Date(record.begin).getFullYear()}-${new Date(record.begin).getMonth() + 1}-${new Date(record.begin).getDate()}`
       if (typeof this.recordsMap[mapDateKey] === 'undefined') {
         this.recordsMap[mapDateKey] = []
       }
@@ -101,13 +101,14 @@ function createCalendar(inputDate, cb) {
         cellText = document.createTextNode('')
       } else {
         // Insert a Day [1] [2] ...
-        const dateHasRecords = typeof this.recordsMap[date] !== 'undefined'
+        const dateString = `${inputDateFullYear}-${inputDateMonth + 1}-${date}`
+        const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
         cellText = document.createElement('span')
         cellText.classList.add('date-item')
-        cellText.dataset.dateString = `${inputDateFullYear}-${inputDateMonth + 1}-${date}`
+        cellText.dataset.dateString = dateString
 
         if (dateHasRecords) {
-          for (const item of this.recordsMap[date]) {
+          for (const item of this.recordsMap[dateString]) {
             console.log(item)
             cellText.insertAdjacentHTML('beforeend', '🥵')
           }
