@@ -3,13 +3,36 @@ import BaseComponent from './BaseComponent.js'
 class Calendar extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.state = { ...state, inputDate: state.inputDate !== undefined ? new Date(state.inputDate) : new Date() }
+    this.state = state
+    this.observe()
+  }
+
+  observe() {
+    this.observer = new MutationObserver(handleMutation.bind(this))
+    this.observer.observe(this.container, { childList: true, subtree: true })
+
+    function handleMutation(mutationRecord) {
+      const table = mutationRecord[0].addedNodes[0]
+      const dateItems = table.querySelectorAll('span.date-item')
+      // console.log(this)
+
+      for (const item of dateItems) {
+        const dateItemDateString = item.dataset.dateString
+        const todaysRecords = this.state.records.filter(record => {
+          return new Date(record.begin).getDate() == new Date(dateItemDateString).getDate()
+        })
+        console.log(todaysRecords)
+      }
+    }
   }
 
   render() {
+    // console.log(this.state)
+
     const inputDate = this.state.inputDate
 
     this.createCalendar = createCalendar
+    this.insertRecords = insertRecords
     this.container.innerHTML = `
       <style>
         [data-calendar] table {
@@ -31,8 +54,9 @@ class Calendar extends BaseComponent {
         <p style="text-align: center; padding-top: 1rem"><b>${inputDate.toLocaleDateString('en', { month: 'long' })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
-
-    this.createCalendar(inputDate)
+    setTimeout(() => {
+      this.createCalendar(inputDate, this.insertRecords.bind(this))
+    }, 0)
   }
   constructor(tag, state) {
     super(tag, state)
@@ -43,9 +67,16 @@ export default Calendar
 
 // Calendar Helper Functions
 
-function createCalendar(inputDate) {
+function createCalendar(inputDate, cb) {
   const table = createTableOuter()
+
+  const inputDateMonth = inputDate.getMonth()
+  const inputDateFullYear = inputDate.getFullYear()
+
   var dateNow = new Date()
+  const dateNowDate = dateNow.getDate()
+  const dateNowMonth = dateNow.getMonth()
+  const dateNowFullYear = dateNow.getFullYear()
   // save firstWeekDay Int (Sun to Sat) to check for later
   // and Adjust that Mon = 0
 
@@ -68,17 +99,19 @@ function createCalendar(inputDate) {
       // check if is first row, and interationCount is less than firstDay
       // todo: fill with last month dates
       if (i == 0 && j < firstDay) {
-        cellText = document.createTextNode('😴')
+        cellText = document.createTextNode('')
       } else if (date > daysInMonth(inputDate)) {
-        cellText = document.createTextNode('😱')
+        cellText = document.createTextNode('')
       } else {
-        // console.log(inputDate)
+        // Insert a Day [1] [2] ...
+        // console.log(this.state, getTodaysRecords(date).bind(this), date)
 
         cellText = document.createElement('span')
-        cellText.dataset.dateString = `${inputDate.getFullYear()}-${inputDate.getMonth() + 1}-${date}`
+        cellText.classList.add('date-item')
+        cellText.dataset.dateString = `${inputDateFullYear}-${inputDateMonth + 1}-${date}`
         cellText.appendChild(document.createTextNode(date))
 
-        if (date == dateNow.getDate() && inputDate.getFullYear() == dateNow.getFullYear() && inputDate.getMonth() == dateNow.getMonth()) {
+        if (date == dateNowDate && inputDateFullYear == dateNowFullYear && inputDateMonth == dateNowMonth) {
           cellText.dataset.isToday = ''
           // cellText.insertAdjacentHTML('beforeEnd', ` *`)
         }
@@ -91,7 +124,16 @@ function createCalendar(inputDate) {
     }
   }
 
+  // Append Table to Dom
   this.container.querySelector('[data-calendar]').appendChild(table)
+}
+
+function insertRecords() {
+  console.log(this, this.dateItemsLive, this.dateItemsLive.length, Array.from(this.dateItemsLive))
+  // setTimeout(() => {}, timeout)
+  // for (const item of Array.from(this.dateItemsLive)) {
+  //   console.log('foo', item)
+  // }
 }
 
 function createTableOuter() {
