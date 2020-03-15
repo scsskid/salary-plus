@@ -67,6 +67,7 @@ class Home extends BaseComponent {
       const dateString = event.target.dataset.dateString
       const date = new Date(dateString)
       document.querySelectorAll('.date-item').forEach(el => delete el.dataset.dateSelected)
+      this.dayView.container.remove()
       if (dateString) {
         event.target.dataset.dateSelected = ''
         const recordsOfDate = Store.get('records').filter(record => {
