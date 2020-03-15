@@ -1,16 +1,14 @@
 import BaseComponent from './BaseComponent.js'
 import Calendar from './Calendar.js'
-import Utils, { events } from './../utils.js'
+import Utils, { events, isCurrentMonth } from './../utils.js'
 import { Store } from '../store.js'
 import CalendarDayView from './CalendarDayView.js'
 
 class Home extends BaseComponent {
   init(tag, state) {
-    const inputDate = new Date()
-
     this.container = document.createElement(tag)
-    this.state = { ...state, calendar: { inputDate: inputDate, records: this.getRecordsOfMonth(inputDate) } }
-
+    this.inputDate = new Date()
+    this.state = state
     this.dayView = new CalendarDayView('div')
 
     this.content = {
@@ -18,8 +16,6 @@ class Home extends BaseComponent {
     }
   }
   render() {
-    console.log(this.state)
-
     this.container.innerHTML = `
       <style>
         [data-calendar-controls] button {
@@ -38,15 +34,14 @@ class Home extends BaseComponent {
 
     `
 
-    this.calendar = new Calendar('div', this.state.calendar)
+    this.calendar = new Calendar('div', { inputDate: this.inputDate, records: this.getRecordsOfMonth(this.inputDate) })
     this.container.appendChild(this.calendar.container)
 
     this.addEventListeners()
-
-    // console.log(getRecordsOfMonth())
   }
 
-  getRecordsOfMonth(date = new Date()) {
+  // getRecordsOfMonth(date = new Date()) {
+  getRecordsOfMonth(date) {
     return Store.get('records').filter(record => {
       return new Date(record.begin).getMonth() == date.getMonth()
     })
@@ -89,15 +84,19 @@ class Home extends BaseComponent {
       this.dayView.container.remove()
       let inputDate = this.calendar.state.inputDate
 
+      // if inputDate = current Month set day to today
+
       if ('monthDecrease' in event.target.dataset) {
         inputDate = changeMonth(inputDate, -1)
+        inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
         this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
       } else if ('monthIncrease' in event.target.dataset) {
         inputDate = changeMonth(inputDate, 1)
+        inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
         this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
       } else if ('monthReset' in event.target.dataset) {
         inputDate = new Date()
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth() }
+        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(new Date()) }
       }
     })
   }

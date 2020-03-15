@@ -178,3 +178,8 @@ export const events = {
     }
   }
 }
+
+export function isCurrentMonth(date) {
+  const now = new Date()
+  return date.getMonth() == now.getMonth() && date.getFullYear() == now.getFullYear()
+}
