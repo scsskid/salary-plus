@@ -1,4 +1,4 @@
 .DS_Store
 node_modules
-data/records.csv
+dist/app/data/records.js
 dist/css
