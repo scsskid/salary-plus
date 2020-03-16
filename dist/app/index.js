@@ -54,7 +54,10 @@ class App {
 
     // Process Form Data
     events.on('record-submitted', data => Store.setRecord(data))
-    events.on('record-delete', data => Store.deleteRecord(data.id))
+    events.on('record-delete', data => {
+      Store.deleteRecord(data.id)
+      events.publish('navigate', { pathname: data.referer })
+    })
 
     // Admin Tools
     events.on('save-sample-data', Store.saveSampleData)

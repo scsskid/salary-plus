@@ -33,12 +33,6 @@ class RecordsList extends BaseComponent {
           this.recordsListItem = new RecordsListItem(this.recordsListItemContainer, record)
         })
     }
-
-    // dispatchEvent('render', window, { title: 'List of all Records' })
-    // events.publish('update-title', { title: 'List Of ...' })
-    // events.events['hollyyyy-cow'] = ['func1', 'func2']
-
-    // console.log(events)
   }
 
   static markup(records) {

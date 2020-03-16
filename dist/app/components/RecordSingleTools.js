@@ -26,20 +26,10 @@ export default class RecordTools {
 
   addEventListeners() {
     // Click on Link to Single Record
-    this.container.querySelector('.record-delete').addEventListener('click', todo)
-
-    function handleClickDeleteRecord(event) {
+    this.container.querySelector('.record-delete').addEventListener('click', handleDeleteButtonClick)
+    function handleDeleteButtonClick(event) {
       const listItem = event.target.closest('.records-list-item')
-      const recordDeleteEvent = new CustomEvent('record-delete', {
-        bubbles: true,
-        detail: { id: listItem.dataset.id }
-      })
-      listItem.dispatchEvent(recordDeleteEvent)
-    }
-
-    function todo(event) {
-      const listItem = event.target.closest('.records-list-item')
-      events.publish('record-delete', { id: listItem.dataset.id })
+      events.publish('record-delete', { id: listItem.dataset.id, referer: window.location.pathname })
     }
   }
 
