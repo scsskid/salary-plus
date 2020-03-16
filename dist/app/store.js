@@ -73,4 +73,5 @@ Store.saveSampleData = function() {
   localStorage.setItem('sp_user', JSON.stringify(sampleData.user))
   localStorage.setItem('sp_records', JSON.stringify(sampleData.records))
   localStorage.setItem('sp_jobs', JSON.stringify(sampleData.jobs))
+  localStorage.setItem('sp_patterns', JSON.stringify(sampleData.patterns))
 }
