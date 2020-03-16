@@ -1,5 +1,7 @@
 import BaseComponent from './BaseComponent.js'
-import { dispatchEvent, events } from './../utils.js'
+import Utils, { events } from './../utils.js'
+import MajaRecords from '../data/records.js'
+import { Store } from './../store.js'
 
 class Debug extends BaseComponent {
   init(tag, state) {
@@ -8,6 +10,39 @@ class Debug extends BaseComponent {
     this.content = {
       title: 'Debug'
     }
+  }
+
+  importSalaryBookRecords() {
+    let aiid = 0
+    const map = MajaRecords.map((record, i) => {
+      // console.log(record)
+      const dateFragments = record['Datum'].split('.')
+      const dateBegin = `${dateFragments[2]}-${dateFragments[1]}-${dateFragments[0]}`
+      // console.log(record['Datum'], new Date(dateBegin))
+
+      record = {
+        id: ++aiid,
+        jobId: 1,
+        dateBegin: dateBegin,
+        timeBegin: record['Beginn'],
+        timeEnd: record['Ende'],
+        bonus: record['Zusätzl. Bezahlung'].split(' ')[0].replace(',', '.'),
+        note: record['Notizen']
+      }
+
+      record = Utils.processRecordFormData(record)
+      return { ...record }
+    })
+
+    console.log(map)
+
+    // Store.set('records', map)
+
+    // map.forEach(el => {
+    //   for (const prop in el) {
+    //     console.log(prop, el[prop])
+    //   }
+    // })
   }
 
   render() {

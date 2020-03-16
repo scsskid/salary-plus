@@ -41,6 +41,7 @@ class Home extends BaseComponent {
   }
 
   // getRecordsOfMonth(date = new Date()) {
+  // ! Move To Store
   getRecordsOfMonth(date) {
     if (Store.get('records')) {
       return Store.get('records').filter(record => {
@@ -70,6 +71,7 @@ class Home extends BaseComponent {
       dateToBeSelected.dataset.dateSelected = ''
 
       // find records of date
+      // ! Move To Store
       const recordsOfDate = Store.get('records')
         ? Store.get('records').filter(record => {
             const dateBegin = new Date(record.begin)
