@@ -38,7 +38,9 @@ class RecordForm extends BaseComponent {
       jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
       dateBegin: Utils.formatDate.rfc3339(new Date()),
       timeBegin: '14:00',
-      timeEnd: '00:00'
+      timeEnd: '00:00',
+      rate: Store.get('jobs').find(job => job.id == 1).rate,
+      bonus: '0.00'
     }
 
     // set state.record to default if { mode: new }

@@ -29,6 +29,10 @@ html {
 
 /* Forms */
 
+select {
+  background: #fff;
+}
+
 input {
   cursor: pointer;
   border: none;
