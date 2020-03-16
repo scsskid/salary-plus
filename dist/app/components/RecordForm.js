@@ -59,6 +59,8 @@ class RecordForm extends BaseComponent {
     this.inputDate = this.container.querySelector('#entry-date')
     this.inputBeginTime = this.container.querySelector('#entry-begin-time')
     this.inputEndTime = this.container.querySelector('#entry-end-time')
+    this.inputBonus = this.container.querySelector('#entry-bonus')
+    this.inputSickLeave = this.container.querySelector('#entry-sick-leave')
 
     this.populateForm()
     this.addEventListeners()
@@ -72,6 +74,8 @@ class RecordForm extends BaseComponent {
     this.inputDate.value = this.state.record.dateBegin
     this.inputBeginTime.value = this.state.record.timeBegin
     this.inputEndTime.value = this.state.record.timeEnd
+    this.inputBonus.value = this.state.record.bonus
+    this.inputSickLeave.checked = this.state.record.sickLeave == 'true' ? 'checked' : ''
   }
 
   addEventListeners() {
@@ -87,7 +91,7 @@ class RecordForm extends BaseComponent {
 
       // add id from form.dataset
       if (typeof event.target.dataset.id !== 'undefined') {
-        formData.id = event.target.dataset.id
+        formData.id = parseInt(event.target.dataset.id)
       }
 
       // Dispatch Event /w attached unaltered formData
@@ -111,7 +115,7 @@ class RecordForm extends BaseComponent {
 
     return `
       <section class="edit-record" data-id>
-        <h2><b>--${state.mode}--</b> Record</h2>
+        <h2>${state.mode == 'edit' ? 'Edit' : 'Add New'} Record</h2>
         <form action="">
           <div class="form-el">
             <label for="entry-job">Job</label>
@@ -131,9 +135,17 @@ class RecordForm extends BaseComponent {
             <label for="entry-end-time">End Time</label>
             <input name="timeEnd" id="entry-end-time" type="time">
           </div>
+          <div class="form-el">
+            <label for="entry-bonus">Bonus</label>
+            <input style="text-align: right" name="bonus" id="entry-bonus" type="number" step="0.01"> €
+          </div>        
+          <div class="form-el">
+            <label for="entry-sick-leave">Sick Leave</label>
+            <input name="sickLeave" id="entry-sick-leave" type="checkbox">
+          </div>                
 
           <div class="form-el">
-            <button data-button-submit>Save New</button>
+            <button data-button-submit>Save${state.mode == 'new' ? ' New' : ''}</button>
           </div>
         </form>
       </section>    

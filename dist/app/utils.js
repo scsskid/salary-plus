@@ -78,7 +78,7 @@ export default {
       end,
       bonus: record.bonus || '',
       note: record.note || '',
-      sickLeave: record.sickLeave || '',
+      sickLeave: record.sickLeave == 'on' ? 'true' : '' || '',
       status: record.status || ''
     }
   },
@@ -113,6 +113,8 @@ export default {
     const record = args[0] || undefined
     const mode = args[1] || 'display'
 
+    console.log(record)
+
     let mapped = {}
 
     if (mode == 'form') {
@@ -121,7 +123,10 @@ export default {
         jobId: parseInt(record.jobId || 0),
         dateBegin: this.formatDate.rfc3339(new Date(record.begin)),
         timeBegin: this.formatTime(record.begin),
-        timeEnd: this.formatTime(record.end)
+        timeEnd: this.formatTime(record.end),
+        bonus: record.bonus,
+        sickLeave: record.sickLeave,
+        status: record.status
       }
     } else if (mode == 'display') {
       var jobs = Store.get('jobs')
@@ -140,7 +145,10 @@ export default {
         timeEnd: this.formatTime(record.end),
         end: record.end,
         timeElapsed,
-        earned
+        earned,
+        bonus: record.bonus,
+        sickLeave: record.sickLeave,
+        status: record.status
       }
     }
     return mapped
