@@ -62,7 +62,7 @@ Store.getRecordsMaxId = function() {
   var maxId = 0
   Store.get('records').forEach(record => {
     if (maxId < record.id) {
-      maxId = record.id
+      maxId = parseInt(record.id)
     }
   })
   return maxId
