@@ -79,7 +79,9 @@ export default {
       bonus: record.bonus || '',
       note: record.note || '',
       sickLeave: record.sickLeave == 'on' ? 'true' : '' || '',
-      status: record.status || ''
+      status: record.status || '',
+      rate: record.rate || '',
+      interval: record.rateInterval || ''
     }
   },
 
@@ -109,48 +111,34 @@ export default {
   /**
    * Maps Storage Data to Form values or to Display Values
    */
-  mapRecord(...args) {
+  mapLocalStorageRecord(...args) {
     const record = args[0] || undefined
+    // console.log(record)
     const mode = args[1] || 'display'
-
-    console.log(record)
-
     let mapped = {}
+    var timeElapsed = this.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+    var earnedNumber = this.timeToDecimal(timeElapsed) * record.rate
+    var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+    // var earned = earnedNumber.toLocaleString('de-DE', { minimumFractionDigits: 2 })
+    var jobs = Store.get('jobs')
+    var job = jobs.find(job => {
+      return job.id == record.jobId
+    })
 
-    if (mode == 'form') {
-      mapped = {
-        id: record.id || undefined,
-        jobId: parseInt(record.jobId || 0),
-        dateBegin: this.formatDate.rfc3339(new Date(record.begin)),
-        timeBegin: this.formatTime(record.begin),
-        timeEnd: this.formatTime(record.end),
-        bonus: record.bonus,
-        sickLeave: record.sickLeave,
-        status: record.status
-      }
-    } else if (mode == 'display') {
-      var jobs = Store.get('jobs')
-      var job = jobs.find(job => {
-        return job.id == record.jobId
-      })
-      var timeElapsed = this.getTimeElapsed(new Date(record.end) - new Date(record.begin))
-      var earnedNumber = this.timeToDecimal(timeElapsed) * job.rate
-      var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
-
-      mapped = {
-        id: record.id,
-        jobId: parseInt(record.jobId),
-        dateBegin: this.formatDate.nice(record.begin),
-        timeBegin: this.formatTime(record.begin),
-        timeEnd: this.formatTime(record.end),
-        end: record.end,
-        timeElapsed,
-        earned,
-        bonus: record.bonus,
-        sickLeave: record.sickLeave,
-        status: record.status
-      }
+    mapped = {
+      id: record.id || undefined,
+      jobId: parseInt(record.jobId || 0),
+      dateBegin: this.formatDate.rfc3339(new Date(record.begin)),
+      timeBegin: this.formatTime(record.begin),
+      timeEnd: this.formatTime(record.end),
+      timeElapsed,
+      earned,
+      bonus: record.bonus,
+      rate: record.rate,
+      sickLeave: record.sickLeave,
+      status: record.status
     }
+
     return mapped
   }
 }

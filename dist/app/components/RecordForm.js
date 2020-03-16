@@ -29,7 +29,8 @@ class RecordForm extends BaseComponent {
 
     // If no record prop in state, mode is 'new', otherwise 'edit
 
-    this.state = { jobs: Store.get('jobs') || [], ...state, ...{ mode: state.recordId != undefined ? 'edit' : 'new' } } || {}
+    this.state =
+      { jobs: Store.get('jobs') || [], ...state, ...{ mode: state.recordId != undefined ? 'edit' : 'new' } } || {}
 
     // Defaults
 
@@ -46,8 +47,9 @@ class RecordForm extends BaseComponent {
       record = this.defaultFormValues
     } else if (this.state.mode == 'edit') {
       // map data from localstorage to format of form
-      record = Utils.mapRecord(Store.getRecord(this.state.recordId), 'form')
+      record = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
     }
+    console.log(record)
     this.state = { ...this.state, ...{ record } }
 
     this.render()
@@ -60,6 +62,7 @@ class RecordForm extends BaseComponent {
     this.inputBeginTime = this.container.querySelector('#entry-begin-time')
     this.inputEndTime = this.container.querySelector('#entry-end-time')
     this.inputBonus = this.container.querySelector('#entry-bonus')
+    this.inputRate = this.container.querySelector('#entry-rate')
     this.inputSickLeave = this.container.querySelector('#entry-sick-leave')
 
     this.populateForm()
@@ -75,6 +78,7 @@ class RecordForm extends BaseComponent {
     this.inputBeginTime.value = this.state.record.timeBegin
     this.inputEndTime.value = this.state.record.timeEnd
     this.inputBonus.value = this.state.record.bonus
+    this.inputRate.value = this.state.record.rate
     this.inputSickLeave.checked = this.state.record.sickLeave == 'true' ? 'checked' : ''
   }
 
@@ -135,6 +139,10 @@ class RecordForm extends BaseComponent {
             <label for="entry-end-time">End Time</label>
             <input name="timeEnd" id="entry-end-time" type="time">
           </div>
+          <div class="form-el">
+            <label for="entry-rate">Rate</label>
+            <input style="text-align: right" name="rate" id="entry-rate" type="number" step="0.01"> €
+          </div>            
           <div class="form-el">
             <label for="entry-bonus">Bonus</label>
             <input style="text-align: right" name="bonus" id="entry-bonus" type="number" step="0.01"> €

@@ -10,6 +10,7 @@ class Debug extends BaseComponent {
     this.content = {
       title: 'Debug'
     }
+    this.importSalaryBookRecords()
   }
 
   importSalaryBookRecords() {
@@ -27,7 +28,9 @@ class Debug extends BaseComponent {
         timeBegin: record['Beginn'],
         timeEnd: record['Ende'],
         bonus: record['Zusätzl. Bezahlung'].split(' ')[0].replace(',', '.'),
-        note: record['Notizen']
+        note: record['Notizen'],
+        rate: record['Stundenlohn'].split(' ')[0].replace(',', '.'),
+        rateInterval: 'hourly'
       }
 
       record = Utils.processRecordFormData(record)
@@ -38,11 +41,11 @@ class Debug extends BaseComponent {
 
     // Store.set('records', map)
 
-    // map.forEach(el => {
-    //   for (const prop in el) {
-    //     console.log(prop, el[prop])
-    //   }
-    // })
+    map.forEach(el => {
+      for (const prop in el) {
+        console.log(prop, el[prop])
+      }
+    })
   }
 
   render() {

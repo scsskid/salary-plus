@@ -17,7 +17,7 @@ export default class RecordsListItem {
   }
 
   render() {
-    const record = utils.mapRecord(this.state)
+    const record = utils.mapLocalStorageRecord(this.state)
     // record.recordEditButton = new RecordEditButton(document.querySelector('.record-footer'), this.state.id).render()
 
     this.rootEl = document.createElement('article')
