@@ -69,11 +69,15 @@ export default {
     let begin = new Date(record.dateBegin + ' ' + record.timeBegin).toISOString()
     let end = new Date(record.dateEnd + ' ' + record.timeEnd).toISOString()
 
+    delete record.dateEnd // ? otherwise it get returned, why?
+
     return {
       id: parseInt(record.id),
       jobId: parseInt(record.jobId),
       begin,
-      end
+      end,
+      bonus: record.bonus || '',
+      note: record.note || ''
     }
   },
 
