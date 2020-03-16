@@ -72,12 +72,14 @@ export default {
     delete record.dateEnd // ? otherwise it get returned, why?
 
     return {
-      id: parseInt(record.id),
-      jobId: parseInt(record.jobId),
+      id: record.id,
+      jobId: parseInt(record.jobId), // ? Why parseInt()?
       begin,
       end,
       bonus: record.bonus || '',
-      note: record.note || ''
+      note: record.note || '',
+      sickLeave: record.sickLeave || '',
+      status: record.status || ''
     }
   },
 

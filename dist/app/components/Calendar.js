@@ -54,7 +54,6 @@ class Calendar extends BaseComponent {
     // map date of Records to days of calendar
     // todo: rewrite to reduce() ?
     this.recordsMap = {}
-    console.log(this.state.records)
 
     if (this.state.records) {
       this.state.records.forEach(record => {

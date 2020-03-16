@@ -53,7 +53,7 @@ class App {
     events.on('update-view-title', data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View'))
 
     // Process Form Data
-    events.on('record-submitted', data => Store.setRecord(data.formData))
+    events.on('record-submitted', data => Store.setRecord(data))
     events.on('record-delete', data => Store.deleteRecord(data.id))
 
     // Admin Tools

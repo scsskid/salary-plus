@@ -54,7 +54,6 @@ class Home extends BaseComponent {
 
   addEventListeners() {
     events.on('select-date', data => {
-      console.log('on:select-date')
       const dateItems = document.querySelectorAll('.date-item')
       const date = data.date
 
@@ -84,7 +83,6 @@ class Home extends BaseComponent {
         const dayView = this.dayView
         dayView.state = { records: recordsOfDate }
         this.container.appendChild(dayView.container)
-        console.log(recordsOfDate)
       }
     })
 

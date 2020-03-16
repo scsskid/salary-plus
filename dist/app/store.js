@@ -21,7 +21,7 @@ Store.setRecord = function(submittedRecord) {
   let records = [...Store.get('records')]
   submittedRecord = Utils.processRecordFormData(submittedRecord)
 
-  if (submittedRecord.id == 'undefined') {
+  if (typeof submittedRecord.id == 'undefined') {
     // new
     submittedRecord.id = Store.getRecordsMaxId() + 1
     records.push(submittedRecord)
@@ -32,6 +32,7 @@ Store.setRecord = function(submittedRecord) {
     })
     records[targetIndex] = submittedRecord
   }
+
   Store.set('records', records)
 }
 
@@ -41,7 +42,7 @@ Store.deleteRecord = function(id) {
   const targetIndex = records.findIndex(el => {
     return el.id == id
   })
-  console.log(targetIndex)
+  // console.log('deleted index: ', targetIndex)
 
   if (targetIndex != -1) {
     records.splice(targetIndex, 1)

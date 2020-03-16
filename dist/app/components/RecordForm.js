@@ -20,7 +20,7 @@ class RecordForm extends BaseComponent {
   }
 
   init(tag, state) {
-    console.log('Form Init', state)
+    // console.log('Form Init', state)
 
     this.content = {
       title: 'Form'
@@ -65,13 +65,17 @@ class RecordForm extends BaseComponent {
   }
 
   populateForm() {
-    this.form.dataset.id = this.state.record.id
+    if (typeof this.state.record.id != 'undefined') {
+      this.form.dataset.id = this.state.record.id
+    }
+
     this.inputDate.value = this.state.record.dateBegin
     this.inputBeginTime.value = this.state.record.timeBegin
     this.inputEndTime.value = this.state.record.timeEnd
   }
 
   addEventListeners() {
+    // Submit
     this.container.addEventListener('submit', event => {
       event.preventDefault()
       const form = event.target
@@ -82,14 +86,12 @@ class RecordForm extends BaseComponent {
       }
 
       // add id from form.dataset
-      formData.id = event.target.dataset.id
+      if (typeof event.target.dataset.id !== 'undefined') {
+        formData.id = event.target.dataset.id
+      }
 
       // Dispatch Event /w attached unaltered formData
-      events.publish('record-submitted', {
-        formData: formData
-      })
-
-      // this.state.record = formData
+      events.publish('record-submitted', formData)
 
       // ! trying to reconstruct Form (not working)
 

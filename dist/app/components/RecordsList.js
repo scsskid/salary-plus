@@ -25,9 +25,13 @@ class RecordsList extends BaseComponent {
 
       // Sub Component
       this.recordsListItemContainer = this.container.querySelector('.records-list')
-      this.state.records.forEach(record => {
-        this.recordsListItem = new RecordsListItem(this.recordsListItemContainer, record)
-      })
+      this.state.records
+        .sort((a, b) => {
+          return b.id - a.id
+        })
+        .forEach(record => {
+          this.recordsListItem = new RecordsListItem(this.recordsListItemContainer, record)
+        })
     }
 
     // dispatchEvent('render', window, { title: 'List of all Records' })
