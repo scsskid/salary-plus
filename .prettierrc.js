@@ -1,7 +1,7 @@
 module.exports = {
   parser: 'babel',
   useTabs: false,
-  printWidth: 180,
+  printWidth: 120,
   singleQuote: true,
   semi: false
 }
