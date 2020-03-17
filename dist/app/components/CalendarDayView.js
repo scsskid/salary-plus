@@ -14,9 +14,9 @@ export default class CalendarDayView extends BaseComponent {
 
     if (typeof this.state.records !== 'undefined') {
       this.state.records.forEach(record => {
-        const jobName = this.state.jobs.find(job => {
-          return job.id == record.jobId
-        }).name
+        const jobName = this.state.jobs.find(job => job.id == record.jobId).name
+        const earned = this.salaryOfShift(record)
+        const bonus = new Intl.NumberFormat([], { style: 'currency', currency: 'EUR' }).format(record.bonus)
         markup += `
           <div class="day-view-el" data-day-view-el data-record-id="${record.id}">
             <div class="day-view-el-time">
@@ -27,7 +27,8 @@ export default class CalendarDayView extends BaseComponent {
               })}</span>
             </div>
             <div class="day-view-el-content">
-              Job: ${jobName}
+              Job: ${jobName}<br>
+              Earned: ${earned} + ${bonus}
             </div>
             
           </div>
@@ -37,6 +38,13 @@ export default class CalendarDayView extends BaseComponent {
 
     this.container.insertAdjacentHTML('beforeend', markup)
     this.addEventListeners()
+  }
+
+  salaryOfShift(record) {
+    var timeElapsed = Utils.getTimeElapsed(new Date(record.end) - new Date(record.begin))
+    var earnedNumber = Utils.timeToDecimal(timeElapsed) * record.rate
+    var earned = new Intl.NumberFormat([], { style: 'currency', currency: 'EUR' }).format(earnedNumber)
+    return earned
   }
 
   addEventListeners() {
