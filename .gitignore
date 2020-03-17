@@ -1,6 +1,7 @@
 .DS_Store
-node_modules
-dist/app/data/records.js
-dist/app/data/sample-data.js
-dist/app/data/sample-data_fake.js
-dist/css
+/node_modules
+/dist/app/data/records.js
+/data/records.csv
+/dist/app/data/sample-data.js
+/dist/app/data/sample-data_fake.js
+/dist/css
