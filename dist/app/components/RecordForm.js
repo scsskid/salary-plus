@@ -143,11 +143,11 @@ class RecordForm extends BaseComponent {
           </div>
           <div class="form-el">
             <label for="entry-rate">Rate</label>
-            <input style="text-align: right" name="rate" id="entry-rate" type="number" step="0.01"> €
+            <input inputmode="decimal"  style="text-align: right" name="rate" id="entry-rate" type="number" step="0.01"> €
           </div>            
           <div class="form-el">
             <label for="entry-bonus">Bonus</label>
-            <input style="text-align: right" name="bonus" id="entry-bonus" type="number" step="0.01"> €
+            <input inputmode="decimal" style="text-align: right" name="bonus" id="entry-bonus" type="number" step="0.01"> €
           </div>        
           <div class="form-el">
             <label for="entry-sick-leave">Sick Leave</label>
