@@ -1,6 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 import Utils, { events } from './../utils.js'
-import MajaRecords from '../data/records.js'
+// import MajaRecords from './../data/records.js'
 import { Store } from './../store.js'
 
 class Debug extends BaseComponent {
@@ -10,7 +10,7 @@ class Debug extends BaseComponent {
     this.content = {
       title: 'Debug'
     }
-    this.importSalaryBookRecords()
+    // this.importSalaryBookRecords()
   }
 
   importSalaryBookRecords() {
@@ -37,13 +37,13 @@ class Debug extends BaseComponent {
       return { ...record }
     })
 
-    console.log(map)
+    // console.log(map)
 
     // Store.set('records', map)
 
     map.forEach(el => {
       for (const prop in el) {
-        console.log(prop, el[prop])
+        // console.log(prop, el[prop])
       }
     })
   }
