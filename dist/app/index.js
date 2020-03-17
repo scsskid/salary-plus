@@ -2,12 +2,12 @@ import { Store } from './store.js'
 import Router from './router.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
-import { events } from './utils.js'
+import Utils, { isEmpty, events } from './utils.js'
 
 class App {
   set state(state) {
     this.stateValue = state
-    this.render()
+    // this.render()
   }
 
   get state() {
@@ -19,7 +19,7 @@ class App {
     this.mainFooter = this.container.querySelector('[data-main-footer]')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.viewTitle = document.querySelector('[data-view-title]')
-    this.state = { ui: 'default', appDataPresent: Store.appDataPresent ? true : false }
+    this.state = { appData: Store.getAll(), ui: 'default' }
 
     this.moduleRegistry = []
     this.addEventListeners()
@@ -33,6 +33,7 @@ class App {
     */
 
     this.fixHeight()
+    this.render()
   }
 
   render() {
@@ -102,13 +103,14 @@ class App {
     }
 
     function processImportedModule(moduleClass) {
-      const module = new moduleClass.default('div', state)
+      const module = new moduleClass.default('div', { ...state, appData: this.state.appData })
 
       module.id = route.module
       module.container.dataset.id = route.module
 
       // Dont Register Record Form
       if (route.module != 'RecordForm') {
+        // ! reconsider soon
         // preserve Views
         // this.moduleRegistry.push(module)
       }

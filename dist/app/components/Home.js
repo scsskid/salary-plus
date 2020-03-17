@@ -15,6 +15,7 @@ class Home extends BaseComponent {
     this.content = {
       title: 'Overview'
     }
+    console.log(state)
   }
   render() {
     this.container.innerHTML = `
@@ -46,8 +47,8 @@ class Home extends BaseComponent {
 
   // ! Move To Store
   getRecordsOfMonth(date) {
-    if (Store.get('records')) {
-      return Store.get('records').filter(record => {
+    if (this.state.appData.records) {
+      return this.state.appData.records.filter(record => {
         return new Date(record.begin).getMonth() == date.getMonth()
       })
     } else {
@@ -88,7 +89,7 @@ class Home extends BaseComponent {
       // display dayview
       if (recordsOfDate.length) {
         const dayView = this.dayView
-        dayView.state = { records: recordsOfDate }
+        dayView.state = { records: recordsOfDate, jobs: this.state.appData.jobs }
         this.container.appendChild(dayView.container)
       }
     })

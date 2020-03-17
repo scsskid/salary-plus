@@ -1,0 +1,10 @@
+.day-view-el {
+  display: flex;
+}
+
+.day-view-el-time {
+  margin-right: 1rem;
+  & span {
+    display: block;
+  }
+}

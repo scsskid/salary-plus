@@ -7,6 +7,18 @@ const settings = {
 
 export function Store() {}
 
+Store.getAll = function() {
+  const appData = {}
+  Object.entries(localStorage).forEach(el => {
+    const key = el[0].replace(`${settings.localStoragePrefix}`, '')
+    const value = JSON.parse(el[1])
+    appData[key] = value
+  })
+  return appData
+}
+
+Store.getAll()
+
 Store.get = function(key) {
   const item = localStorage.getItem(`${settings.localStoragePrefix}${key}`)
   const result = item ? JSON.parse(item) : null

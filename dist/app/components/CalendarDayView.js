@@ -1,5 +1,5 @@
 import BaseComponent from './BaseComponent.js'
-import { events } from './../utils.js'
+import Utils, { events } from './../utils.js'
 
 export default class CalendarDayView extends BaseComponent {
   init(tag, state) {
@@ -14,11 +14,22 @@ export default class CalendarDayView extends BaseComponent {
 
     if (typeof this.state.records !== 'undefined') {
       this.state.records.forEach(record => {
+        const jobName = this.state.jobs.find(job => {
+          return job.id == record.jobId
+        }).name
         markup += `
-          <div data-day-view-el data-record-id="${record.id}">
-            ${new Date(record.begin).toLocaleTimeString()}<br>
-            ${new Date(record.end).toLocaleTimeString()}
-            <hr>
+          <div class="day-view-el" data-day-view-el data-record-id="${record.id}">
+            <div class="day-view-el-time">
+              <span>${new Date(record.begin).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              <span style="opacity: .5">${new Date(record.end).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</span>
+            </div>
+            <div class="day-view-el-content">
+              Job: ${jobName}
+            </div>
+            
           </div>
         `
       })
