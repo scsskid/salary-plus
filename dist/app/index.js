@@ -40,7 +40,7 @@ class App {
     this.mainFooter.appendChild(new Nav('main-navigation').container)
 
     window.addEventListener('popstate', this.onNavigate.bind(this))
-    events.on('navigate', this.onNavigate.bind(this))
+    events.on('navigate', this.onNavigate.bind(this)) // ? why this position in class
 
     // window.addEventListener('routeLoad', this.onRouteLoad.bind(this))
 
@@ -50,13 +50,24 @@ class App {
   addEventListeners() {
     // Routing
     events.on('routeLoad', this.onRouteLoad.bind(this))
-    events.on('update-view-title', data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View'))
+    events.on(
+      'update-view-title',
+      data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View')
+    )
 
     // Process Form Data
-    events.on('record-submitted', data => Store.setRecord(data))
+    events.on('record-submitted', data => {
+      Store.setRecord(data.formData)
+      events.publish('navigate', {
+        pathname: data.origin,
+        params: { msg: 'from record submitted handler 🍫', inputDate: data.formData.dateBegin }
+      })
+    })
     events.on('record-delete', data => {
       Store.deleteRecord(data.id)
-      events.publish('navigate', { pathname: data.referer })
+      // ! todo redirect like on record-submitted
+      // events.publish('navigate', { pathname: data.referer })
+      // events.publish('routeLoad', { route: matchedRoute })
     })
 
     // Admin Tools
@@ -66,7 +77,7 @@ class App {
 
   onRouteLoad(data) {
     const route = data.route
-    const state = { ...route.params }
+    const state = { ...route.params, ...data.params }
 
     // Check if module was loaded before and pushed to registry
     const module = this.moduleRegistry.find(moduleRegistryEl => {
@@ -118,7 +129,7 @@ class App {
     }
     const pathnameSplit = window.location.pathname.toLowerCase().split('/')
     const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-    this.router.loadRoute(pathSegments)
+    this.router.loadRoute({ pathSegments, params: data.params })
 
     // catch the moment when the new document state is already fully in place
     // by pushing the setTimeout CB to be processed at the end of the browser event loop

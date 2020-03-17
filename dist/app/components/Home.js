@@ -7,7 +7,8 @@ import CalendarDayView from './CalendarDayView.js'
 class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.inputDate = new Date()
+    this.inputDate = typeof state.inputDate !== 'undefined' ? new Date(state.inputDate) : new Date()
+
     this.state = state
     this.dayView = new CalendarDayView('div')
 
@@ -34,13 +35,15 @@ class Home extends BaseComponent {
 
     `
 
-    this.calendar = new Calendar('div', { inputDate: this.inputDate, records: this.getRecordsOfMonth(this.inputDate) || [] })
+    this.calendar = new Calendar('div', {
+      inputDate: this.inputDate,
+      records: this.getRecordsOfMonth(this.inputDate) || []
+    })
     this.container.appendChild(this.calendar.container)
 
     this.addEventListeners()
   }
 
-  // getRecordsOfMonth(date = new Date()) {
   // ! Move To Store
   getRecordsOfMonth(date) {
     if (Store.get('records')) {
@@ -74,7 +77,11 @@ class Home extends BaseComponent {
       const recordsOfDate = Store.get('records')
         ? Store.get('records').filter(record => {
             const dateBegin = new Date(record.begin)
-            return dateBegin.getFullYear() == date.getFullYear() && dateBegin.getMonth() == date.getMonth() && dateBegin.getDate() == date.getDate()
+            return (
+              dateBegin.getFullYear() == date.getFullYear() &&
+              dateBegin.getMonth() == date.getMonth() &&
+              dateBegin.getDate() == date.getDate()
+            )
           })
         : []
 

@@ -51,7 +51,6 @@ class RecordForm extends BaseComponent {
       // map data from localstorage to format of form
       record = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
     }
-    console.log(record)
     this.state = { ...this.state, ...{ record } }
 
     this.render()
@@ -101,7 +100,7 @@ class RecordForm extends BaseComponent {
       }
 
       // Dispatch Event /w attached unaltered formData
-      events.publish('record-submitted', formData)
+      events.publish('record-submitted', { formData, origin: window.location.origin })
 
       // ! trying to reconstruct Form (not working)
 

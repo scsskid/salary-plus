@@ -6,9 +6,11 @@ class Router {
     this._loadInitialRoute()
   }
 
-  loadRoute(urlSegments) {
+  loadRoute(props) {
+    const { pathSegments, params } = props
+
     // Attempt to match the URL to a route.
-    const matchedRoute = this._matchUrlToRoute(urlSegments)
+    const matchedRoute = this._matchUrlToRoute(pathSegments)
 
     // if (matchedRoute.module != undefined) {
     //   console.log('👍FOUND. Module:', matchedRoute)
@@ -16,15 +18,7 @@ class Router {
     //   console.log('👎NOT FOUND')
     // }
 
-    events.publish('routeLoad', { route: matchedRoute })
-
-    // window.dispatchEvent(
-    //   new CustomEvent('routeLoad', {
-    //     detail: {
-    //       route: matchedRoute
-    //     }
-    //   })
-    // )
+    events.publish('routeLoad', { route: matchedRoute, params })
   }
 
   _matchUrlToRoute(urlSegments) {
@@ -66,7 +60,7 @@ class Router {
     const pathnameSplit = window.location.pathname.toLowerCase().split('/')
     const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
 
-    this.loadRoute(pathSegments)
+    this.loadRoute({ pathSegments })
   }
 }
 

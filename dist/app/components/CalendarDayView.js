@@ -29,13 +29,8 @@ export default class CalendarDayView extends BaseComponent {
   }
 
   addEventListeners() {
-    console.log(this.container.querySelectorAll('[data-day-view-el]'))
-
     this.container.querySelectorAll('[data-day-view-el]').forEach(el => {
-      console.log('here')
       el.addEventListener('click', event => {
-        // console.log('here')
-
         events.publish('navigate', { pathname: `records/${el.closest('[data-day-view-el]').dataset.recordId}` })
       })
     })

@@ -19,7 +19,7 @@ export default class MainNav extends BaseComponent {
         const url = new URL(event.target.href)
         // console.log(url.pathname, event.target.href)
         // ! refactor Utils.route(path) || route()
-        events.publish('navigate', { pathname: url.pathname })
+        events.publish('navigate', { pathname: url.pathname, params: { msg: 'from main nav' } })
       }
     })
   }
