@@ -2,7 +2,10 @@ import { Store } from './store.js'
 import Router from './router.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
-import Utils, { isEmpty, events } from './utils.js'
+import StatusBar from './components/StatusBar.js'
+import { events } from './utils.js'
+
+import proxyState from './lib/Proxy.js'
 
 class App {
   set state(state) {
@@ -15,11 +18,15 @@ class App {
   }
 
   init(container) {
+    this.state = proxyState
+    window.proxyState = proxyState
+
     this.container = container
+    this.mainHeader = this.container.querySelector('.main-header')
     this.mainFooter = this.container.querySelector('[data-main-footer]')
+    this.statusBar = new StatusBar('status-bar', { records: proxyState.records })
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.viewTitle = document.querySelector('[data-view-title]')
-    this.state = { appData: Store.getAll(), ui: 'default' }
 
     this.moduleRegistry = []
     this.addEventListeners()
@@ -38,6 +45,7 @@ class App {
 
   render() {
     this.mainViewContainer.innerHTML = ''
+    this.mainHeader.appendChild(this.statusBar.container)
     this.mainFooter.appendChild(new Nav('main-navigation').container)
 
     window.addEventListener('popstate', this.onNavigate.bind(this))
@@ -71,14 +79,31 @@ class App {
       // events.publish('routeLoad', { route: matchedRoute })
     })
 
+    // State Management
+    events.on('proxyStateChanged', data => {
+      console.log('proxyStateChanged sub')
+      // this.logState(data)
+    })
+
     // Admin Tools
     events.on('save-sample-data', Store.saveSampleData)
     events.on('clear-storage', () => localStorage.clear())
   }
 
+  logState(data) {
+    const { key, value } = data
+    const stateCopy = { ...proxyState }
+
+    console.groupCollapsed('Proxy State Props')
+    for (const prop in stateCopy) {
+      console.log(prop, stateCopy[prop])
+    }
+    console.groupEnd()
+  }
+
   onRouteLoad(data) {
     const route = data.route
-    const state = { ...route.params, ...data.params }
+    const params = { ...route.params, ...data.params }
 
     // Check if module was loaded before and pushed to registry
     const module = this.moduleRegistry.find(moduleRegistryEl => {
@@ -91,19 +116,18 @@ class App {
     })
 
     // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
-    {
-      if (typeof module === 'undefined') {
-        import(`./components/${route.module}.js`)
-          .then(processImportedModule.bind(this))
-          .then(updateViewTitle)
-      } else {
-        this.mainViewContainer.appendChild(module.container)
-        events.publish('update-view-title', module.content)
-      }
+
+    if (typeof module === 'undefined') {
+      import(`./components/${route.module}.js`)
+        .then(processImportedModule.bind(this))
+        .then(updateViewTitle)
+    } else {
+      this.mainViewContainer.appendChild(module.container)
+      events.publish('update-view-title', module.content)
     }
 
     function processImportedModule(moduleClass) {
-      const module = new moduleClass.default('div', { ...state, appData: this.state.appData })
+      const module = new moduleClass.default('div', { ...params, ...this.state })
 
       module.id = route.module
       module.container.dataset.id = route.module

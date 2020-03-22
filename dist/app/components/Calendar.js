@@ -6,6 +6,7 @@ class Calendar extends BaseComponent {
     this.container = document.createElement(tag)
     this.state = state
     this.addEventListeners()
+    // console.log(state)
   }
 
   render() {
@@ -35,7 +36,9 @@ class Calendar extends BaseComponent {
         }
       </style>
       <section data-calendar>
-        <p style="text-align: center; padding-top: 1rem"><b>${inputDate.toLocaleDateString('en', { month: 'long' })}</b><br>${inputDate.getFullYear()}</p>
+        <p style="text-align: center; padding-top: 1rem"><b>${inputDate.toLocaleDateString('en', {
+          month: 'long'
+        })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
     this.createCalendar(inputDate).then(_ => events.publish('select-date', { date: this.state.inputDate }))
@@ -57,7 +60,9 @@ class Calendar extends BaseComponent {
 
     if (this.state.records) {
       this.state.records.forEach(record => {
-        const mapDateKey = `${new Date(record.begin).getFullYear()}-${(new Date(record.begin).getMonth() + 1).toString().padStart(2, '0')}-${new Date(record.begin)
+        const mapDateKey = `${new Date(record.begin).getFullYear()}-${(new Date(record.begin).getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${new Date(record.begin)
           .getDate()
           .toString()
           .padStart(2, '0')}`
@@ -114,7 +119,9 @@ function createCalendar(inputDate) {
           cellText = document.createTextNode('')
         } else {
           // Insert a Day [1] [2] ...
-          const dateString = `${inputDateFullYear}-${(inputDateMonth + 1).toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`
+          const dateString = `${inputDateFullYear}-${(inputDateMonth + 1)
+            .toString()
+            .padStart(2, '0')}-${date.toString().padStart(2, '0')}`
 
           const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
           cellText = document.createElement('span')

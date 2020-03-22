@@ -20,12 +20,6 @@ export default {
   formatTime: function(string) {
     return new Date(string).toLocaleTimeString('DE-de', { hour: '2-digit', minute: '2-digit' })
   },
-  setData: function(data) {
-    localStorage.setItem('appData', JSON.stringify(data))
-  },
-  getData: function() {
-    return JSON.parse(localStorage.getItem('appData'))
-  },
   getTimeZoneAwareIsoString: function(string) {
     var date = new Date(string)
     var dateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0]
@@ -102,10 +96,6 @@ export default {
     })
 
     return formInputElements
-  },
-
-  parseRequestedURL: function() {
-    console.log(location)
   },
 
   /**
