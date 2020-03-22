@@ -48,7 +48,7 @@ export default {
     return parseFloat(parseInt(arr[0], 10) + '.' + (dec < 10 ? '0' : '') + dec)
   },
 
-  processRecordFormData: function(record) {
+  mapFormDataToStorageObject: function(record) {
     // set dateEnd, since its not set in Form
     record.dateEnd = record.dateBegin
 

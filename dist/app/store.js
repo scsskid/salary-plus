@@ -1,5 +1,6 @@
 import Utils from './utils.js'
 import sampleData from './data/sample-data.js'
+// import proxyState from './lib/Proxy.js'
 
 const settings = {
   localStoragePrefix: 'sp_'
@@ -31,19 +32,9 @@ Store.set = function(key, data) {
 
 Store.setRecord = function(submittedRecord) {
   let records = [...Store.get('records')]
-  submittedRecord = Utils.processRecordFormData(submittedRecord)
+  submittedRecord = Utils.mapFormDataToStorageObject(submittedRecord)
 
-  if (typeof submittedRecord.id == 'undefined') {
-    // new
-    submittedRecord.id = Store.getRecordsMaxId() + 1
-    records.push(submittedRecord)
-  } else {
-    // update existing
-    const targetIndex = records.findIndex(el => {
-      return el.id == submittedRecord.id
-    })
-    records[targetIndex] = submittedRecord
-  }
+  mutateRecords(submittedRecord, records)
 
   Store.set('records', records)
 }
@@ -70,11 +61,36 @@ Store.getRecord = function(id) {
   return requestedRecordObj
 }
 
-Store.getRecordsMaxId = function() {
+/**
+ * add record or alter record of records array
+ * @param {obj} record
+ * @param {array} records
+ */
+function mutateRecords(record, records) {
+  // add new
+  if (typeof record.id == 'undefined') {
+    record.id = getMaxId(records) + 1
+    records.push(record)
+  } else {
+    // update existing
+    const targetIndex = records.findIndex(el => {
+      return el.id == record.id
+    })
+    records[targetIndex] = record
+  }
+
+  return records
+}
+
+/**
+ * get maxId of array with objects, which contain prop obj.id
+ * @param {array} array
+ */
+function getMaxId(array) {
   var maxId = 0
-  Store.get('records').forEach(record => {
-    if (maxId < record.id) {
-      maxId = parseInt(record.id)
+  array.forEach(obj => {
+    if (maxId < obj.id) {
+      maxId = parseInt(obj.id)
     }
   })
   return maxId
