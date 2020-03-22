@@ -1,5 +1,5 @@
 import Utils from './utils.js'
-import { getObjById, mutateArray, deleteObjInArrayById, getMaxId } from './lib/helpers.js'
+import { getObjById, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
 import sampleData from './data/sample-data.js'
 // import proxyState from './lib/Proxy.js'
 
@@ -31,9 +31,8 @@ Store.set = function(key, data) {
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 }
 
-Store.setRecord = function(submittedRecord) {
-  submittedRecord = Utils.mapFormDataToStorageObject(submittedRecord)
-  const records = mutateArray(submittedRecord, [...Store.get('records')])
+Store.setRecord = function(record) {
+  const records = mutateArray(record, [...Store.get('records')])
   Store.set('records', records)
 }
 

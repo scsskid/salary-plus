@@ -4,7 +4,8 @@ import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
 import StatusBar from './components/StatusBar.js'
 import { events } from './utils.js'
-
+import { getObjById, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
+import Utils from './utils.js'
 import proxyState from './lib/Proxy.js'
 
 class App {
@@ -66,7 +67,10 @@ class App {
 
     // Process Form Data
     events.on('record-submitted', data => {
-      Store.setRecord(data.formData)
+      // MapFormData then pass to Store and State
+      const record = Utils.mapFormDataToStorageObject(data.formData)
+      // pass to Store
+      Store.setRecord(record)
       events.publish('navigate', {
         pathname: data.origin,
         params: { msg: 'from record submitted handler 🍫', inputDate: data.formData.dateBegin }
