@@ -29,7 +29,7 @@ export default class RecordTools {
     this.container.querySelector('.record-delete').addEventListener('click', handleDeleteButtonClick)
     function handleDeleteButtonClick(event) {
       const listItem = event.target.closest('.records-list-item')
-      events.publish('record-delete', { id: listItem.dataset.id, referer: window.location.pathname })
+      events.publish('record-delete', { id: listItem.dataset.id, origin: window.location.pathname })
     }
   }
 

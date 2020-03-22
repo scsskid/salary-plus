@@ -69,18 +69,29 @@ class App {
     events.on('record-submitted', data => {
       // MapFormData then pass to Store and State
       const record = Utils.mapFormDataToStorageObject(data.formData)
+      // Mutate Array
+      const records = mutateArray(record, [...Store.get('records')])
       // pass to Store
-      Store.setRecord(record)
+      Store.set('records', records)
+      // pass to State
+      proxyState.records = records
+
       events.publish('navigate', {
         pathname: data.origin,
         params: { msg: 'from record submitted handler 🍫', inputDate: data.formData.dateBegin }
       })
     })
     events.on('record-delete', data => {
-      Store.deleteRecord(data.id)
-      // ! todo redirect like on record-submitted
-      // events.publish('navigate', { pathname: data.referer })
-      // events.publish('routeLoad', { route: matchedRoute })
+      const records = deleteObjInArrayById(data.id, [...Store.get('records')])
+      // pass to Store
+      Store.set('records', records)
+      // pass to State
+      proxyState.records = records
+
+      events.publish('navigate', {
+        pathname: data.origin,
+        params: { msg: 'from record delete handler 🍄' }
+      })
     })
 
     // State Management

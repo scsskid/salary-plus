@@ -31,15 +31,10 @@ Store.set = function(key, data) {
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 }
 
-Store.setRecord = function(record) {
-  const records = mutateArray(record, [...Store.get('records')])
-  Store.set('records', records)
-}
-
-Store.deleteRecord = function(recordId) {
-  const records = deleteObjInArrayById(recordId, [...Store.get('records')])
-  Store.set('records', records)
-}
+// Store.deleteRecord = function(recordId) {
+//   const records = deleteObjInArrayById(recordId, [...Store.get('records')])
+//   Store.set('records', records)
+// }
 
 Store.getRecord = function(id) {
   return getObjById(id, Store.get('records'))
