@@ -1,4 +1,5 @@
 import Utils from './utils.js'
+import { getObjById, mutateArray, deleteObjInArrayById, getMaxId } from './lib/helpers.js'
 import sampleData from './data/sample-data.js'
 // import proxyState from './lib/Proxy.js'
 
@@ -31,69 +32,18 @@ Store.set = function(key, data) {
 }
 
 Store.setRecord = function(submittedRecord) {
-  let records = [...Store.get('records')]
   submittedRecord = Utils.mapFormDataToStorageObject(submittedRecord)
-
-  mutateRecords(submittedRecord, records)
-
+  const records = mutateArray(submittedRecord, [...Store.get('records')])
   Store.set('records', records)
 }
 
-Store.deleteRecord = function(id) {
-  const records = [...Store.get('records')]
-
-  const targetIndex = records.findIndex(el => {
-    return el.id == id
-  })
-  // console.log('deleted index: ', targetIndex)
-
-  if (targetIndex != -1) {
-    records.splice(targetIndex, 1)
-  }
-
+Store.deleteRecord = function(recordId) {
+  const records = deleteObjInArrayById(recordId, [...Store.get('records')])
   Store.set('records', records)
 }
 
 Store.getRecord = function(id) {
-  var requestedRecordObj = Store.get('records').find(function(record) {
-    return record.id == id
-  })
-  return requestedRecordObj
-}
-
-/**
- * add record or alter record of records array
- * @param {obj} record
- * @param {array} records
- */
-function mutateRecords(record, records) {
-  // add new
-  if (typeof record.id == 'undefined') {
-    record.id = getMaxId(records) + 1
-    records.push(record)
-  } else {
-    // update existing
-    const targetIndex = records.findIndex(el => {
-      return el.id == record.id
-    })
-    records[targetIndex] = record
-  }
-
-  return records
-}
-
-/**
- * get maxId of array with objects, which contain prop obj.id
- * @param {array} array
- */
-function getMaxId(array) {
-  var maxId = 0
-  array.forEach(obj => {
-    if (maxId < obj.id) {
-      maxId = parseInt(obj.id)
-    }
-  })
-  return maxId
+  return getObjById(id, Store.get('records'))
 }
 
 Store.saveSampleData = function() {
