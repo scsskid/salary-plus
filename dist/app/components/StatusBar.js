@@ -9,18 +9,20 @@ class StatusBar extends BaseComponent {
     this.content = {
       title: 'Settings'
     }
-    console.log(this.state)
-    events.on('proxyStateChanged', propName => {
-      console.log(propName, proxyState[propName])
-      if (propName == 'records') {
-        this.render()
-      }
-    })
-  }
-  render() {
-    console.log('Rendering Status Bar...')
 
-    this.container.innerHTML = ' ...Status Bar'
+    events.on('proxyStateChanged', this.checkPropChange.bind(this))
+  }
+
+  render() {
+    const countRecords = proxyState.records.length
+
+    this.container.innerHTML = `${countRecords} Records (State)`
+  }
+
+  checkPropChange(propName) {
+    if (propName == 'records') {
+      this.render()
+    }
   }
 
   constructor(container, state) {
