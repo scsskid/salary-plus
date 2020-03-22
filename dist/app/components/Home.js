@@ -3,20 +3,36 @@ import Calendar from './Calendar.js'
 import Utils, { events, isCurrentMonth } from './../utils.js'
 import { Store } from '../store.js'
 import CalendarDayView from './CalendarDayView.js'
+import proxyState from '../lib/Proxy.js'
 
 class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.inputDate = typeof state.inputDate !== 'undefined' ? new Date(state.inputDate) : new Date()
 
-    this.state = state
+    this.state = { ...proxyState }
     this.dayView = new CalendarDayView('div')
 
     this.content = {
       title: 'Overview'
     }
-    console.log(state)
   }
+
+  connectedCallback() {
+    console.log('Home ConnectedCallback --------------')
+
+    const freshness = this.state.records.length == proxyState.records.length
+    console.log(freshness)
+    if (!freshness) {
+      console.log('records outdated: rerender, update compoenent state')
+
+      this.state.records = [...proxyState.records]
+      this.render()
+    } else {
+      console.log('records already up to date: sleep')
+    }
+  }
+
   render() {
     this.container.innerHTML = `
       <style>

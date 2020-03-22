@@ -15,12 +15,12 @@ class StatusBar extends BaseComponent {
 
   render() {
     const countRecords = proxyState.records.length
-
-    this.container.innerHTML = `${countRecords} Records (State)`
+    const mainViewComponent = proxyState.mainViewComponent
+    this.container.innerHTML = `<small style="line-height: 1.2; display: block; text-align: right">${countRecords} Records (State)<br>MainViewComponent: ${mainViewComponent}</small>`
   }
 
   checkPropChange(propName) {
-    if (propName == 'records') {
+    if (propName == 'records' || propName == 'mainViewComponent') {
       this.render()
     }
   }

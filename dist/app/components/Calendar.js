@@ -6,7 +6,7 @@ class Calendar extends BaseComponent {
     this.container = document.createElement(tag)
     this.state = state
     this.addEventListeners()
-    console.log(state)
+    // console.log(state)
   }
 
   render() {

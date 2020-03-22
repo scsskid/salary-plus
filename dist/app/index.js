@@ -51,10 +51,6 @@ class App {
 
     window.addEventListener('popstate', this.onNavigate.bind(this))
     events.on('navigate', this.onNavigate.bind(this)) // ? why this position in class
-
-    // window.addEventListener('routeLoad', this.onRouteLoad.bind(this))
-
-    // Set Component Title
   }
 
   addEventListeners() {
@@ -94,12 +90,6 @@ class App {
       })
     })
 
-    // State Management
-    events.on('proxyStateChanged', data => {
-      console.log('proxyStateChanged sub')
-      // this.logState(data)
-    })
-
     // Admin Tools
     events.on('save-sample-data', Store.saveSampleData)
     events.on('clear-storage', () => localStorage.clear())
@@ -118,40 +108,64 @@ class App {
 
   onRouteLoad(data) {
     const route = data.route
-    const params = { ...route.params, ...data.params }
+    const params = { ...data.params }
+    const requestedModuleName = route.module
 
     // Check if module was loaded before and pushed to registry
-    const module = this.moduleRegistry.find(moduleRegistryEl => {
-      return moduleRegistryEl.id == route.module
+    let existingModuleInstance = this.moduleRegistry.find(el => {
+      return el.id == requestedModuleName
     })
 
-    // Remove existing viewContainer from Dom (It remains in Regsitry)
-    document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
-      el.remove()
-    })
+    // todo: get existing module and disconnect()
+
+    // Check if current MainViewcomponent is not the reuqested module
+    if (typeof existingModuleInstance === 'undefined' || existingModuleInstance.id != proxyState.mainViewComponent) {
+      // Remove existing viewContainer from Dom (It remains in Regsitry)
+      document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
+        el.remove()
+      })
+    }
 
     // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
 
-    if (typeof module === 'undefined') {
-      import(`./components/${route.module}.js`)
-        .then(processImportedModule.bind(this))
+    if (typeof existingModuleInstance === 'undefined') {
+      console.log('module not present, attempting to load:', requestedModuleName)
+
+      import(`./components/${requestedModuleName}.js`)
+        .then(handleModuleImport.bind(this))
         .then(updateViewTitle)
     } else {
-      this.mainViewContainer.appendChild(module.container)
-      events.publish('update-view-title', module.content)
+      console.log('pstate mainviewcomp', proxyState.mainViewComponent)
+      console.log('existingModuleInstance.id', existingModuleInstance.id)
+
+      //
+      if (proxyState.mainViewComponent != existingModuleInstance.id) {
+        existingModuleInstance.connectedCallback()
+        this.mainViewContainer.appendChild(existingModuleInstance.container)
+        events.publish('update-view-title', existingModuleInstance.content)
+        proxyState.mainViewComponent = existingModuleInstance.id
+      }
     }
 
-    function processImportedModule(moduleClass) {
-      const module = new moduleClass.default('div', { ...params, ...this.state })
+    //
 
-      module.id = route.module
-      module.container.dataset.id = route.module
+    function handleModuleImport(moduleClass) {
+      // console.log({ ...params, ...this.state })
+
+      // dont pass parameters?
+      const module = new moduleClass.default('div', { ...params })
+      // const module = new moduleClass.default('div', { ...params, ...this.state })
+
+      // Set Module Name as id, so if can be checked if already instanciated later
+      module.id = requestedModuleName
+      proxyState.mainViewComponent = requestedModuleName
+      module.container.dataset.mainViewComponent = requestedModuleName
 
       // Dont Register Record Form
-      if (route.module != 'RecordForm') {
+      if (requestedModuleName != 'RecordForm') {
         // ! reconsider soon
         // preserve Views
-        // this.moduleRegistry.push(module)
+        this.moduleRegistry.push(module)
       }
       this.mainViewContainer.appendChild(module.container)
       updateViewTitle(module)

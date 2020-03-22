@@ -4,7 +4,6 @@ export default [
   {
     path: '/',
     module: 'Home'
-    // params: { displayRecords: false }
   },
   // ? combine /records and /records/:recordsId
   {
@@ -13,17 +12,11 @@ export default [
   },
   {
     path: '/records/new',
-    module: 'RecordForm',
-    setState: true
+    module: 'RecordForm'
   },
   {
     path: '/records/:recordId',
     module: 'RecordForm'
-  },
-  {
-    path: '/records/:recordId/:mode',
-    module: 'RecordForm',
-    setState: true
   },
   {
     path: '/settings',

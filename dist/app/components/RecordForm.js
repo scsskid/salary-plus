@@ -20,7 +20,7 @@ class RecordForm extends BaseComponent {
   }
 
   init(tag, state) {
-    // console.log('Form Init', state)
+    console.log('Form Init', state)
 
     this.content = {
       title: 'Form'
@@ -54,6 +54,10 @@ class RecordForm extends BaseComponent {
     this.state = { ...this.state, ...{ record } }
 
     this.render()
+  }
+
+  connectedCallback() {
+    console.log('FORM RE-CONNECTED ')
   }
 
   render() {
@@ -104,7 +108,7 @@ class RecordForm extends BaseComponent {
 
       // ! trying to reconstruct Form (not working)
 
-      this.init('div', { record: this.defaultFormValues })
+      // this.init('div', { record: this.defaultFormValues })
     })
   }
 

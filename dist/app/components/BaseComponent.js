@@ -12,6 +12,11 @@ export default class BaseComponent {
     this.container = document.createElement(tag)
     this.state = state
   }
+
+  connectedCallback() {
+    console.warn('No connect() func provided by Component', this.__proto__)
+  }
+
   render() {
     console.error('no render specified')
   }
