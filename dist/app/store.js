@@ -1,5 +1,7 @@
 import Utils from './utils.js'
+import { getObjById, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
 import sampleData from './data/sample-data.js'
+// import proxyState from './lib/Proxy.js'
 
 const settings = {
   localStoragePrefix: 'sp_'
@@ -29,55 +31,13 @@ Store.set = function(key, data) {
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 }
 
-Store.setRecord = function(submittedRecord) {
-  let records = [...Store.get('records')]
-  submittedRecord = Utils.processRecordFormData(submittedRecord)
-
-  if (typeof submittedRecord.id == 'undefined') {
-    // new
-    submittedRecord.id = Store.getRecordsMaxId() + 1
-    records.push(submittedRecord)
-  } else {
-    // update existing
-    const targetIndex = records.findIndex(el => {
-      return el.id == submittedRecord.id
-    })
-    records[targetIndex] = submittedRecord
-  }
-
-  Store.set('records', records)
-}
-
-Store.deleteRecord = function(id) {
-  const records = [...Store.get('records')]
-
-  const targetIndex = records.findIndex(el => {
-    return el.id == id
-  })
-  // console.log('deleted index: ', targetIndex)
-
-  if (targetIndex != -1) {
-    records.splice(targetIndex, 1)
-  }
-
-  Store.set('records', records)
-}
+// Store.deleteRecord = function(recordId) {
+//   const records = deleteObjInArrayById(recordId, [...Store.get('records')])
+//   Store.set('records', records)
+// }
 
 Store.getRecord = function(id) {
-  var requestedRecordObj = Store.get('records').find(function(record) {
-    return record.id == id
-  })
-  return requestedRecordObj
-}
-
-Store.getRecordsMaxId = function() {
-  var maxId = 0
-  Store.get('records').forEach(record => {
-    if (maxId < record.id) {
-      maxId = parseInt(record.id)
-    }
-  })
-  return maxId
+  return getObjById(id, Store.get('records'))
 }
 
 Store.saveSampleData = function() {

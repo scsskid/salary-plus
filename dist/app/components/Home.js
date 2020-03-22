@@ -47,8 +47,8 @@ class Home extends BaseComponent {
 
   // ! Move To Store
   getRecordsOfMonth(date) {
-    if (this.state.appData.records) {
-      return this.state.appData.records.filter(record => {
+    if (this.state.records) {
+      return this.state.records.filter(record => {
         return new Date(record.begin).getMonth() == date.getMonth()
       })
     } else {
@@ -89,7 +89,7 @@ class Home extends BaseComponent {
       // display dayview
       if (recordsOfDate.length) {
         const dayView = this.dayView
-        dayView.state = { records: recordsOfDate, jobs: this.state.appData.jobs }
+        dayView.state = { records: recordsOfDate, jobs: this.state.jobs }
         this.container.appendChild(dayView.container)
       }
     })

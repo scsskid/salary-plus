@@ -20,12 +20,6 @@ export default {
   formatTime: function(string) {
     return new Date(string).toLocaleTimeString('DE-de', { hour: '2-digit', minute: '2-digit' })
   },
-  setData: function(data) {
-    localStorage.setItem('appData', JSON.stringify(data))
-  },
-  getData: function() {
-    return JSON.parse(localStorage.getItem('appData'))
-  },
   getTimeZoneAwareIsoString: function(string) {
     var date = new Date(string)
     var dateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0]
@@ -54,7 +48,7 @@ export default {
     return parseFloat(parseInt(arr[0], 10) + '.' + (dec < 10 ? '0' : '') + dec)
   },
 
-  processRecordFormData: function(record) {
+  mapFormDataToStorageObject: function(record) {
     // set dateEnd, since its not set in Form
     record.dateEnd = record.dateBegin
 
@@ -102,10 +96,6 @@ export default {
     })
 
     return formInputElements
-  },
-
-  parseRequestedURL: function() {
-    console.log(location)
   },
 
   /**
@@ -184,21 +174,4 @@ export const events = {
 export function isCurrentMonth(date) {
   const now = new Date()
   return date.getMonth() == now.getMonth() && date.getFullYear() == now.getFullYear()
-}
-
-export function isEmpty(value) {
-  switch (typeof value) {
-    case 'undefined':
-      return true
-    case 'object':
-      return value === null
-        ? true
-        : Array.isArray(value)
-        ? !value.length
-        : Object.entries(value).length === 0 && value.constructor === Object
-    case 'string':
-      return !value.length
-    default:
-      return false
-  }
 }
