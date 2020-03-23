@@ -1,3 +1,5 @@
+import { events } from '../utils.js'
+
 export default class BaseComponent {
   set state(state) {
     this.stateValue = state || {}

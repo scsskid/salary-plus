@@ -26,11 +26,11 @@ class StatusBar extends BaseComponent {
         </small>`
   }
 
-  checkPropChange(propName) {
-    if (propName == 'records' || propName == 'mainViewComponent') {
-      this.render()
-    }
-  }
+  // checkPropChange(propName) {
+  //   if (propName == 'records' || propName == 'mainViewComponent') {
+  //     this.render()
+  //   }
+  // }
 
   constructor(container, state) {
     super(container, state)

@@ -154,7 +154,6 @@ class App {
 
       // dont pass parameters?
       const module = new moduleClass.default('div', { ...params })
-      // const module = new moduleClass.default('div', { ...params, ...this.state })
 
       // Set Module Name as id, so if can be checked if already instanciated later
       module.id = requestedModuleName
