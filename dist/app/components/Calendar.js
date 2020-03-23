@@ -1,5 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 import Utils, { events } from './../utils.js'
+import proxyState from '../lib/Proxy.js'
 
 class Calendar extends BaseComponent {
   init(tag, state) {

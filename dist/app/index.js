@@ -25,7 +25,7 @@ class App {
     this.container = container
     this.mainHeader = this.container.querySelector('.main-header')
     this.mainFooter = this.container.querySelector('[data-main-footer]')
-    this.statusBar = new StatusBar('status-bar', { records: proxyState.records })
+    this.statusBar = new StatusBar('div')
     this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.viewTitle = document.querySelector('[data-view-title]')
 
@@ -45,12 +45,12 @@ class App {
   }
 
   render() {
+    events.on('navigate', this.onNavigate.bind(this)) // ? why this position in class
     this.mainViewContainer.innerHTML = ''
     this.mainHeader.appendChild(this.statusBar.container)
     this.mainFooter.appendChild(new Nav('main-navigation').container)
 
     window.addEventListener('popstate', this.onNavigate.bind(this))
-    events.on('navigate', this.onNavigate.bind(this)) // ? why this position in class
   }
 
   addEventListeners() {
@@ -61,28 +61,28 @@ class App {
       data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View')
     )
 
+    events.on('select-date', data => {
+      proxyState.inputDate = data.date
+    })
+
     // Process Form Data
     events.on('record-submitted', data => {
       // MapFormData then pass to Store and State
       const record = Utils.mapFormDataToStorageObject(data.formData)
       // Mutate Array
       const records = mutateArray(record, [...Store.get('records')])
-      // pass to Store
-      Store.set('records', records)
-      // pass to State
-      proxyState.records = records
+
+      this.commit('records', records)
+      proxyState.inputDate = new Date(data.formData.dateBegin)
 
       events.publish('navigate', {
-        pathname: data.origin,
-        params: { msg: 'from record submitted handler 🍫', inputDate: data.formData.dateBegin }
+        pathname: data.origin
       })
     })
     events.on('record-delete', data => {
       const records = deleteObjInArrayById(data.id, [...Store.get('records')])
-      // pass to Store
-      Store.set('records', records)
-      // pass to State
-      proxyState.records = records
+
+      this.commit('records', records)
 
       events.publish('navigate', {
         pathname: data.origin,
@@ -108,7 +108,7 @@ class App {
 
   onRouteLoad(data) {
     const route = data.route
-    const params = { ...data.params }
+    const params = { ...route.params, ...data.params }
     const requestedModuleName = route.module
 
     // Check if module was loaded before and pushed to registry
@@ -129,7 +129,7 @@ class App {
     // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
 
     if (typeof existingModuleInstance === 'undefined') {
-      console.log('module not present, attempting to load:', requestedModuleName)
+      // console.log('module not present, attempting to load:', requestedModuleName)
 
       import(`./components/${requestedModuleName}.js`)
         .then(handleModuleImport.bind(this))
@@ -204,6 +204,13 @@ class App {
       let vh = window.innerHeight * 0.01
       document.documentElement.style.setProperty('--vh', `${vh}px`)
     })
+  }
+
+  commit(prop, data) {
+    // pass to Store
+    Store.set(prop, data)
+    // pass to State
+    proxyState[prop] = data
   }
 
   // todo: move fn to Store Module

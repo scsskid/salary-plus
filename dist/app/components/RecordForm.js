@@ -2,6 +2,7 @@ import BaseComponent from './BaseComponent.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import Utils, { dispatchEvent, events } from '../utils.js'
 import { Store } from '../store.js'
+import proxyState from '../lib/Proxy.js'
 
 // todo: eval populateForm() on stateChange ?
 /*
@@ -36,7 +37,7 @@ class RecordForm extends BaseComponent {
 
     this.defaultFormValues = {
       jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
-      dateBegin: Utils.formatDate.rfc3339(new Date()),
+      dateBegin: Utils.formatDate.rfc3339(proxyState.inputDate || new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00',
       rate: Store.get('jobs').find(job => job.id == 1).rate,

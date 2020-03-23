@@ -1,5 +1,5 @@
 import BaseComponent from './BaseComponent.js'
-import { events } from '../utils.js'
+import Utils, { events } from '../utils.js'
 import proxyState from '../lib/Proxy.js'
 
 class StatusBar extends BaseComponent {
@@ -10,13 +10,20 @@ class StatusBar extends BaseComponent {
       title: 'Settings'
     }
 
-    events.on('proxyStateChanged', this.checkPropChange.bind(this))
+    events.on('proxyStateChanged', this.render.bind(this))
   }
 
   render() {
     const countRecords = proxyState.records.length
     const mainViewComponent = proxyState.mainViewComponent
-    this.container.innerHTML = `<small style="line-height: 1.2; display: block; text-align: right">${countRecords} Records (State)<br>MainViewComponent: ${mainViewComponent}</small>`
+    const inputDate = proxyState.inputDate || new Date()
+    this.container.innerHTML = `
+      <small style="line-height: 1.2; display: block; text-align: right">
+        Records: ${countRecords} <br>
+        MainViewComponent: ${mainViewComponent}<br>
+        inputDate: ${Utils.formatDate.rfc3339(inputDate)}
+        
+        </small>`
   }
 
   checkPropChange(propName) {

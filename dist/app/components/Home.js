@@ -8,10 +8,10 @@ import proxyState from '../lib/Proxy.js'
 class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.inputDate = typeof state.inputDate !== 'undefined' ? new Date(state.inputDate) : new Date()
 
     this.state = { ...proxyState }
     this.dayView = new CalendarDayView('div')
+    this.inputDate = proxyState.inputDate
 
     this.content = {
       title: 'Overview'
@@ -19,17 +19,35 @@ class Home extends BaseComponent {
   }
 
   connectedCallback() {
-    console.log('Home ConnectedCallback --------------')
+    let freshness = true
 
-    const freshness = this.state.records.length == proxyState.records.length
-    console.log(freshness)
+    console.log('Home ConnectedCallback --------------')
+    console.log(this.inputDate)
+    console.log(proxyState.inputDate)
+    console.log('this.inputDate == proxyState.inputDate', this.inputDate == proxyState.inputDate)
+
+    if (this.state.records.length != proxyState.records.length) {
+      console.log('records were updated, set  freshness to false')
+      freshness = false
+    } else {
+      console.log('records unchanged')
+    }
+
+    if (this.inputDate != proxyState.inputDate) {
+      freshness = false
+      this.inputDate = proxyState.inputDate
+    }
+
+    console.log('freshness:', freshness)
     if (!freshness) {
-      console.log('records outdated: rerender, update compoenent state')
+      console.warn('records outdated: rerender, update compoenent state')
 
       this.state.records = [...proxyState.records]
+
       this.render()
+      // freshness = true
     } else {
-      console.log('records already up to date: sleep')
+      console.log('records already up to date: DO NOTHING')
     }
   }
 
@@ -52,9 +70,20 @@ class Home extends BaseComponent {
 
     `
 
+    console.log('proxy input Date Before NEW Cal ', proxyState.inputDate, proxyState)
+
+    let inputDate
+    if (typeof proxyState.inputDate !== 'undefined') {
+      inputDate = proxyState.inputDate
+    } else {
+      inputDate = this.inputDate
+
+      console.warn('proxyState.inputDate undefined', proxyState.inputDate)
+    }
+
     this.calendar = new Calendar('div', {
-      inputDate: this.inputDate,
-      records: this.getRecordsOfMonth(this.inputDate) || []
+      inputDate: proxyState.inputDate,
+      records: this.getRecordsOfMonth(proxyState.inputDate) || []
     })
     this.container.appendChild(this.calendar.container)
 
