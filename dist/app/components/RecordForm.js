@@ -21,20 +21,12 @@ class RecordForm extends BaseComponent {
   // }
 
   init(tag, state) {
-    console.log('Form Init', state)
+    console.log('Form Init', typeof state.recordId)
 
     this.content = {
       title: 'Form'
     }
     this.container = document.createElement(tag)
-
-    // If no record prop in state, mode is 'new', otherwise 'edit
-
-    this.state =
-      { jobs: Store.get('jobs') || [], ...state, ...{ mode: state.recordId != undefined ? 'edit' : 'new' } } || {}
-
-    // Defaults
-
     this.defaultFormValues = {
       jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
       dateBegin: Utils.formatDate.rfc3339(proxyState.inputDate || new Date()),
@@ -43,25 +35,36 @@ class RecordForm extends BaseComponent {
       rate: Store.get('jobs') != null ? Store.get('jobs').find(job => job.id == 1).rate : 0,
       bonus: '0.00'
     }
-
-    // set state.record to default if { mode: new }
-    let record
-    if (this.state.mode == 'new') {
-      record = this.defaultFormValues
-    } else if (this.state.mode == 'edit') {
-      // map data from localstorage to format of form
-      record = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
+    // If no record prop in state, mode is 'new', otherwise 'edit
+    let mode
+    if (typeof state.recordId === 'undefined') {
+      // NEW with default values
+      mode = 'new'
+      this.formData = this.defaultFormValues
+    } else if (typeof parseInt(state.recordId) === 'number') {
+      // EDIT
+      mode = 'edit'
+      this.formData = Utils.mapLocalStorageRecord(Store.getRecord(state.recordId), 'form')
     }
-    this.state = { ...this.state, ...{ record } }
 
-    this.render()
+    console.log(this.formData)
+
+    this.state = { mode, ...state, formData: this.formData, jobs: proxyState.jobs }
   }
 
-  connectedCallback() {
-    console.log('FORM RE-CONNECTED ')
+  populateForm() {
+    this.form.dataset.id = this.formData.id
+    this.inputDate.value = this.formData.dateBegin
+    this.inputBeginTime.value = this.formData.timeBegin
+    this.inputEndTime.value = this.formData.timeEnd
+    this.inputBonus.value = this.formData.bonus
+    this.inputRate.value = this.formData.rate
+    this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
   }
 
   render() {
+    console.log(this.state)
+
     this.container.innerHTML = RecordForm.markup(this.state)
     this.form = this.container.querySelector('form')
     this.inputDate = this.container.querySelector('#entry-date')
@@ -75,49 +78,14 @@ class RecordForm extends BaseComponent {
     this.addEventListeners()
   }
 
-  populateForm() {
-    if (typeof this.state.record.id != 'undefined') {
-      this.form.dataset.id = this.state.record.id
-    }
-
-    this.inputDate.value = this.state.record.dateBegin
-    this.inputBeginTime.value = this.state.record.timeBegin
-    this.inputEndTime.value = this.state.record.timeEnd
-    this.inputBonus.value = this.state.record.bonus
-    this.inputRate.value = this.state.record.rate
-    this.inputSickLeave.checked = this.state.record.sickLeave == 'true' ? 'checked' : ''
-  }
-
-  addEventListeners() {
-    // Submit
-    this.container.addEventListener('submit', event => {
-      event.preventDefault()
-      const form = event.target
-      const formData = {}
-
-      for (var [formElementName, value] of new FormData(form).entries()) {
-        formData[formElementName] = value
-      }
-
-      // add id from form.dataset
-      if (typeof event.target.dataset.id !== 'undefined') {
-        formData.id = parseInt(event.target.dataset.id)
-      }
-
-      // Dispatch Event /w attached unaltered formData
-      events.publish('record-submitted', { formData, origin: window.location.origin })
-
-      // ! trying to reconstruct Form (not working)
-
-      // this.init('div', { record: this.defaultFormValues })
-    })
-  }
-
   static markup(state) {
     let jobsOptionsMarkup = ``
     // Fill select element with options
     state.jobs.forEach(job => {
-      const selected = state.record.jobId == job.id ? 'selected ' : ''
+      let selected = ''
+      if (typeof state.record !== 'undefined') {
+        selected = state.record.jobId == job.id ? 'selected ' : ''
+      }
       jobsOptionsMarkup += `
         <option ${selected}value="${job.id}">#${job.id} ${job.name} (rate: ${job.rate})</option>
         `
@@ -164,6 +132,35 @@ class RecordForm extends BaseComponent {
         </form>
       </section>    
     `
+  }
+
+  addEventListeners() {
+    // Submit
+    this.container.addEventListener('submit', event => {
+      event.preventDefault()
+      const form = event.target
+      const formData = {}
+
+      for (var [formElementName, value] of new FormData(form).entries()) {
+        formData[formElementName] = value
+      }
+
+      // add id from form.dataset
+      if (typeof event.target.dataset.id !== 'undefined') {
+        formData.id = parseInt(event.target.dataset.id)
+      }
+
+      // Dispatch Event /w attached unaltered formData
+      events.publish('record-submitted', { formData, origin: window.location.origin })
+
+      // ! trying to reconstruct Form (not working)
+
+      // this.init('div', { record: this.defaultFormValues })
+    })
+  }
+
+  connectedCallback() {
+    console.log('FORM RE-CONNECTED ')
   }
 
   constructor(tag, state) {

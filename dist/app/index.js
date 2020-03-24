@@ -132,13 +132,14 @@ class App {
     if (typeof requestedRegistryEl !== 'undefined') {
       // Handle: The Requested Module IS PRESENT in registry
       // needs to refresh?
-      if (params.refresh) {
+      if (params.refresh || requestedRegistryEl.module.id == 'RecordForm') {
         requestedRegistryEl.module.refresh()
       }
 
       // but is it already in dom?
       if (connectedEl.module == requestedRegistryEl.module) {
         console.log('already in dom', params)
+        // always refresh form when displayed
       } else if (connectedEl.module != requestedRegistryEl.module) {
         console.log('the requested is not the one in the dom')
         connectedEl.status = 'disconnect'
