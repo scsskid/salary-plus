@@ -6,10 +6,10 @@ import { dispatchEvent, events } from './../utils.js'
 class RecordsList extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.state = Store.get('app') ? { records: Store.get('records'), jobs: Store.get('jobs') } : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
     this.content = {
       title: 'List'
     }
+    this.refresh()
   }
 
   render() {
@@ -33,6 +33,12 @@ class RecordsList extends BaseComponent {
           this.recordsListItem = new RecordsListItem(this.recordsListItemContainer, record)
         })
     }
+  }
+
+  refresh() {
+    this.state = Store.get('app')
+      ? { records: Store.get('records'), jobs: Store.get('jobs') }
+      : undefined /* || { records: sampleData.records, jobs: sampleData.jobs } */
   }
 
   static markup(records) {

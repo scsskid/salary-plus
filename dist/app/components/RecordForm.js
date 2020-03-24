@@ -12,13 +12,13 @@ import proxyState from '../lib/Proxy.js'
 */
 
 class RecordForm extends BaseComponent {
-  set state(state) {
-    this.stateValue = state
-  }
+  // set state(state) {
+  //   this.stateValue = state
+  // }
 
-  get state() {
-    return this.stateValue
-  }
+  // get state() {
+  //   return this.stateValue
+  // }
 
   init(tag, state) {
     console.log('Form Init', state)

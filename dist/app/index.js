@@ -86,7 +86,7 @@ class App {
 
       events.publish('navigate', {
         pathname: data.origin,
-        params: { msg: 'from record delete handler 🍄' }
+        params: { msg: 'from record delete handler 🍄', refresh: true }
       })
     })
 
@@ -131,9 +131,14 @@ class App {
     //  requested module is found in registry
     if (typeof requestedRegistryEl !== 'undefined') {
       // Handle: The Requested Module IS PRESENT in registry
+      // needs to refresh?
+      if (params.refresh) {
+        requestedRegistryEl.module.refresh()
+      }
+
       // but is it already in dom?
       if (connectedEl.module == requestedRegistryEl.module) {
-        console.log('already in dom')
+        console.log('already in dom', params)
       } else if (connectedEl.module != requestedRegistryEl.module) {
         console.log('the requested is not the one in the dom')
         connectedEl.status = 'disconnect'
@@ -174,9 +179,9 @@ class App {
       module.container.dataset.mainViewComponent = route.moduleName
 
       // Dont Register Record Form
-      if (route.moduleName != 'RecordForm') {
-        this.moduleRegistry.push({ module, status: 'connected' })
-      }
+      // if (route.moduleName != 'RecordForm') {
+      this.moduleRegistry.push({ module, status: 'connected' })
+      // }
 
       updateViewTitle(module)
 

@@ -19,6 +19,10 @@ export default class BaseComponent {
     console.warn('No connect() func provided by Component', this.__proto__)
   }
 
+  refresh() {
+    console.error('no refresh specified')
+  }
+
   render() {
     console.error('no render specified')
   }
