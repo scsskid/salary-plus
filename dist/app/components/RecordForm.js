@@ -40,7 +40,7 @@ class RecordForm extends BaseComponent {
       dateBegin: Utils.formatDate.rfc3339(proxyState.inputDate || new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00',
-      rate: Store.get('jobs').find(job => job.id == 1).rate,
+      rate: Store.get('jobs') != null ? Store.get('jobs').find(job => job.id == 1).rate : 0,
       bonus: '0.00'
     }
 

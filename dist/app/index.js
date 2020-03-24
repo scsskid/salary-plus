@@ -109,71 +109,78 @@ class App {
   onRouteLoad(data) {
     const route = data.route
     const params = { ...route.params, ...data.params }
-    const requestedModuleName = route.module
 
-    // Check if module was loaded before and pushed to registry
-    let existingModuleInstance = this.moduleRegistry.find(el => {
-      return el.id == requestedModuleName
-    })
+    // Get connected module from registry
+    const connectedEl = this.moduleRegistry.find(el => el.status == 'connected')
 
-    // todo: get existing module and disconnect()
-
-    // Check if current MainViewcomponent is not the reuqested module
-    if (typeof existingModuleInstance === 'undefined' || existingModuleInstance.id != proxyState.mainViewComponent) {
-      // Remove existing viewContainer from Dom (It remains in Regsitry)
-      document.querySelectorAll('[data-main-view] > *').forEach(function disconnectEl(el) {
-        el.remove()
+    // Check if requested  module was loaded before and pushed to registry
+    const requestedRegistryEl = getRegistryEl(route.moduleName, this.moduleRegistry)
+    function getRegistryEl(moduleName, registry) {
+      return registry.find(el => {
+        return el.module.id == moduleName
       })
+    }
+
+    // if no connected el found, or
+    if (!connectedEl) {
+      importAndConnectModule.bind(this)(route.moduleName)
+      return
+    }
+
+    // subsequent page load
+    //  requested module is found in registry
+    if (typeof requestedRegistryEl !== 'undefined') {
+      // Handle: The Requested Module IS PRESENT in registry
+      // but is it already in dom?
+      if (connectedEl.module == requestedRegistryEl.module) {
+        console.log('already in dom')
+      } else if (connectedEl.module != requestedRegistryEl.module) {
+        console.log('the requested is not the one in the dom')
+        connectedEl.status = 'disconnect'
+        connectedEl.module.container.remove()
+        requestedRegistryEl.status = 'connected'
+        connectModule.bind(this)(requestedRegistryEl.module)
+      }
+    } else if (typeof requestedRegistryEl === 'undefined') {
+      // Handle: The Requested Module IS NOT PRESENT in registry
+      console.log('req not in registry, importing...')
+      connectedEl.status = 'disconnect'
+      connectedEl.module.container.remove()
+      importAndConnectModule.bind(this)(route.moduleName)
+    } else {
+      console.error('EXCEPTION')
     }
 
     // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
 
-    if (typeof existingModuleInstance === 'undefined') {
-      // console.log('module not present, attempting to load:', requestedModuleName)
-
-      import(`./components/${requestedModuleName}.js`)
-        .then(handleModuleImport.bind(this))
-        .then(updateViewTitle)
-    } else {
-      console.log('pstate mainviewcomp', proxyState.mainViewComponent)
-      console.log('existingModuleInstance.id', existingModuleInstance.id)
-
-      //
-      if (proxyState.mainViewComponent != existingModuleInstance.id) {
-        existingModuleInstance.connectedCallback()
-        this.mainViewContainer.appendChild(existingModuleInstance.container)
-        events.publish('update-view-title', existingModuleInstance.content)
-        proxyState.mainViewComponent = existingModuleInstance.id
-      }
-    }
-
     //
 
-    function handleModuleImport(moduleClass) {
-      // console.log({ ...params, ...this.state })
+    function importAndConnectModule(moduleName) {
+      import(`./components/${moduleName}.js`)
+        .then(handleModuleImport.bind(this))
+        .then(updateViewTitle)
+    }
 
+    function handleModuleImport(moduleClass) {
       // dont pass parameters?
       const module = new moduleClass.default('div', { ...params })
 
+      // connect
+      this.mainViewContainer.appendChild(module.container)
+
       // Set Module Name as id, so if can be checked if already instanciated later
-      module.id = requestedModuleName
-      proxyState.mainViewComponent = requestedModuleName
-      module.container.dataset.mainViewComponent = requestedModuleName
+      module.id = route.moduleName
+      proxyState.mainViewComponent = route.moduleName
+      module.container.dataset.mainViewComponent = route.moduleName
 
       // Dont Register Record Form
-      if (requestedModuleName != 'RecordForm') {
-        // ! reconsider soon
-        // preserve Views
-        this.moduleRegistry.push(module)
+      if (route.moduleName != 'RecordForm') {
+        this.moduleRegistry.push({ module, status: 'connected' })
       }
-      this.mainViewContainer.appendChild(module.container)
+
       updateViewTitle(module)
 
       return module
-    }
-
-    function updateViewTitle(module) {
-      events.publish('update-view-title', module.content)
     }
   }
 
@@ -223,3 +230,18 @@ const app = new App(document.documentElement)
 window.app = app
 window.store = Store
 window.storage = Storage
+
+//
+
+function connectModule(module) {
+  console.log('connect Module Fn', module)
+
+  this.mainViewContainer.appendChild(module.container)
+  module.connectedCallback()
+  events.publish('update-view-title', module.content)
+  proxyState.mainViewComponent = module.id
+}
+
+function updateViewTitle(module) {
+  events.publish('update-view-title', module.content)
+}

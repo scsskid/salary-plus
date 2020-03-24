@@ -3,27 +3,27 @@ export default [
   // ? e.g.:  modules: [ { container: this.header, file: 'special-header.js', state: { displaySth: true } }, { container: this.mainView, file: 'records-list.js' } ]
   {
     path: '/',
-    module: 'Home'
+    moduleName: 'Home'
   },
   // ? combine /records and /records/:recordsId
   {
     path: '/records',
-    module: 'RecordsList'
+    moduleName: 'RecordsList'
   },
   {
     path: '/records/new',
-    module: 'RecordForm'
+    moduleName: 'RecordForm'
   },
   {
     path: '/records/:recordId',
-    module: 'RecordForm'
+    moduleName: 'RecordForm'
   },
   {
     path: '/settings',
-    module: 'Settings'
+    moduleName: 'Settings'
   },
   {
     path: '/debug',
-    module: 'Debug'
+    moduleName: 'Debug'
   }
 ]

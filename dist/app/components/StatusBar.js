@@ -14,7 +14,7 @@ class StatusBar extends BaseComponent {
   }
 
   render() {
-    const countRecords = proxyState.records.length
+    const countRecords = typeof proxyState.records !== 'undefined' ? proxyState.records.length : 0
     const mainViewComponent = proxyState.mainViewComponent
     const inputDate = proxyState.inputDate || new Date()
     this.container.innerHTML = `

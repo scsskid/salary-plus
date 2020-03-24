@@ -16,16 +16,18 @@ class Home extends BaseComponent {
     }
   }
 
+  disconnectedCallback() {}
+
   connectedCallback() {
     console.log('Home ConnectedCallback --------------')
 
     let freshness = true
 
     if (this.state.records.length != proxyState.records.length) {
-      console.log(' records were updated, set  freshness to false')
+      // records were updated, set  freshness to false
       freshness = false
     } else {
-      console.log(' records unchanged')
+      // records unchanged
     }
 
     if (this.inputDate != proxyState.inputDate) {
@@ -33,7 +35,7 @@ class Home extends BaseComponent {
       this.inputDate = proxyState.inputDate
     }
 
-    console.log('freshness:', freshness)
+    // console.log('freshness:', freshness)
     if (!freshness) {
       console.warn('😲 : update compoenent state + rerender')
 
