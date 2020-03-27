@@ -52,7 +52,7 @@ class Router {
     })
 
     // Merge Hardcoded Route Params with Get Params
-    return { ...matchedRoute, params: { ...routeParams, ...matchedRoute.params } }
+    return { ...matchedRoute, params: { ...routeParams } }
   }
 
   _loadInitialRoute() {

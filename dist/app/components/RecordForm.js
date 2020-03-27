@@ -27,6 +27,12 @@ class RecordForm extends BaseComponent {
       title: 'Form'
     }
     this.container = document.createElement(tag)
+
+    this.state = { ...state }
+    this
+  }
+
+  populateForm() {
     this.defaultFormValues = {
       jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
       dateBegin: Utils.formatDate.rfc3339(proxyState.inputDate || new Date()),
@@ -37,22 +43,18 @@ class RecordForm extends BaseComponent {
     }
     // If no record prop in state, mode is 'new', otherwise 'edit
     let mode
-    if (typeof state.recordId === 'undefined') {
+    if (typeof this.state.recordId === 'undefined') {
       // NEW with default values
       mode = 'new'
       this.formData = this.defaultFormValues
-    } else if (typeof parseInt(state.recordId) === 'number') {
+    } else if (typeof parseInt(this.state.recordId) === 'number') {
       // EDIT
       mode = 'edit'
-      this.formData = Utils.mapLocalStorageRecord(Store.getRecord(state.recordId), 'form')
+      this.formData = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
     }
 
     console.log(this.formData)
 
-    this.state = { mode, ...state, formData: this.formData, jobs: proxyState.jobs }
-  }
-
-  populateForm() {
     this.form.dataset.id = this.formData.id
     this.inputDate.value = this.formData.dateBegin
     this.inputBeginTime.value = this.formData.timeBegin
@@ -63,7 +65,7 @@ class RecordForm extends BaseComponent {
   }
 
   render() {
-    console.log(this.state)
+    console.log('👨‍🎨 FORM Render', this.state)
 
     this.container.innerHTML = RecordForm.markup(this.state)
     this.form = this.container.querySelector('form')
@@ -81,7 +83,7 @@ class RecordForm extends BaseComponent {
   static markup(state) {
     let jobsOptionsMarkup = ``
     // Fill select element with options
-    state.jobs.forEach(job => {
+    proxyState.jobs.forEach(job => {
       let selected = ''
       if (typeof state.record !== 'undefined') {
         selected = state.record.jobId == job.id ? 'selected ' : ''
@@ -129,6 +131,12 @@ class RecordForm extends BaseComponent {
           <div class="form-el">
             <button data-button-submit>Save${state.mode == 'new' ? ' New' : ''}</button>
           </div>
+
+          <div class="form-el">
+            ${state.mode !== 'new' ? ' <button data-button-delete>Delete</button>' : ''}
+          </div>
+
+
         </form>
       </section>    
     `
@@ -156,6 +164,13 @@ class RecordForm extends BaseComponent {
       // ! trying to reconstruct Form (not working)
 
       // this.init('div', { record: this.defaultFormValues })
+    })
+
+    this.container.addEventListener('click', event => {
+      events.publish('record-delete', {
+        id: event.target.closest('[data-id]').dataset.id,
+        origin: window.location.pathname
+      })
     })
   }
 

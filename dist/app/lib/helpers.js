@@ -61,7 +61,6 @@ export function getMaxId(array) {
   return maxId
 }
 
-/*
 export function isEmpty(value) {
   switch (typeof value) {
     case 'undefined':
@@ -78,4 +77,3 @@ export function isEmpty(value) {
       return false
   }
 }
-*/

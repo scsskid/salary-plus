@@ -4,9 +4,10 @@ import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
 import StatusBar from './components/StatusBar.js'
 import { events } from './utils.js'
-import { getObjById, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
+import { isEmpty, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
 import Utils from './utils.js'
 import proxyState from './lib/Proxy.js'
+import diffObjects from './vendor/objects-diff.js'
 
 class App {
   set state(state) {
@@ -80,6 +81,8 @@ class App {
       })
     })
     events.on('record-delete', data => {
+      console.log(data)
+
       const records = deleteObjInArrayById(data.id, [...Store.get('records')])
 
       this.commit('records', records)
@@ -92,7 +95,7 @@ class App {
 
     // Admin Tools
     events.on('save-sample-data', Store.saveSampleData)
-    events.on('clear-storage', () => localStorage.clear())
+    events.on('clear-storage', _ => localStorage.clear())
   }
 
   logState(data) {
@@ -107,8 +110,10 @@ class App {
   }
 
   onRouteLoad(data) {
+    console.log(data)
+
     const route = data.route
-    const params = { ...route.params, ...data.params }
+    const params = { ...data.params, ...data.props, ...route.params }
 
     // Get connected module from registry
     const connectedEl = this.moduleRegistry.find(el => el.status == 'connected')
@@ -132,8 +137,18 @@ class App {
     if (typeof requestedRegistryEl !== 'undefined') {
       // Handle: The Requested Module IS PRESENT in registry
       // needs to refresh?
-      if (params.refresh || requestedRegistryEl.module.id == 'RecordForm') {
-        requestedRegistryEl.module.refresh()
+      if (requestedRegistryEl.module.id == 'RecordForm') {
+        const stateHasChanged = !isEmpty(diffObjects(requestedRegistryEl.module.state, params))
+        // ! DIFF STATE HERE
+        // ? move diff to component?
+        // DIff State of existing instance with requested props
+        console.log('requestedRegistryEl.module.state', requestedRegistryEl.module.state, params)
+        console.warn('stateHasChanged', stateHasChanged)
+        if (stateHasChanged) {
+          requestedRegistryEl.module.state = params
+        }
+
+        // requestedRegistryEl.module.refresh()
       }
 
       // but is it already in dom?
@@ -191,12 +206,14 @@ class App {
   }
 
   onNavigate(data) {
+    console.log(data)
+
     if (data && data.pathname) {
       window.history.pushState({}, '', data.pathname)
     }
     const pathnameSplit = window.location.pathname.toLowerCase().split('/')
     const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''
-    this.router.loadRoute({ pathSegments, params: data.params })
+    this.router.loadRoute({ pathSegments, params: { ...data.params, ...data.props } })
 
     // catch the moment when the new document state is already fully in place
     // by pushing the setTimeout CB to be processed at the end of the browser event loop
