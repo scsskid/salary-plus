@@ -52,6 +52,8 @@ class RecordForm extends BaseComponent {
       mode = 'edit'
 
       if (!recordData) {
+        this.formData = this.defaultFormValues
+
         console.error('no revord found for id', this.state.recordId)
       } else {
         this.formData = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
@@ -60,15 +62,13 @@ class RecordForm extends BaseComponent {
 
     console.log(this.formData)
 
-    if (recordData) {
-      this.form.dataset.id = this.formData.id
-      this.inputDate.value = this.formData.dateBegin
-      this.inputBeginTime.value = this.formData.timeBegin
-      this.inputEndTime.value = this.formData.timeEnd
-      this.inputBonus.value = this.formData.bonus
-      this.inputRate.value = this.formData.rate
-      this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
-    }
+    this.form.dataset.id = this.formData.id
+    this.inputDate.value = this.formData.dateBegin
+    this.inputBeginTime.value = this.formData.timeBegin
+    this.inputEndTime.value = this.formData.timeEnd
+    this.inputBonus.value = this.formData.bonus
+    this.inputRate.value = this.formData.rate
+    this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
   }
 
   render() {
@@ -161,6 +161,8 @@ class RecordForm extends BaseComponent {
       }
 
       // add id from form.dataset
+      console.log(event.target.dataset.id)
+
       if (typeof event.target.dataset.id !== 'undefined') {
         formData.id = parseInt(event.target.dataset.id)
       }

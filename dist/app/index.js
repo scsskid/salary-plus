@@ -68,6 +68,8 @@ class App {
 
     // Process Form Data
     events.on('record-submitted', data => {
+      console.log(data)
+
       // MapFormData then pass to Store and State
       const record = Utils.mapFormDataToStorageObject(data.formData)
       // Mutate Array
