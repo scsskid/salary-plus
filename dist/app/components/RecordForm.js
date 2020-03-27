@@ -29,10 +29,10 @@ class RecordForm extends BaseComponent {
     this.container = document.createElement(tag)
 
     this.state = { ...state }
-    this
   }
 
   populateForm() {
+    const recordData = Store.getRecord(this.state.recordId)
     this.defaultFormValues = {
       jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
       dateBegin: Utils.formatDate.rfc3339(proxyState.inputDate || new Date()),
@@ -50,18 +50,25 @@ class RecordForm extends BaseComponent {
     } else if (typeof parseInt(this.state.recordId) === 'number') {
       // EDIT
       mode = 'edit'
-      this.formData = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
+
+      if (!recordData) {
+        console.error('no revord found for id', this.state.recordId)
+      } else {
+        this.formData = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
+      }
     }
 
     console.log(this.formData)
 
-    this.form.dataset.id = this.formData.id
-    this.inputDate.value = this.formData.dateBegin
-    this.inputBeginTime.value = this.formData.timeBegin
-    this.inputEndTime.value = this.formData.timeEnd
-    this.inputBonus.value = this.formData.bonus
-    this.inputRate.value = this.formData.rate
-    this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
+    if (recordData) {
+      this.form.dataset.id = this.formData.id
+      this.inputDate.value = this.formData.dateBegin
+      this.inputBeginTime.value = this.formData.timeBegin
+      this.inputEndTime.value = this.formData.timeEnd
+      this.inputBonus.value = this.formData.bonus
+      this.inputRate.value = this.formData.rate
+      this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
+    }
   }
 
   render() {
@@ -167,10 +174,12 @@ class RecordForm extends BaseComponent {
     })
 
     this.container.addEventListener('click', event => {
-      events.publish('record-delete', {
-        id: event.target.closest('[data-id]').dataset.id,
-        origin: window.location.pathname
-      })
+      if (event.target.hasAttribute('data-button-delete')) {
+        events.publish('record-delete', {
+          id: event.target.closest('[data-id]').dataset.id,
+          origin: window.location.pathname
+        })
+      }
     })
   }
 

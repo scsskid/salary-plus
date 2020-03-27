@@ -19,6 +19,15 @@ export default class BaseComponent {
     console.warn('No connect() func provided by Component', this.__proto__)
   }
 
+  disconnectCallback() {
+    // todo
+    this.deleteEventListeners()
+  }
+
+  deleteEventListeners() {
+    // todo
+  }
+
   refresh() {
     console.error('no refresh specified')
   }
