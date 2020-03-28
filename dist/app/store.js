@@ -28,7 +28,7 @@ Store.get = function(key) {
 
 Store.set = function(key, data) {
   console.log('STORE SET')
-  debugger
+
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 }
 

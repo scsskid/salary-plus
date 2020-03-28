@@ -64,12 +64,19 @@ class App {
 
     events.on('select-date', data => {
       proxyState.inputDate = data.date
+      // if form exists in registry: set state = input date
+
+      const recordFormInstance = this.moduleRegistry.find(el => {
+        return el.module.id == 'RecordForm'
+      })
+
+      if (!isEmpty(recordFormInstance)) {
+        recordFormInstance.module.state = { inputDate: data.date }
+      }
     })
 
     // Process Form Data
     events.on('record-submitted', data => {
-      console.log(data)
-
       // MapFormData then pass to Store and State
       const record = Utils.mapFormDataToStorageObject(data.formData)
       // Mutate Array
@@ -78,19 +85,17 @@ class App {
       proxyState.inputDate = new Date(data.formData.dateBegin)
 
       events.publish('navigate', {
-        pathname: data.origin
+        // pathname: data.origin
+        pathname: '/'
       })
     })
     events.on('record-delete', data => {
-      console.log(data)
-
       const records = deleteObjInArrayById(data.id, [...Store.get('records')])
-
       this.commit('records', records)
-
       events.publish('navigate', {
         pathname: data.origin,
-        params: { msg: 'from record delete handler 🍄', refresh: true }
+        pathname: '/',
+        params: { records } // ? why
       })
     })
 
@@ -111,8 +116,6 @@ class App {
   }
 
   onRouteLoad(data) {
-    console.log(data)
-
     const route = data.route
     const params = { ...data.params, ...data.props, ...route.params }
 
@@ -138,26 +141,25 @@ class App {
     if (typeof requestedRegistryEl !== 'undefined') {
       // Handle: The Requested Module IS PRESENT in registry
       // needs to refresh?
-      if (requestedRegistryEl.module.id == 'RecordForm') {
-        const stateHasChanged = !isEmpty(diffObjects(requestedRegistryEl.module.state, params))
-        // ! DIFF STATE HERE
-        // ? move diff to component?
-        // DIff State of existing instance with requested props
-        console.log('requestedRegistryEl.module.state', requestedRegistryEl.module.state, params)
-        console.warn('stateHasChanged', stateHasChanged)
-        if (stateHasChanged) {
-          requestedRegistryEl.module.state = params
-        }
-
-        // requestedRegistryEl.module.refresh()
+      let stateHasChanged = false
+      if (!isEmpty(params)) {
+        stateHasChanged = !isEmpty(diffObjects(requestedRegistryEl.module.state, params))
+      }
+      // ! DIFF STATE HERE
+      // ? move diff to component?
+      // DIff State of existing instance with requested props
+      console.warn('stateHasChanged', stateHasChanged, requestedRegistryEl.module.state, params)
+      if (stateHasChanged) {
+        // Trigger Setter of Module
+        requestedRegistryEl.module.state = params
       }
 
       // but is it already in dom?
       if (connectedEl.module == requestedRegistryEl.module) {
-        console.log('already in dom', params)
+        // console.log('already in dom', params)
         // always refresh form when displayed
       } else if (connectedEl.module != requestedRegistryEl.module) {
-        console.log('the requested is not the one in the dom')
+        // console.log('the requested is not the one in the dom')
         connectedEl.status = 'disconnect'
         connectedEl.module.container.remove()
         requestedRegistryEl.status = 'connected'
@@ -165,7 +167,7 @@ class App {
       }
     } else if (typeof requestedRegistryEl === 'undefined') {
       // Handle: The Requested Module IS NOT PRESENT in registry
-      console.log('req not in registry, importing...')
+      // console.log('req not in registry, importing...')
       connectedEl.status = 'disconnect'
       connectedEl.module.container.remove()
       importAndConnectModule.bind(this)(route.moduleName)
@@ -207,8 +209,6 @@ class App {
   }
 
   onNavigate(data) {
-    console.log(data)
-
     if (data && data.pathname) {
       window.history.pushState({}, '', data.pathname)
     }

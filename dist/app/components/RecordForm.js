@@ -21,7 +21,7 @@ class RecordForm extends BaseComponent {
   // }
 
   init(tag, state) {
-    console.log('Form Init', typeof state.recordId)
+    console.log('Form Init', typeof state.recordId, state)
 
     this.content = {
       title: 'Form'
@@ -101,7 +101,7 @@ class RecordForm extends BaseComponent {
     })
 
     return `
-      <section class="edit-record" data-id>
+      <section class="edit-record">
         <h2>${state.mode == 'edit' ? 'Edit' : 'Add New'} Record</h2>
         <form action="">
           <div class="form-el">
@@ -151,7 +151,9 @@ class RecordForm extends BaseComponent {
 
   addEventListeners() {
     // Submit
-    this.container.addEventListener('submit', event => {
+    this.form.addEventListener('submit', event => {
+      console.warn('------ SUBMIT')
+
       event.preventDefault()
       const form = event.target
       const formEntries = new FormData(form).entries()
@@ -162,13 +164,11 @@ class RecordForm extends BaseComponent {
       }
 
       // add id from form.dataset
-      console.log(event.target.dataset.id, typeof event.target.dataset.id)
       // id is always typeof string since its a html attr
       if (event.target.dataset.id !== 'undefined') {
         formData.id = parseInt(event.target.dataset.id)
       }
 
-      console.log(formData.id)
       // Dispatch Event /w attached unaltered formData
       events.publish('record-submitted', { formData, origin: window.location.origin })
 
