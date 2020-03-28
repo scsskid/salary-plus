@@ -1,5 +1,4 @@
-import Utils from './utils.js'
-import { getObjById, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
+import { getObjById } from './lib/helpers.js'
 import sampleData from './data/sample-data.js'
 // import proxyState from './lib/Proxy.js'
 
@@ -28,6 +27,8 @@ Store.get = function(key) {
 }
 
 Store.set = function(key, data) {
+  console.log('STORE SET')
+  debugger
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 }
 
