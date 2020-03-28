@@ -154,19 +154,21 @@ class RecordForm extends BaseComponent {
     this.container.addEventListener('submit', event => {
       event.preventDefault()
       const form = event.target
+      const formEntries = new FormData(form).entries()
       const formData = {}
 
-      for (var [formElementName, value] of new FormData(form).entries()) {
+      for (var [formElementName, value] of formEntries) {
         formData[formElementName] = value
       }
 
       // add id from form.dataset
-      console.log(event.target.dataset.id)
-
-      if (typeof event.target.dataset.id !== 'undefined') {
+      console.log(event.target.dataset.id, typeof event.target.dataset.id)
+      // id is always typeof string since its a html attr
+      if (event.target.dataset.id !== 'undefined') {
         formData.id = parseInt(event.target.dataset.id)
       }
 
+      console.log(formData.id)
       // Dispatch Event /w attached unaltered formData
       events.publish('record-submitted', { formData, origin: window.location.origin })
 

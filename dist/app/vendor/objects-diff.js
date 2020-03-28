@@ -118,32 +118,32 @@ export default function diff(obj1, obj2) {
   return diffs
 }
 
-var order1 = {
-  sandwich: 'tuna',
-  chips: true,
-  drink: 'soda',
-  order: 1,
-  toppings: ['pickles', 'mayo', 'lettuce'],
-  details: {
-    name: 'Chris',
-    phone: '555-555-5555',
-    email: 'no@thankyou.com'
-  },
-  otherVal1: '1'
-}
+// var order1 = {
+//   sandwich: 'tuna',
+//   chips: true,
+//   drink: 'soda',
+//   order: 1,
+//   toppings: ['pickles', 'mayo', 'lettuce'],
+//   details: {
+//     name: 'Chris',
+//     phone: '555-555-5555',
+//     email: 'no@thankyou.com'
+//   },
+//   otherVal1: '1'
+// }
 
-var order2 = {
-  sandwich: 'turkey',
-  chips: true,
-  drink: 'soda',
-  order: 2,
-  toppings: ['pickles', 'lettuce'],
-  details: {
-    name: 'Jon',
-    phone: '(555) 555-5555',
-    email: 'yes@please.com'
-  },
-  otherVal2: '2'
-}
+// var order2 = {
+//   sandwich: 'turkey',
+//   chips: true,
+//   drink: 'soda',
+//   order: 2,
+//   toppings: ['pickles', 'lettuce'],
+//   details: {
+//     name: 'Jon',
+//     phone: '(555) 555-5555',
+//     email: 'yes@please.com'
+//   },
+//   otherVal2: '2'
+// }
 
-console.log(diff(order1, order2))
+// console.log(diff(order1, order2))

@@ -74,7 +74,6 @@ class App {
       const record = Utils.mapFormDataToStorageObject(data.formData)
       // Mutate Array
       const records = mutateArray(record, [...Store.get('records')])
-
       this.commit('records', records)
       proxyState.inputDate = new Date(data.formData.dateBegin)
 
