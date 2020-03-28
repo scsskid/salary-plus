@@ -1,5 +1,6 @@
 import BaseComponent from './BaseComponent.js'
 import { events } from './../utils.js'
+import proxyState from '../lib/Proxy.js'
 export default class MainNav extends BaseComponent {
   render() {
     this.container.innerHTML = `
@@ -14,12 +15,10 @@ export default class MainNav extends BaseComponent {
 
     this.container.querySelector('[data-nav-menu]').addEventListener('click', event => {
       event.preventDefault()
-      // overengineered? but what about protocols
       if (event.target.href) {
         const url = new URL(event.target.href)
-        // console.log(url.pathname, event.target.href)
         // ! refactor Utils.route(path) || route()
-        events.publish('navigate', { pathname: url.pathname, params: { msg: 'from main nav' } })
+        events.publish('navigate', { pathname: url.pathname })
       }
     })
   }
