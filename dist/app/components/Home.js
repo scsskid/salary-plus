@@ -123,7 +123,7 @@ class Home extends BaseComponent {
       // display dayview
       if (recordsOfDate.length) {
         const dayView = this.dayView
-        dayView.state = { records: recordsOfDate, jobs: this.state.jobs }
+        dayView.state = { records: recordsOfDate }
         this.container.appendChild(dayView.container)
       }
     })
