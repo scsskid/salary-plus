@@ -1,5 +1,6 @@
 import BaseComponent from './BaseComponent.js'
-import Utils, { events } from './../utils.js'
+import Utils, { events } from '../utils.js'
+import proxyState from '../lib/Proxy.js'
 
 export default class CalendarDayView extends BaseComponent {
   init(tag, state) {
@@ -14,7 +15,7 @@ export default class CalendarDayView extends BaseComponent {
 
     if (typeof this.state.records !== 'undefined') {
       this.state.records.forEach(record => {
-        const jobName = this.state.jobs.find(job => job.id == record.jobId).name
+        const jobName = proxyState.jobs.find(job => job.id == record.jobId).name
         const earned = this.salaryOfShift(record)
         const bonus = new Intl.NumberFormat([], { style: 'currency', currency: 'EUR' }).format(record.bonus)
         markup += `
