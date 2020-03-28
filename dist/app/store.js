@@ -19,7 +19,7 @@ Store.getAll = function() {
   return appData
 }
 
-Store.getAll()
+// Store.getAll()
 
 Store.get = function(key) {
   const item = localStorage.getItem(`${settings.localStoragePrefix}${key}`)
