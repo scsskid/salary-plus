@@ -49,7 +49,7 @@ export default {
   },
 
   mapFormDataToStorageObject: function(record) {
-    // set dateEnd, since its not set in Form
+    record.dateBegin = record.dateBegin.replace(/-/g, '/')
     record.dateEnd = record.dateBegin
 
     // check if endtime is less that begin time (enddate is next day), if so add one day
