@@ -3,10 +3,12 @@
 }
 
 .main-nav-menu {
+  --columns: 3;
+
   list-style: none;
   padding-left: 0;
   display: grid;
-  grid-template-columns: repeat(5, calc(20% - (0.4rem / 5)));
+  grid-template-columns: repeat(var(--columns), calc((100% / var(--columns)) - (0.4rem / var(--columns))));
   justify-content: center;
 
   /* margin-left: auto;

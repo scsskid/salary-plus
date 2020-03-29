@@ -85,11 +85,10 @@ class Debug extends BaseComponent {
   }
 
   render() {
-    this.container.innerHTML = ''
-
     this.container.insertAdjacentHTML('beforeend', `<p><button data-save-sample-data>Insert SampleData</button></p>`)
     this.container.insertAdjacentHTML('beforeend', `<p><button data-clear-storage>Clear localStorage</button></p>`)
     this.container.insertAdjacentHTML('beforeend', `<p><button data-generate-data>Generate</button></p>`)
+    this.container.insertAdjacentHTML('beforeend', `<p><button data-list-all>List All Records</button></p>`)
 
     this.addEventListeners()
 
@@ -106,6 +105,8 @@ class Debug extends BaseComponent {
         events.publish('clear-storage')
       } else if ('generateData' in event.target.dataset) {
         this.generateData()
+      } else if ('listAll' in event.target.dataset) {
+        events.publish('navigate', { pathname: '/records' })
       }
     })
   }
