@@ -17,6 +17,7 @@ class StatusBar extends BaseComponent {
     const countRecords = typeof proxyState.records !== 'undefined' ? proxyState.records.length : 0
     const mainViewComponent = proxyState.mainViewComponent
     const inputDate = proxyState.inputDate || new Date()
+    this.container.style.marginTop = '-4rem'
     this.container.innerHTML = `
       <small style="line-height: 1.2; display: block; text-align: right">
         Records: ${countRecords} <br>
