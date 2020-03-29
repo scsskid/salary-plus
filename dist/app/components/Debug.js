@@ -92,7 +92,7 @@ class Debug extends BaseComponent {
 
     this.addEventListeners()
 
-    this.generateData()
+    // this.generateData()
 
     // events.publish('update-view-title', { title: Debug.common.title })
   }

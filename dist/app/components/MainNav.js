@@ -8,8 +8,8 @@ export default class MainNav extends BaseComponent {
         <li><a href="${window.location.origin}/">Overview</a></li>
         <!--<li><a href="${window.location.origin}/records">List</a></li> -->
         <li><a href="${window.location.origin}/records/new">Add</a></li>
-        <!--<li><a href="${window.location.origin}/settings">Settings</a></li>-->
-        <li><a href="${window.location.origin}/debug">Debug</a></li>
+        <li><a href="${window.location.origin}/settings">Settings</a></li>
+        
       </ul>
     `
 

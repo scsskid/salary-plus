@@ -11,6 +11,7 @@ class StatusBar extends BaseComponent {
     }
 
     events.on('proxyStateChanged', this.render.bind(this))
+    this.addEventListeners()
   }
 
   render() {
@@ -22,11 +23,26 @@ class StatusBar extends BaseComponent {
       <small style="line-height: 1.2; display: block; text-align: right">
         Records: ${countRecords} <br>
         MainViewComponent: ${mainViewComponent}<br>
-        inputDate: ${Utils.formatDate.rfc3339(inputDate)}
+        inputDate: ${Utils.formatDate.rfc3339(inputDate)}<br>
+        <span><a data-href="/debug" href="/debug">Debug</a></span>
         
         </small>`
   }
 
+  addEventListeners() {
+    this.container.addEventListener('click', event => {
+      console.log('handler start')
+
+      console.log(this.container)
+
+      event.preventDefault()
+      if (event.target.href) {
+        const url = new URL(event.target.href)
+        // ! refactor Utils.route(path) || route()
+        events.publish('navigate', { pathname: url.pathname })
+      }
+    })
+  }
   // checkPropChange(propName) {
   //   if (propName == 'records' || propName == 'mainViewComponent') {
   //     this.render()
