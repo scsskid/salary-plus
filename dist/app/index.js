@@ -148,10 +148,18 @@ class App {
       // ! DIFF STATE HERE
       // ? move diff to component?
       // DIff State of existing instance with requested props
-      console.warn('stateHasChanged', stateHasChanged, requestedRegistryEl.module.state, params)
+      console.warn('stateHasChanged?', stateHasChanged, requestedRegistryEl.module.state, params)
       if (stateHasChanged) {
-        // Trigger Setter of Module
+        // Trigger Setter Fn of Module
         requestedRegistryEl.module.state = params
+      } else if (requestedRegistryEl.module.id == 'RecordForm') {
+        // ! Exception: Rerender Form every Time, because there is no check when it's used for 'new' entry after state was 'edit' before
+        // console.log('Form exception handler', requestedRegistryEl.module.state)
+        // if state.recordId (and)but pathname records/new, flush state to trigger rerender
+        if (requestedRegistryEl.module.state.recordId !== undefined && window.location.pathname == '/records/new') {
+          requestedRegistryEl.module.state = {}
+          //! Input Date Remains == proyyState InputDate
+        }
       }
 
       // but is it already in dom?

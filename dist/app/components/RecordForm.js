@@ -29,9 +29,43 @@ class RecordForm extends BaseComponent {
     this.container = document.createElement(tag)
 
     this.state = { ...state }
+    this.formData = {}
+    this.mode
   }
 
   populateForm() {
+    this.form.dataset.id = this.formData.id
+    this.inputDate.value = this.formData.dateBegin
+    this.inputBeginTime.value = this.formData.timeBegin
+    this.inputEndTime.value = this.formData.timeEnd
+    this.inputBonus.value = this.formData.bonus
+    this.inputRate.value = this.formData.rate
+    this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
+  }
+
+  render() {
+    this.prepareForm()
+    console.log('👨‍🎨 FORM Render', this.state, this.formData)
+
+    this.container.innerHTML = RecordForm.markup({ formData: this.formData, mode: this.mode })
+    this.form = this.container.querySelector('form')
+    this.selectJob = this.container.querySelector('#entry-job')
+    this.inputDate = this.container.querySelector('#entry-date')
+    this.inputBeginTime = this.container.querySelector('#entry-begin-time')
+    this.inputEndTime = this.container.querySelector('#entry-end-time')
+    this.inputBonus = this.container.querySelector('#entry-bonus')
+    this.inputRate = this.container.querySelector('#entry-rate')
+    this.inputSickLeave = this.container.querySelector('#entry-sick-leave')
+
+    this.populateForm()
+    this.addEventListeners()
+
+    // flush state, to ensure rerender every time
+  }
+
+  prepareForm() {
+    this.mode = this.state.recordId === undefined ? 'new' : 'edit'
+
     const recordData = Store.getRecord(this.state.recordId)
     this.defaultFormValues = {
       jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
@@ -43,66 +77,40 @@ class RecordForm extends BaseComponent {
     }
     // If no record prop in state, mode is 'new', otherwise 'edit
     let mode
-    if (typeof this.state.recordId === 'undefined') {
+    if (this.state.recordId === undefined) {
       // NEW with default values
-      mode = 'new'
       this.formData = this.defaultFormValues
     } else if (typeof parseInt(this.state.recordId) === 'number') {
       // EDIT
-      mode = 'edit'
 
       if (!recordData) {
         this.formData = this.defaultFormValues
 
-        console.error('no revord found for id', this.state.recordId)
+        console.error('no record found for id', this.state.recordId)
       } else {
         this.formData = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
       }
     }
-
-    console.log(this.formData)
-
-    this.form.dataset.id = this.formData.id
-    this.inputDate.value = this.formData.dateBegin
-    this.inputBeginTime.value = this.formData.timeBegin
-    this.inputEndTime.value = this.formData.timeEnd
-    this.inputBonus.value = this.formData.bonus
-    this.inputRate.value = this.formData.rate
-    this.inputSickLeave.checked = this.formData.sickLeave == 'true' ? 'checked' : ''
   }
 
-  render() {
-    console.log('👨‍🎨 FORM Render', this.state)
+  static markup(args) {
+    const { formData, mode } = args
 
-    this.container.innerHTML = RecordForm.markup(this.state)
-    this.form = this.container.querySelector('form')
-    this.inputDate = this.container.querySelector('#entry-date')
-    this.inputBeginTime = this.container.querySelector('#entry-begin-time')
-    this.inputEndTime = this.container.querySelector('#entry-end-time')
-    this.inputBonus = this.container.querySelector('#entry-bonus')
-    this.inputRate = this.container.querySelector('#entry-rate')
-    this.inputSickLeave = this.container.querySelector('#entry-sick-leave')
-
-    this.populateForm()
-    this.addEventListeners()
-  }
-
-  static markup(state) {
     let jobsOptionsMarkup = ``
     // Fill select element with options
     proxyState.jobs.forEach(job => {
-      let selected = ''
-      if (typeof state.record !== 'undefined') {
-        selected = state.record.jobId == job.id ? 'selected ' : ''
+      let selected
+      if (typeof formData !== 'undefined') {
+        selected = formData.jobId == job.id ? 'selected ' : ''
       }
       jobsOptionsMarkup += `
-        <option ${selected}value="${job.id}">#${job.id} ${job.name} (rate: ${job.rate})</option>
+        <option ${selected} value="${job.id}" data-rate="${job.rate}">#${job.id} ${job.name} (rate: ${job.rate})</option>
         `
     })
 
     return `
       <section class="edit-record">
-        <h2>${state.mode == 'edit' ? 'Edit' : 'Add New'} Record</h2>
+        <h2>${mode == 'edit' ? 'Edit' : 'Add New'} Record</h2>
         <form action="">
           <div class="form-el">
             <label for="entry-job">Job</label>
@@ -136,11 +144,11 @@ class RecordForm extends BaseComponent {
           </div>                
 
           <div class="form-el">
-            <button data-button-submit>Save${state.mode == 'new' ? ' New' : ''}</button>
+            <button data-button-submit>Save${mode == 'new' ? ' New' : ''}</button>
           </div>
 
           <div class="form-el">
-            ${state.mode !== 'new' ? ' <button data-button-delete>Delete</button>' : ''}
+            ${mode !== 'new' ? ' <button data-button-delete>Delete</button>' : ''}
           </div>
 
 
@@ -150,6 +158,15 @@ class RecordForm extends BaseComponent {
   }
 
   addEventListeners() {
+    // Change Selected Job
+    this.selectJob.addEventListener('change', event => {
+      const select = event.target
+
+      console.log(event.target.selectedOptions[0].dataset.rate)
+
+      this.inputRate.value = event.target.selectedOptions[0].dataset.rate
+    })
+
     // Submit
     this.form.addEventListener('submit', event => {
       console.warn('------ SUBMIT')
@@ -170,6 +187,9 @@ class RecordForm extends BaseComponent {
       }
 
       // Dispatch Event /w attached unaltered formData
+
+      console.log(formData)
+
       events.publish('record-submitted', { formData, origin: window.location.origin })
 
       // ! trying to reconstruct Form (not working)
@@ -189,6 +209,7 @@ class RecordForm extends BaseComponent {
 
   connectedCallback() {
     console.log('FORM RE-CONNECTED ')
+    console.log(window.location.pathname)
   }
 
   constructor(tag, state) {
