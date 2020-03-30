@@ -13,7 +13,6 @@ const store = new Store()
 class App {
   set state(state) {
     this.stateValue = state
-    // this.render()
   }
 
   get state() {
@@ -22,25 +21,17 @@ class App {
 
   init(container) {
     this.state = proxyState
-    window.proxyState = proxyState
 
     this.container = container
     this.mainHeader = this.container.querySelector('.main-header')
-    this.mainFooter = this.container.querySelector('[data-main-footer]')
     this.statusBar = new StatusBar('div')
-    this.mainViewContainer = this.container.querySelector('[data-main-view]')
     this.viewTitle = document.querySelector('[data-view-title]')
+    this.mainViewContainer = this.container.querySelector('[data-main-view]')
+    this.mainFooter = this.container.querySelector('[data-main-footer]')
 
     this.moduleRegistry = []
     this.addEventListeners()
     this.router = new Router(Routes)
-
-    /*
-    if (Store.get('user') == null) {
-      console.log('NO USER IN STATE')
-      events.publish('navigate', { pathname: '/welcome' })
-    }
-    */
 
     this.fixHeight()
     this.render()
@@ -271,7 +262,7 @@ class App {
 const app = new App(document.documentElement)
 window.app = app
 window.store = store
-window.storage = Storage
+window.proxyState = proxyState
 
 //
 

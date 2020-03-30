@@ -42,16 +42,10 @@ Store.prototype.return = function() {
 }
 
 Store.prototype.set = function(key, value) {
-  console.log('STORE SET 2')
+  console.log(`--- STORE SET ${key}`, value)
 
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(value)) || undefined
 }
-
-// Store.set = function(key, data) {
-//   console.log('STORE SET')
-
-//   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
-// }
 
 Store.saveSampleData = function() {
   localStorage.setItem('sp_app', JSON.stringify(sampleData.app))
@@ -61,13 +55,13 @@ Store.saveSampleData = function() {
   localStorage.setItem('sp_patterns', JSON.stringify(sampleData.patterns))
 }
 
-const store = new Store()
+// const store = new Store()
 
-console.log(
-  store
-    .get('jobs')
-    .filter(el => {
-      return el.id == 1
-    })
-    .return()[0]
-)
+// console.log(
+//   store
+//     .get('jobs')
+//     .filter(el => {
+//       return el.id == 1
+//     })
+//     .return()[0]
+// )
