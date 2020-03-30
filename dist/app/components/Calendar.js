@@ -7,13 +7,15 @@ class Calendar extends BaseComponent {
     this.container = document.createElement(tag)
     this.state = state
     this.addEventListeners()
+    this.dateItemsRegistry
     // console.log(state)
   }
 
   render() {
+    this.dateItemsRegistry = []
+    this.createCalendar = createCalendar.bind(this)
     this.createRecordsMap()
     const inputDate = proxyState.inputDate
-    this.createCalendar = createCalendar
 
     this.container.innerHTML = `
       <style>
@@ -113,14 +115,14 @@ function createCalendar(inputDate) {
       // Create Rows
       for (let j = 0; j < 7; j++) {
         const cell = document.createElement('td')
-        let cellText
+        let dateItem
         // fill empty cells until first date of manth is nth day
         // check if is first row, and interationCount is less than firstDay
         // todo: fill with last month dates
         if (i == 0 && j < firstDay) {
-          cellText = document.createTextNode('')
+          dateItem = document.createTextNode('')
         } else if (date > daysInMonth(inputDate)) {
-          cellText = document.createTextNode('')
+          dateItem = document.createTextNode('')
         } else {
           // Insert a Day [1] [2] ...
           const dateString = `${inputDateFullYear}-${(inputDateMonth + 1)
@@ -128,27 +130,28 @@ function createCalendar(inputDate) {
             .padStart(2, '0')}-${date.toString().padStart(2, '0')}`
 
           const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
-          cellText = document.createElement('span')
-          cellText.classList.add('date-item')
-          cellText.dataset.dateString = dateString
+          dateItem = document.createElement('span')
+          this.dateItemsRegistry.push(dateItem)
+          dateItem.classList.add('date-item')
+          dateItem.dataset.dateString = dateString
 
           if (dateHasRecords) {
             for (const item of this.recordsMap[dateString]) {
-              cellText.insertAdjacentHTML('beforeend', '🍩')
+              dateItem.insertAdjacentHTML('beforeend', '🍩')
             }
           }
 
-          cellText.appendChild(document.createTextNode(date))
+          dateItem.appendChild(document.createTextNode(date))
 
           if (date == dateNowDate && inputDateFullYear == dateNowFullYear && inputDateMonth == dateNowMonth) {
-            cellText.dataset.isToday = ''
+            dateItem.dataset.isToday = ''
             // cellText.insertAdjacentHTML('beforeEnd', ` *`)
           }
 
           date++
         }
 
-        cell.appendChild(cellText)
+        cell.appendChild(dateItem)
         row.appendChild(cell)
       }
     }

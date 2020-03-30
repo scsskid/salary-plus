@@ -59,7 +59,8 @@ class Home extends BaseComponent {
         inputDate = new Date()
       }
 
-      events.publish('change inputDate', { inputDate })
+      // events.publish('change inputDate', { inputDate })
+      proxyState.inputDate = inputDate
     })
   }
 

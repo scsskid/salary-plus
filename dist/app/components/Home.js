@@ -108,7 +108,8 @@ class Home extends BaseComponent {
 
     function setDayMarker() {
       const inputDate = proxyState.inputDate
-      const dateItems = document.querySelectorAll('.date-item')
+      const dateItems = this.calendar.dateItemsRegistry
+
       // unselect current selected day
       dateItems.forEach(el => delete el.dataset.dateSelected)
       // clear day view
