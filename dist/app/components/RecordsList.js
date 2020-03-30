@@ -1,6 +1,6 @@
 import RecordsListItem from './RecordsListItem.js'
 import BaseComponent from './BaseComponent.js'
-import { Store } from '../store.js'
+import Store from '../store.js'
 import { dispatchEvent, events } from './../utils.js'
 
 class RecordsList extends BaseComponent {

@@ -1,4 +1,4 @@
-import { Store } from './store.js'
+import Store from './store.js'
 import Router from './router.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
@@ -9,6 +9,7 @@ import Utils from './utils.js'
 import proxyState from './lib/Proxy.js'
 import diffObjects from './vendor/objects-diff.js'
 
+const store = new Store()
 class App {
   set state(state) {
     this.stateValue = state
@@ -66,21 +67,22 @@ class App {
       proxyState.inputDate = data.date
       // if form exists in registry: set state = input date
 
-      const recordFormInstance = this.moduleRegistry.find(el => {
-        return el.module.id == 'RecordForm'
-      })
+      // const recordFormInstance = this.moduleRegistry.find(el => {
+      //   return el.module.id == 'RecordForm'
+      // })
 
-      if (!isEmpty(recordFormInstance)) {
-        recordFormInstance.module.state = { inputDate: data.date }
-      }
+      // if (!isEmpty(recordFormInstance)) {
+      //   recordFormInstance.module.state = { inputDate: data.date }
+      // }
     })
 
     // Process Form Data
     events.on('record-submitted', data => {
       // MapFormData then pass to Store and State
+      let records = store.get('records').return()
       const record = Utils.mapFormDataToStorageObject(data.formData)
       // Mutate Array
-      const records = mutateArray(record, [...Store.get('records')])
+      records = mutateArray(record, [...records])
       this.commit('records', records)
       proxyState.inputDate = new Date(data.formData.dateBegin)
 
@@ -89,8 +91,10 @@ class App {
         pathname: '/'
       })
     })
+
     events.on('record-delete', data => {
-      const records = deleteObjInArrayById(data.id, [...Store.get('records')])
+      let records = store.get('records').return()
+      records = deleteObjInArrayById(data.id, [...records])
       this.commit('records', records)
       events.publish('navigate', {
         pathname: data.origin,
@@ -139,6 +143,7 @@ class App {
     // subsequent page load
     //  requested module is found in registry
     if (typeof requestedRegistryEl !== 'undefined') {
+      console.log(`Requesting [ ${requestedRegistryEl.module.id} ] from Registry`)
       // Handle: The Requested Module IS PRESENT in registry
       // needs to refresh?
       let stateHasChanged = false
@@ -148,7 +153,12 @@ class App {
       // ! DIFF STATE HERE
       // ? move diff to component?
       // DIff State of existing instance with requested props
-      console.warn('stateHasChanged?', stateHasChanged, requestedRegistryEl.module.state, params)
+      console.warn(
+        `[ ${requestedRegistryEl.module.id} ] stateHasChanged?`,
+        stateHasChanged,
+        requestedRegistryEl.module.state,
+        params
+      )
       if (stateHasChanged) {
         // Trigger Setter Fn of Module
         requestedRegistryEl.module.state = params
@@ -246,9 +256,9 @@ class App {
 
   commit(prop, data) {
     // pass to Store
-    Store.set(prop, data)
+    store.set(prop, data)
     // pass to State
-    proxyState[prop] = data
+    // proxyState[prop] = data
   }
 
   // todo: move fn to Store Module
@@ -260,7 +270,7 @@ class App {
 
 const app = new App(document.documentElement)
 window.app = app
-window.store = Store
+window.store = store
 window.storage = Storage
 
 //

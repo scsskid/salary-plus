@@ -12,7 +12,7 @@ class Calendar extends BaseComponent {
 
   render() {
     this.createRecordsMap()
-    const inputDate = this.state.inputDate
+    const inputDate = proxyState.inputDate
     this.createCalendar = createCalendar
 
     this.container.innerHTML = `
@@ -42,14 +42,17 @@ class Calendar extends BaseComponent {
         })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
-    this.createCalendar(inputDate).then(_ => events.publish('select-date', { date: this.state.inputDate }))
+    console.log(`Created Calendar with month ${inputDate.getMonth() + 1} ${inputDate.getFullYear()}`)
+    this.createCalendar(inputDate).then(_ => events.publish('calendar created', { date: inputDate }))
   }
 
   addEventListeners() {
     this.container.addEventListener('click', event => {
       const dateString = event.target.dataset.dateString
       if (dateString) {
-        events.publish('select-date', { date: new Date(dateString) })
+        event.stopPropagation()
+        events.publish('date clicked', { inputDate: new Date(dateString) })
+        proxyState.inputDate = new Date(dateString)
       }
     })
   }

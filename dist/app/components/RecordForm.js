@@ -1,8 +1,10 @@
 import BaseComponent from './BaseComponent.js'
 // todo: only import selected utils AND also consider not to abstract away when only used once
 import Utils, { dispatchEvent, events } from '../utils.js'
-import { Store } from '../store.js'
+import Store from '../store.js'
 import proxyState from '../lib/Proxy.js'
+
+const store = new Store()
 
 // todo: eval populateForm() on stateChange ?
 /*
@@ -12,14 +14,6 @@ import proxyState from '../lib/Proxy.js'
 */
 
 class RecordForm extends BaseComponent {
-  // set state(state) {
-  //   this.stateValue = state
-  // }
-
-  // get state() {
-  //   return this.stateValue
-  // }
-
   init(tag, state) {
     console.log('Form Init', typeof state.recordId, state)
 
@@ -66,13 +60,24 @@ class RecordForm extends BaseComponent {
   prepareForm() {
     this.mode = this.state.recordId === undefined ? 'new' : 'edit'
 
-    const recordData = Store.getRecord(this.state.recordId)
+    // const recordData = Store.getRecord(this.state.recordId)
+    const recordData = store
+      .get('records')
+      .byId(this.state.recordId)
+      .return()
+
     this.defaultFormValues = {
-      jobId: Store.get('user') ? Store.get('user').settings.defaultJobId : undefined,
+      jobId: store.get('user').return().settings.defaultJobId,
       dateBegin: Utils.formatDate.rfc3339(proxyState.inputDate || new Date()),
       timeBegin: '14:00',
       timeEnd: '00:00',
-      rate: Store.get('jobs') != null ? Store.get('jobs').find(job => job.id == 1).rate : 0,
+      rate:
+        store.get('jobs') != null
+          ? store
+              .get('jobs')
+              .filter(job => job.id == 1)
+              .return()[0].rate
+          : 0,
       bonus: '0.00'
     }
     // If no record prop in state, mode is 'new', otherwise 'edit
@@ -88,7 +93,7 @@ class RecordForm extends BaseComponent {
 
         console.error('no record found for id', this.state.recordId)
       } else {
-        this.formData = Utils.mapLocalStorageRecord(Store.getRecord(this.state.recordId), 'form')
+        this.formData = Utils.mapLocalStorageRecord(recordData, 'form')
       }
     }
   }
@@ -160,10 +165,6 @@ class RecordForm extends BaseComponent {
   addEventListeners() {
     // Change Selected Job
     this.selectJob.addEventListener('change', event => {
-      const select = event.target
-
-      console.log(event.target.selectedOptions[0].dataset.rate)
-
       this.inputRate.value = event.target.selectedOptions[0].dataset.rate
     })
 
@@ -199,6 +200,7 @@ class RecordForm extends BaseComponent {
 
     this.container.addEventListener('click', event => {
       if (event.target.hasAttribute('data-button-delete')) {
+        event.stopPropagation()
         events.publish('record-delete', {
           id: event.target.closest('[data-id]').dataset.id,
           origin: window.location.pathname

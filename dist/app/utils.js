@@ -1,5 +1,7 @@
 import settings from './data/settings.js'
-import { Store } from './store.js'
+import Store from './store.js'
+
+const store = new Store()
 
 export default {
   formatDate: {
@@ -110,10 +112,10 @@ export default {
     var earnedNumber = this.timeToDecimal(timeElapsed) * record.rate
     var earned = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(earnedNumber)
     // var earned = earnedNumber.toLocaleString('de-DE', { minimumFractionDigits: 2 })
-    var jobs = Store.get('jobs')
-    var job = jobs.find(job => {
-      return job.id == record.jobId
-    })
+    // var jobs = Store.get('jobs')
+    // var job = jobs.find(job => {
+    //   return job.id == record.jobId
+    // })
 
     mapped = {
       id: record.id || undefined,

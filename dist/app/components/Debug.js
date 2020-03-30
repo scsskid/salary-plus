@@ -1,7 +1,7 @@
 import BaseComponent from './BaseComponent.js'
 import Utils, { events } from './../utils.js'
 // import MajaRecords from './../data/records.js'
-import { Store } from './../store.js'
+import Store from './../store.js'
 
 class Debug extends BaseComponent {
   init(tag, state) {

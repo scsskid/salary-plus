@@ -1,9 +1,12 @@
 import BaseComponent from './BaseComponent.js'
 import Calendar from './Calendar.js'
+import CalendarControls from './CalendarControls.js'
 import Utils, { events, isCurrentMonth } from './../utils.js'
-import { Store } from '../store.js'
+import Store from '../store.js'
 import CalendarDayView from './CalendarDayView.js'
 import proxyState from '../lib/Proxy.js'
+
+const store = new Store()
 
 class Home extends BaseComponent {
   init(tag, state) {
@@ -61,20 +64,23 @@ class Home extends BaseComponent {
         }
       </style>
       
-      <div data-calendar-controls>
+      <!--<div data-calendar-controls>
         <button data-month-decrease>prev</button>
         <button data-month-increase>next</button>
         <button data-month-reset>today</button>
-      </div>
+      </div>-->
 
     `
 
     const inputDate = this.inputDate
 
+    this.calendarControls = new CalendarControls('div', { inputDate })
     this.calendar = new Calendar('div', {
       inputDate,
       records: this.getRecordsOfMonth(inputDate) || []
     })
+
+    this.container.appendChild(this.calendarControls.container)
     this.container.appendChild(this.calendar.container)
     this.addEventListeners()
   }
@@ -91,43 +97,60 @@ class Home extends BaseComponent {
   }
 
   addEventListeners() {
-    events.on('select-date', data => {
-      const dateItems = document.querySelectorAll('.date-item')
-      const date = data.date
+    events.on('proxy inputDate change', _ => {
+      console.log('proxy inputDate change', proxyState.inputDate)
 
+      //  this.calendar.state = {}
+      // this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
+      updateDayView.bind(this)()
+      setDayMarker.bind(this)()
+    })
+
+    function setDayMarker() {
+      const inputDate = proxyState.inputDate
+      const dateItems = document.querySelectorAll('.date-item')
       // unselect current selected day
       dateItems.forEach(el => delete el.dataset.dateSelected)
       // clear day view
-      this.dayView.container.remove()
 
       // find dateToBeSelected
       const dateToBeSelected = Array.from(dateItems).find(dateItem => {
-        return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(date)
+        return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(inputDate)
       })
 
+      // add attribute to visually highlight day
       dateToBeSelected.dataset.dateSelected = ''
+    }
 
+    function updateDayView() {
+      const date = proxyState.inputDate
+      this.dayView.container.remove()
       // find records of date
       // ! Move To Store
-      const recordsOfDate = Store.get('records')
-        ? Store.get('records').filter(record => {
-            const dateBegin = new Date(record.begin)
-            return (
-              dateBegin.getFullYear() == date.getFullYear() &&
-              dateBegin.getMonth() == date.getMonth() &&
-              dateBegin.getDate() == date.getDate()
-            )
-          })
-        : []
+      const recordsOfDate = store
+        .get('records')
+        .return()
+        .filter(filterByDate(proxyState.inputDate))
+
+      function filterByDate(date) {
+        return function matchDate(record) {
+          const dateBegin = new Date(record.begin)
+          return (
+            dateBegin.getFullYear() == date.getFullYear() &&
+            dateBegin.getMonth() == date.getMonth() &&
+            dateBegin.getDate() == date.getDate()
+          )
+        }
+      }
 
       // display dayview
       if (recordsOfDate.length) {
-        const dayView = this.dayView
-        dayView.state = { records: recordsOfDate }
-        this.container.appendChild(dayView.container)
+        this.dayView.state = { records: recordsOfDate }
+        this.container.appendChild(this.dayView.container)
       }
-    })
+    }
 
+    /*
     this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
       this.dayView.container.remove()
       let inputDate = this.calendar.state.inputDate
@@ -147,6 +170,7 @@ class Home extends BaseComponent {
         this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(new Date()) }
       }
     })
+    */
   }
 
   constructor(tag, state) {

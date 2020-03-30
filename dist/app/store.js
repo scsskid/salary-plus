@@ -6,9 +6,12 @@ const settings = {
   localStoragePrefix: 'sp_'
 }
 
-export function Store() {}
+export default function Store() {
+  this.results = []
+}
 
-Store.getAll = function() {
+// only temp expose
+Store.prototype.getAll = function() {
   const appData = {}
   Object.entries(localStorage).forEach(el => {
     const key = el[0].replace(`${settings.localStoragePrefix}`, '')
@@ -18,28 +21,37 @@ Store.getAll = function() {
   return appData
 }
 
-// Store.getAll()
-
-Store.get = function(key) {
+Store.prototype.get = function(key) {
   const item = localStorage.getItem(`${settings.localStoragePrefix}${key}`)
-  const result = item ? JSON.parse(item) : null
-  return result
+  this.results = item ? JSON.parse(item) : null
+  return this
 }
 
-Store.set = function(key, data) {
-  console.log('STORE SET')
-
-  return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
+Store.prototype.filter = function(handler) {
+  this.results = this.results.filter(handler)
+  return this
 }
 
-// Store.deleteRecord = function(recordId) {
-//   const records = deleteObjInArrayById(recordId, [...Store.get('records')])
-//   Store.set('records', records)
+Store.prototype.byId = function(id) {
+  this.results = this.results.find(el => el.id == id)
+  return this
+}
+
+Store.prototype.return = function() {
+  return this.results
+}
+
+Store.prototype.set = function(key, value) {
+  console.log('STORE SET 2')
+
+  return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(value)) || undefined
+}
+
+// Store.set = function(key, data) {
+//   console.log('STORE SET')
+
+//   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(data)) || undefined
 // }
-
-Store.getRecord = function(id) {
-  return getObjById(id, Store.get('records'))
-}
 
 Store.saveSampleData = function() {
   localStorage.setItem('sp_app', JSON.stringify(sampleData.app))
@@ -48,3 +60,14 @@ Store.saveSampleData = function() {
   localStorage.setItem('sp_jobs', JSON.stringify(sampleData.jobs))
   localStorage.setItem('sp_patterns', JSON.stringify(sampleData.patterns))
 }
+
+const store = new Store()
+
+console.log(
+  store
+    .get('jobs')
+    .filter(el => {
+      return el.id == 1
+    })
+    .return()[0]
+)
