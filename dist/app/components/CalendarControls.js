@@ -56,6 +56,8 @@ class Home extends BaseComponent {
         inputDate = changeMonth(inputDate, 1)
         inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
       } else if ('monthReset' in event.target.dataset) {
+        console.log('here')
+
         inputDate = new Date()
       }
 

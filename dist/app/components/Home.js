@@ -97,31 +97,7 @@ class Home extends BaseComponent {
   }
 
   addEventListeners() {
-    events.on('proxy inputDate change', _ => {
-      console.log('proxy inputDate change', proxyState.inputDate)
-
-      //  this.calendar.state = {}
-      // this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
-      updateDayView.bind(this)()
-      setDayMarker.bind(this)()
-    })
-
-    function setDayMarker() {
-      const inputDate = proxyState.inputDate
-      const dateItems = this.calendar.dateItemsRegistry
-
-      // unselect current selected day
-      dateItems.forEach(el => delete el.dataset.dateSelected)
-      // clear day view
-
-      // find dateToBeSelected
-      const dateToBeSelected = Array.from(dateItems).find(dateItem => {
-        return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(inputDate)
-      })
-
-      // add attribute to visually highlight day
-      dateToBeSelected.dataset.dateSelected = ''
-    }
+    events.on('date-select', updateDayView.bind(this))
 
     function updateDayView() {
       const date = proxyState.inputDate

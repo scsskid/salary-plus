@@ -7,15 +7,14 @@ class Calendar extends BaseComponent {
     this.container = document.createElement(tag)
     this.state = state
     this.addEventListeners()
-    this.dateItemsRegistry
     // console.log(state)
   }
 
   render() {
-    this.dateItemsRegistry = []
     this.createCalendar = createCalendar.bind(this)
     this.createRecordsMap()
     const inputDate = proxyState.inputDate
+    // const inputDate = this.state.inputDate
 
     this.container.innerHTML = `
       <style>
@@ -45,18 +44,43 @@ class Calendar extends BaseComponent {
       </section>
     `
     console.log(`Created Calendar with month ${inputDate.getMonth() + 1} ${inputDate.getFullYear()}`)
-    this.createCalendar(inputDate).then(_ => events.publish('calendar created', { date: inputDate }))
+    this.createCalendar(inputDate)
+      .then(_ => events.publish('calendar created', { date: inputDate }))
+      .then(this.setDayMarker(Utils.getTimeZoneAwareIsoString(inputDate)))
+      .then(_ => events.publish('date-select', {}))
   }
 
   addEventListeners() {
     this.container.addEventListener('click', event => {
+      console.log(event.target)
+
       const dateString = event.target.dataset.dateString
       if (dateString) {
         event.stopPropagation()
-        events.publish('date clicked', { inputDate: new Date(dateString) })
+        // events.publish('date clicked', { inputDate: new Date(dateString) })
+        this.setDayMarker.bind(this)(dateString)
         proxyState.inputDate = new Date(dateString)
       }
     })
+
+    events.on('proxy inputDate change', data => {
+      console.log(data)
+      // Utils.getTimeZoneAwareIsoString(inputDate)
+
+      // if this.state.inputDate.getMotnh !== proxySate.getMonth
+      // only rerender if diffrent month
+      this.render()
+    })
+  }
+
+  setDayMarker(dateString) {
+    console.log(dateString)
+
+    const dateItems = this.container.getElementsByClassName('date-item') // !
+    const dateItem = this.container.querySelector(`[data-date-string="${dateString}"]`) // !
+    console.log(dateItem)
+    Array.from(dateItems).forEach(el => delete el.dataset.dateSelected)
+    dateItem.dataset.dateSelected = ''
   }
 
   createRecordsMap() {
@@ -131,7 +155,6 @@ function createCalendar(inputDate) {
 
           const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
           dateItem = document.createElement('span')
-          this.dateItemsRegistry.push(dateItem)
           dateItem.classList.add('date-item')
           dateItem.dataset.dateString = dateString
 
@@ -156,10 +179,7 @@ function createCalendar(inputDate) {
       }
     }
 
-    const resp = this.container.querySelector('[data-calendar]').appendChild(table)
-    if (resp) {
-      resolve({ msg: 'huhu', el: resp })
-    }
+    this.container.querySelector('[data-calendar]').appendChild(table)
   })
 }
 
