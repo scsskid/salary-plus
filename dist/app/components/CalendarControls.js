@@ -4,7 +4,7 @@ import { events } from './../utils.js'
 class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.inputDate = new Date(proxyState.inputDate.getTime())
+    // this.inputDate = new Date(proxyState.inputDate.getTime())
     this.state = state
     this.addEventListeners()
   }

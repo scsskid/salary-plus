@@ -46,10 +46,7 @@ class Calendar extends BaseComponent {
       </section>
     `
     console.log(`Created Calendar with month ${inputDate.getMonth() + 1} ${inputDate.getFullYear()}`)
-    this.createCalendar(inputDate)
-      .then(_ => events.publish('calendar created', { date: inputDate }))
-      .then(this.setDayMarker(Utils.getTimeZoneAwareIsoString(inputDate)))
-      .then(_ => events.publish('date-select', {}))
+    this.createCalendar(inputDate).then(_ => events.publish('calendar created', {}))
   }
 
   addEventListeners() {
@@ -60,7 +57,6 @@ class Calendar extends BaseComponent {
       const dateString = event.target.dataset.dateString
       if (dateString) {
         event.stopPropagation()
-
         this.setDayMarker.bind(this)(dateString)
         // proxyState.inputDate = new Date(dateString) // Triggers Rerender, only needed for prefill add record form
         this.inputDate = new Date(dateString)
@@ -73,12 +69,16 @@ class Calendar extends BaseComponent {
   }
 
   setDayMarker(dateString) {
-    console.log(dateString)
+    console.log(`setDayMarker Fn [ ${dateString} ]`)
 
     const dateItems = this.container.getElementsByClassName('date-item') // !
     const dateItem = this.container.querySelector(`[data-date-string="${dateString}"]`) // !
     Array.from(dateItems).forEach(el => delete el.dataset.dateSelected)
     dateItem.dataset.dateSelected = ''
+
+    if ('dateSelected' in dateItem.dataset) {
+      events.publish(`dayMarked`, { inputDateString: dateString })
+    }
   }
 
   createRecordsMap() {
@@ -177,7 +177,9 @@ function createCalendar(inputDate) {
       }
     }
 
-    this.container.querySelector('[data-calendar]').appendChild(table)
+    if (this.container.querySelector('[data-calendar]').appendChild(table)) {
+      resolve()
+    }
   })
 }
 

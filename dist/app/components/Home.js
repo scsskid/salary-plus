@@ -44,15 +44,21 @@ class Home extends BaseComponent {
 
   addEventListeners() {
     events.on('operateDate', data => {
+      // ! better: operateMonth
       const { operation } = data
       let targetDate = new Date(proxyState.inputDate.getTime())
       proxyState.inputDate = operateDate(operation, targetDate)
+      this.calendar.render()
     })
 
-    events.on('date-select', _ => {
-      console.log('on date Select')
+    events.on('calendar created', _ => {
+      console.log('Home on cal created')
+      this.calendar.setDayMarker(Utils.formatDate.rfc3339(proxyState.inputDate)) // vs. // .then(this.setDayMarker(Utils.getTimeZoneAwareIsoString(inputDate)))
+    })
 
-      updateDayView.bind(this)
+    events.on('dayMarked', data => {
+      proxyState.inputDate = new Date(data.inputDateString.replace(/-/g, '/'))
+      updateDayView.bind(this)()
     })
 
     events.on('proxy inputDate change', _ => {
@@ -61,19 +67,23 @@ class Home extends BaseComponent {
         recordsOfInputDateMonth(proxyState.inputDate)
       )
       this.calendar.state.inputDate = proxyState.inputDate
+
+      // todo: only pass length!
       this.calendar.state.records = recordsOfInputDateMonth(proxyState.inputDate)
 
-      this.calendar.state = Object.assign(
-        { ...this.calendarControls.state },
-        {
-          inputDate: proxyState.inputDate,
-          records: recordsOfInputDateMonth(proxyState.inputDate)
-        }
-      )
+      // // todo: set state without render
+      // this.calendar.state = Object.assign(
+      //   { ...this.calendarControls.state },
+      //   {
+      //     inputDate: proxyState.inputDate,
+      //     records: recordsOfInputDateMonth(proxyState.inputDate)
+      //   }
+      // )
     })
 
     function updateDayView() {
-      const date = proxyState.inputDate
+      console.log('updateDayView Fn')
+
       this.dayView.container.remove()
       // find records of date
       // ! Move To Store
@@ -81,17 +91,6 @@ class Home extends BaseComponent {
         .get('records')
         .return()
         .filter(filterByDate(proxyState.inputDate))
-
-      function filterByDate(date) {
-        return function matchDate(record) {
-          const dateBegin = new Date(record.begin)
-          return (
-            dateBegin.getFullYear() == date.getFullYear() &&
-            dateBegin.getMonth() == date.getMonth() &&
-            dateBegin.getDate() == date.getDate()
-          )
-        }
-      }
 
       // display dayview
       if (recordsOfDate.length) {
@@ -171,5 +170,16 @@ function operateDate(operation, targetDate) {
     return changeMonth(targetDate, 1)
   } else if ('today' == operation) {
     return new Date()
+  }
+}
+
+function filterByDate(date) {
+  return function matchDate(record) {
+    const dateBegin = new Date(record.begin)
+    return (
+      dateBegin.getFullYear() == date.getFullYear() &&
+      dateBegin.getMonth() == date.getMonth() &&
+      dateBegin.getDate() == date.getDate()
+    )
   }
 }

@@ -210,8 +210,13 @@ class RecordForm extends BaseComponent {
   }
 
   connectedCallback() {
-    console.log('FORM RE-CONNECTED ')
+    this.prepareForm()
+    this.populateForm()
+    this.addEventListeners() // todo: remove listeners on disconnect
+    console.log('FORM RE-CONNECTED ', this.state)
     console.log(window.location.pathname)
+
+    // this.render()
   }
 
   constructor(tag, state) {
