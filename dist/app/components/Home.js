@@ -17,9 +17,13 @@ class Home extends BaseComponent {
       title: 'Overview'
     }
     this.state = { records: [...proxyState.records], jobs: [...proxyState.jobs] }
+    this.addEventListeners()
   }
 
   render() {
+    const inputDate = proxyState.inputDate
+    console.log(`HOME Render`, recordsOfInputDateMonth(inputDate))
+
     this.container.innerHTML = `
       <style>
         [data-date-selected] {
@@ -27,10 +31,6 @@ class Home extends BaseComponent {
         }
       </style>
     `
-
-    const inputDate = proxyState.inputDate
-
-    console.log(recordsOfInputDateMonth(inputDate))
 
     this.calendarControls = new CalendarControls('div', { inputDate })
     this.container.appendChild(this.calendarControls.container)
@@ -40,8 +40,6 @@ class Home extends BaseComponent {
       records: recordsOfInputDateMonth(inputDate) || []
     })
     this.container.appendChild(this.calendar.container)
-
-    this.addEventListeners()
   }
 
   addEventListeners() {
@@ -58,7 +56,10 @@ class Home extends BaseComponent {
     })
 
     events.on('proxy inputDate change', _ => {
-      console.log('Home proxy date change handler', recordsOfInputDateMonth(proxyState.inputDate))
+      console.log(
+        'Home [ proxy inputDate change ] handler, records of month:',
+        recordsOfInputDateMonth(proxyState.inputDate)
+      )
       this.calendar.state.inputDate = proxyState.inputDate
       this.calendar.state.records = recordsOfInputDateMonth(proxyState.inputDate)
 

@@ -64,10 +64,7 @@ class App {
       this.commit('records', records)
       proxyState.inputDate = new Date(data.formData.dateBegin)
 
-      events.publish('navigate', {
-        // pathname: data.origin
-        pathname: '/'
-      })
+      events.publish('navigate', { pathname: '/' })
     })
 
     events.on('record-delete', data => {
@@ -250,6 +247,7 @@ const app = new App(document.documentElement)
 window.app = app
 window.store = store
 window.proxyState = proxyState
+window.events = events
 
 //
 

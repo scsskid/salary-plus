@@ -6,11 +6,14 @@ class Calendar extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
+    this.inputDate = proxyState.inputDate
     this.addEventListeners()
     // console.log(state)
   }
 
   render() {
+    console.log('CALENDAR Render')
+
     this.createCalendar = createCalendar.bind(this)
     this.createRecordsMap()
     const inputDate = proxyState.inputDate
@@ -50,15 +53,17 @@ class Calendar extends BaseComponent {
   }
 
   addEventListeners() {
+    // Handle Date Click
     this.container.addEventListener('click', event => {
       console.log(event.target)
 
       const dateString = event.target.dataset.dateString
       if (dateString) {
         event.stopPropagation()
-        // events.publish('date clicked', { inputDate: new Date(dateString) })
+
         this.setDayMarker.bind(this)(dateString)
-        proxyState.inputDate = new Date(dateString)
+        // proxyState.inputDate = new Date(dateString) // Triggers Rerender, only needed for prefill add record form
+        this.inputDate = new Date(dateString)
       }
     })
 
@@ -72,7 +77,6 @@ class Calendar extends BaseComponent {
 
     const dateItems = this.container.getElementsByClassName('date-item') // !
     const dateItem = this.container.querySelector(`[data-date-string="${dateString}"]`) // !
-    console.log(dateItem)
     Array.from(dateItems).forEach(el => delete el.dataset.dateSelected)
     dateItem.dataset.dateSelected = ''
   }

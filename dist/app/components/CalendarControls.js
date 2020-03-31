@@ -6,7 +6,7 @@ class Home extends BaseComponent {
     this.container = document.createElement(tag)
     this.inputDate = new Date(proxyState.inputDate.getTime())
     this.state = state
-    console.log(typeof proxyState.inputDate)
+    this.addEventListeners()
   }
 
   render() {
@@ -22,7 +22,6 @@ class Home extends BaseComponent {
       </div>
 
     `
-    this.addEventListeners()
   }
 
   addEventListeners() {

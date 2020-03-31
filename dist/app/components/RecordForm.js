@@ -25,6 +25,7 @@ class RecordForm extends BaseComponent {
     this.state = { ...state }
     this.formData = {}
     this.mode
+    this.addEventListeners()
   }
 
   populateForm() {
@@ -52,7 +53,6 @@ class RecordForm extends BaseComponent {
     this.inputSickLeave = this.container.querySelector('#entry-sick-leave')
 
     this.populateForm()
-    this.addEventListeners()
 
     // flush state, to ensure rerender every time
   }
