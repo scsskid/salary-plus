@@ -14,7 +14,6 @@ class Calendar extends BaseComponent {
     this.createCalendar = createCalendar.bind(this)
     this.createRecordsMap()
     const inputDate = proxyState.inputDate
-    // const inputDate = this.state.inputDate
 
     this.container.innerHTML = `
       <style>
@@ -64,11 +63,6 @@ class Calendar extends BaseComponent {
     })
 
     events.on('proxy inputDate change', data => {
-      console.log(data)
-      // Utils.getTimeZoneAwareIsoString(inputDate)
-
-      // if this.state.inputDate.getMotnh !== proxySate.getMonth
-      // only rerender if diffrent month
       this.render()
     })
   }

@@ -1,68 +1,35 @@
 import BaseComponent from './BaseComponent.js'
-import Calendar from './Calendar.js'
-import Utils, { events, isCurrentMonth } from './../utils.js'
-import Store from '../store.js'
-import CalendarDayView from './CalendarDayView.js'
 import proxyState from '../lib/Proxy.js'
 
 class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.inputDate = proxyState.inputDate
+    this.inputDate = new Date(proxyState.inputDate.getTime())
     this.state = state
+    console.log(typeof proxyState.inputDate)
   }
 
   render() {
-    // this.inputDate = proxyState.inputDate
-
     this.container.innerHTML = `
-
       <style>
-        [data-calendar-controls] button {
-          touch-action: manipulation;
-        }
+        [data-calendar-controls] button { touch-action: manipulation; }
       </style>
       
       <div data-calendar-controls>
-        <button data-month-decrease>prev</button>
-        <button data-month-increase>next</button>
-        <button data-month-reset>today</button>
+        <button data-date-operation="month-decrease">prev</button>
+        <button data-date-operation="month-increase">next</button>
+        <button data-date-operation="today">today</button>
       </div>
 
     `
     this.addEventListeners()
   }
 
-  // ! Move To Store
-  getRecordsOfMonth(date) {
-    if (this.state.records) {
-      return this.state.records.filter(record => {
-        return new Date(record.begin).getMonth() == date.getMonth()
-      })
-    } else {
-      return false
-    }
-  }
-
   addEventListeners() {
     this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
-      events.publish('calendar-controls-action', {})
-      let inputDate = this.inputDate
-
-      if ('monthDecrease' in event.target.dataset) {
-        inputDate = changeMonth(inputDate, -1)
-        inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
-      } else if ('monthIncrease' in event.target.dataset) {
-        inputDate = changeMonth(inputDate, 1)
-        inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
-      } else if ('monthReset' in event.target.dataset) {
-        console.log('here')
-
-        inputDate = new Date()
-      }
-
-      // events.publish('change inputDate', { inputDate })
-      proxyState.inputDate = inputDate
+      let targetDate = new Date(proxyState.inputDate.getTime())
+      let operation = event.target.dataset.dateOperation
+      proxyState.inputDate = operateDate(operation, targetDate)
     })
   }
 
@@ -74,7 +41,23 @@ class Home extends BaseComponent {
 export default Home
 
 function changeMonth(date, num) {
-  var newDate = new Date(date.setMonth(date.getMonth() + num))
-  newDate.setDate(1)
-  return newDate
+  var now = new Date()
+  var newDate = new Date(date.getTime())
+  newDate.setMonth(date.getMonth() + num, 1)
+
+  if (now.getMonth() == newDate.getMonth() && now.getFullYear() == newDate.getFullYear()) {
+    return now
+  } else {
+    return newDate
+  }
+}
+
+function operateDate(operation, targetDate) {
+  if ('month-decrease' == operation) {
+    return changeMonth(targetDate, -1)
+  } else if ('month-increase' == operation) {
+    return changeMonth(targetDate, 1)
+  } else if ('today' == operation) {
+    return new Date()
+  }
 }
