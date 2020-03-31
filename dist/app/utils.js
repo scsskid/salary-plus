@@ -168,7 +168,7 @@ export const events = {
         fn(data)
       })
     } else {
-      console.log(`events.publish('${eventName}'): No Functions are registered for ${eventName}`)
+      // console.warn(`events.publish('${eventName}'): No Functions are registered for ${eventName}`)
     }
   }
 }

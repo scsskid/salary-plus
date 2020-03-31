@@ -102,11 +102,8 @@ class App {
 
     // Check if requested  module was loaded before and pushed to registry
     const requestedRegistryEl = getRegistryEl(route.moduleName, this.moduleRegistry)
-    console.log(routeTitle)
 
     if (typeof route.moduleName === 'undefined') {
-      console.log('here')
-
       importAndConnectModule.bind(this)('404')
       this.viewTitle.innerHTML = 'Not Found'
       return

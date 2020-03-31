@@ -19,8 +19,6 @@ class Home extends BaseComponent {
 
   render() {
     const inputDate = proxyState.inputDate
-    console.log(`HOME Render`, recordsOfInputDateMonth(inputDate))
-
     this.container.innerHTML = `
       <style>
         [data-date-selected] {
@@ -49,7 +47,6 @@ class Home extends BaseComponent {
     })
 
     events.on('calendar created', _ => {
-      console.log('Home on cal created')
       this.calendar.setDayMarker(Utils.formatDate.rfc3339(proxyState.inputDate)) // vs. // .then(this.setDayMarker(Utils.getTimeZoneAwareIsoString(inputDate)))
     })
 
@@ -59,28 +56,13 @@ class Home extends BaseComponent {
     })
 
     events.on('proxy inputDate change', _ => {
-      console.log(
-        'Home [ proxy inputDate change ] handler, records of month:',
-        recordsOfInputDateMonth(proxyState.inputDate)
-      )
       this.calendar.state.inputDate = proxyState.inputDate
 
       // todo: only pass length!
       this.calendar.state.records = recordsOfInputDateMonth(proxyState.inputDate)
-
-      // // todo: set state without render
-      // this.calendar.state = Object.assign(
-      //   { ...this.calendarControls.state },
-      //   {
-      //     inputDate: proxyState.inputDate,
-      //     records: recordsOfInputDateMonth(proxyState.inputDate)
-      //   }
-      // )
     })
 
     function updateDayView() {
-      console.log('updateDayView Fn')
-
       this.dayView.container.remove()
       // find records of date
       // ! Move To Store
@@ -138,6 +120,8 @@ class Home extends BaseComponent {
 }
 
 export default Home
+
+// -----------------
 
 function recordsOfInputDateMonth(date) {
   return store

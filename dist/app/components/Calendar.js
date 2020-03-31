@@ -45,15 +45,13 @@ class Calendar extends BaseComponent {
         })}</b><br>${inputDate.getFullYear()}</p>
       </section>
     `
-    console.log(`Created Calendar with month ${inputDate.getMonth() + 1} ${inputDate.getFullYear()}`)
+    // console.log(`Created Calendar with month ${inputDate.getMonth() + 1} ${inputDate.getFullYear()}`)
     this.createCalendar(inputDate).then(_ => events.publish('calendar created', {}))
   }
 
   addEventListeners() {
     // Handle Date Click
     this.container.addEventListener('click', event => {
-      console.log(event.target)
-
       const dateString = event.target.dataset.dateString
       if (dateString) {
         event.stopPropagation()
@@ -69,8 +67,6 @@ class Calendar extends BaseComponent {
   }
 
   setDayMarker(dateString) {
-    console.log(`setDayMarker Fn [ ${dateString} ]`)
-
     const dateItems = this.container.getElementsByClassName('date-item') // !
     const dateItem = this.container.querySelector(`[data-date-string="${dateString}"]`) // !
     Array.from(dateItems).forEach(el => delete el.dataset.dateSelected)
