@@ -16,12 +16,7 @@ const store = new Store()
 class RecordForm extends BaseComponent {
   init(tag, state) {
     console.log('Form Init', typeof state.recordId, state)
-
-    this.content = {
-      title: 'Form'
-    }
     this.container = document.createElement(tag)
-
     this.state = { ...state }
     this.formData = {}
     this.mode

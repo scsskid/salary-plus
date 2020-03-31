@@ -6,9 +6,6 @@ import { dispatchEvent, events } from './../utils.js'
 class RecordsList extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
-    this.content = {
-      title: 'List'
-    }
     this.refresh()
   }
 

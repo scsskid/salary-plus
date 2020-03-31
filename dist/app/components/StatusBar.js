@@ -6,9 +6,6 @@ class StatusBar extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
-    this.content = {
-      title: 'Settings'
-    }
 
     events.on('proxyStateChanged', this.render.bind(this))
     this.addEventListeners()

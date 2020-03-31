@@ -13,9 +13,6 @@ class Home extends BaseComponent {
     this.container = document.createElement(tag)
     this.inputDate = proxyState.inputDate
     this.dayView = new CalendarDayView('div')
-    this.content = {
-      title: 'Overview'
-    }
     this.state = { records: [...proxyState.records], jobs: [...proxyState.jobs] }
     this.addEventListeners()
   }

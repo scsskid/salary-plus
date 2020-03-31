@@ -9,22 +9,27 @@ export default [
   // ? combine /records and /records/:recordsId
   {
     path: '/records',
-    moduleName: 'RecordsList'
+    moduleName: 'RecordsList',
+    title: 'Records List'
   },
   {
     path: '/records/new',
-    moduleName: 'RecordForm'
+    moduleName: 'RecordForm',
+    title: 'New Record'
   },
   {
     path: '/records/:recordId',
-    moduleName: 'RecordForm'
+    moduleName: 'RecordForm',
+    title: 'Edit Record'
   },
   {
     path: '/settings',
-    moduleName: 'Settings'
+    moduleName: 'Settings',
+    title: 'Settings'
   },
   {
     path: '/debug',
-    moduleName: 'Debug'
+    moduleName: 'Debug',
+    title: 'Debug'
   }
 ]

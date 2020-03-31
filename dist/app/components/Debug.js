@@ -7,9 +7,7 @@ class Debug extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
-    this.content = {
-      title: 'Debug'
-    }
+
     // this.importSalaryBookRecords()
   }
 

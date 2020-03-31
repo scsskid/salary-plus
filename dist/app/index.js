@@ -48,10 +48,6 @@ class App {
   addEventListeners() {
     // Routing
     events.on('routeLoad', this.onRouteLoad.bind(this))
-    events.on(
-      'update-view-title',
-      data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View')
-    )
 
     // Process Form Data
     events.on('record-submitted', data => {
@@ -97,6 +93,7 @@ class App {
 
   onRouteLoad(data) {
     const route = data.route
+    let routeTitle = route.title
 
     const params = { ...data.params, ...data.props, ...route.params }
 
@@ -105,11 +102,13 @@ class App {
 
     // Check if requested  module was loaded before and pushed to registry
     const requestedRegistryEl = getRegistryEl(route.moduleName, this.moduleRegistry)
+    console.log(routeTitle)
 
     if (typeof route.moduleName === 'undefined') {
       console.log('here')
 
       importAndConnectModule.bind(this)('404')
+      this.viewTitle.innerHTML = 'Not Found'
       return
     }
 
@@ -180,7 +179,9 @@ class App {
     function importAndConnectModule(moduleName) {
       import(`./components/${moduleName}.js`)
         .then(handleModuleImport.bind(this))
-        .then(updateViewTitle)
+        .then(_ => {
+          this.viewTitle.innerHTML = typeof routeTitle !== 'undefined' ? routeTitle : 'Untitled View'
+        })
     }
 
     function handleModuleImport(moduleClass) {
@@ -200,7 +201,7 @@ class App {
       this.moduleRegistry.push({ module, status: 'connected' })
       // }
 
-      updateViewTitle(module)
+      // updateViewTitle(module)
 
       return module
     }
@@ -265,9 +266,9 @@ function connectModule(module) {
   proxyState.mainViewComponent = module.id
 }
 
-function updateViewTitle(module) {
-  events.publish('update-view-title', module.content)
-}
+// function updateViewTitle(module) {
+//   events.publish('update-view-title', module.content)
+// }
 
 function getRegistryEl(moduleName, registry) {
   return registry.find(el => {
