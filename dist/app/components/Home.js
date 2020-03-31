@@ -108,6 +108,8 @@ class Home extends BaseComponent {
     let freshness = true
 
     if (this.state.records.length != proxyState.records.length) {
+      console.log('records differ')
+
       // records were updated, set  freshness to false
       freshness = false
     } else {
@@ -115,6 +117,7 @@ class Home extends BaseComponent {
     }
 
     if (this.inputDate != proxyState.inputDate) {
+      console.log('inputDate differ')
       freshness = false
       this.inputDate = proxyState.inputDate
     }

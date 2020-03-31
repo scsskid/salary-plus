@@ -3,9 +3,8 @@ import Router from './router.js'
 import Routes from './data/routes.js'
 import Nav from './components/MainNav.js'
 import StatusBar from './components/StatusBar.js'
-import { events } from './utils.js'
+import Utils, { events } from './utils.js'
 import { isEmpty, mutateArray, deleteObjInArrayById } from './lib/helpers.js'
-import Utils from './utils.js'
 import proxyState from './lib/Proxy.js'
 import diffObjects from './vendor/objects-diff.js'
 
@@ -64,6 +63,8 @@ class App {
       this.commit('records', records)
       proxyState.inputDate = new Date(data.formData.dateBegin)
 
+      // this.moduleRegistry.find(module => module.id == 'Home').state =
+
       events.publish('navigate', { pathname: '/' })
     })
 
@@ -96,6 +97,7 @@ class App {
 
   onRouteLoad(data) {
     const route = data.route
+
     const params = { ...data.params, ...data.props, ...route.params }
 
     // Get connected module from registry
@@ -103,13 +105,16 @@ class App {
 
     // Check if requested  module was loaded before and pushed to registry
     const requestedRegistryEl = getRegistryEl(route.moduleName, this.moduleRegistry)
-    function getRegistryEl(moduleName, registry) {
-      return registry.find(el => {
-        return el.module.id == moduleName
-      })
+
+    if (typeof route.moduleName === 'undefined') {
+      console.log('here')
+
+      importAndConnectModule.bind(this)('404')
+      return
     }
 
     // if no connected el found, or
+    // maybe check directly for id in registry
     if (!connectedEl) {
       importAndConnectModule.bind(this)(route.moduleName)
       return
@@ -153,7 +158,7 @@ class App {
         // always refresh form when displayed
       } else if (connectedEl.module != requestedRegistryEl.module) {
         // console.log('the requested is not the one in the dom')
-        connectedEl.status = 'disconnect'
+        connectedEl.status = 'disconnected'
         connectedEl.module.container.remove()
         requestedRegistryEl.status = 'connected'
         connectModule.bind(this)(requestedRegistryEl.module)
@@ -262,4 +267,10 @@ function connectModule(module) {
 
 function updateViewTitle(module) {
   events.publish('update-view-title', module.content)
+}
+
+function getRegistryEl(moduleName, registry) {
+  return registry.find(el => {
+    return el.module.id == moduleName
+  })
 }

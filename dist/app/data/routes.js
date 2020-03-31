@@ -3,7 +3,8 @@ export default [
   // ? e.g.:  modules: [ { container: this.header, file: 'special-header.js', state: { displaySth: true } }, { container: this.mainView, file: 'records-list.js' } ]
   {
     path: '/',
-    moduleName: 'Home'
+    moduleName: 'Home',
+    title: 'Overview'
   },
   // ? combine /records and /records/:recordsId
   {
