@@ -6,13 +6,14 @@ class Calendar extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
+    this.inputDate = proxyState.inputDate
     this.addEventListeners()
-    this.dateItemsRegistry
     // console.log(state)
   }
 
   render() {
-    this.dateItemsRegistry = []
+    console.log('CALENDAR Render')
+
     this.createCalendar = createCalendar.bind(this)
     this.createRecordsMap()
     const inputDate = proxyState.inputDate
@@ -45,18 +46,39 @@ class Calendar extends BaseComponent {
       </section>
     `
     console.log(`Created Calendar with month ${inputDate.getMonth() + 1} ${inputDate.getFullYear()}`)
-    this.createCalendar(inputDate).then(_ => events.publish('calendar created', { date: inputDate }))
+    this.createCalendar(inputDate).then(_ => events.publish('calendar created', {}))
   }
 
   addEventListeners() {
+    // Handle Date Click
     this.container.addEventListener('click', event => {
+      console.log(event.target)
+
       const dateString = event.target.dataset.dateString
       if (dateString) {
         event.stopPropagation()
-        events.publish('date clicked', { inputDate: new Date(dateString) })
-        proxyState.inputDate = new Date(dateString)
+        this.setDayMarker.bind(this)(dateString)
+        // proxyState.inputDate = new Date(dateString) // Triggers Rerender, only needed for prefill add record form
+        this.inputDate = new Date(dateString)
       }
     })
+
+    events.on('proxy inputDate change', data => {
+      // this.render()
+    })
+  }
+
+  setDayMarker(dateString) {
+    console.log(`setDayMarker Fn [ ${dateString} ]`)
+
+    const dateItems = this.container.getElementsByClassName('date-item') // !
+    const dateItem = this.container.querySelector(`[data-date-string="${dateString}"]`) // !
+    Array.from(dateItems).forEach(el => delete el.dataset.dateSelected)
+    dateItem.dataset.dateSelected = ''
+
+    if ('dateSelected' in dateItem.dataset) {
+      events.publish(`dayMarked`, { inputDateString: dateString })
+    }
   }
 
   createRecordsMap() {
@@ -131,7 +153,6 @@ function createCalendar(inputDate) {
 
           const dateHasRecords = typeof this.recordsMap[dateString] !== 'undefined'
           dateItem = document.createElement('span')
-          this.dateItemsRegistry.push(dateItem)
           dateItem.classList.add('date-item')
           dateItem.dataset.dateString = dateString
 
@@ -156,9 +177,8 @@ function createCalendar(inputDate) {
       }
     }
 
-    const resp = this.container.querySelector('[data-calendar]').appendChild(table)
-    if (resp) {
-      resolve({ msg: 'huhu', el: resp })
+    if (this.container.querySelector('[data-calendar]').appendChild(table)) {
+      resolve()
     }
   })
 }

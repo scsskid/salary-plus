@@ -10,7 +10,7 @@ const proxyState = new Proxy(typeof defaultState !== 'undefined' ? defaultState 
     // const oldState = { ...obj }
     obj[prop] = value
     events.publish('proxyStateChanged', prop) // currently only  statusBar is subscribed
-    events.publish(`proxy ${prop} change`)
+    events.publish(`proxy ${prop} change`, { value })
     console.warn('--- PROXY SET', prop, value)
 
     return obj

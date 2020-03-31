@@ -13,6 +13,7 @@ export default class BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
+    this.addEventListeners()
   }
 
   connectedCallback() {
@@ -23,6 +24,8 @@ export default class BaseComponent {
     // todo
     this.deleteEventListeners()
   }
+
+  addEventListeners() {}
 
   deleteEventListeners() {
     // todo

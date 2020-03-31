@@ -12,10 +12,91 @@ class Home extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.inputDate = proxyState.inputDate
-    this.state = { ...proxyState }
     this.dayView = new CalendarDayView('div')
     this.content = {
       title: 'Overview'
+    }
+    this.state = { records: [...proxyState.records], jobs: [...proxyState.jobs] }
+    this.addEventListeners()
+  }
+
+  render() {
+    const inputDate = proxyState.inputDate
+    console.log(`HOME Render`, recordsOfInputDateMonth(inputDate))
+
+    this.container.innerHTML = `
+      <style>
+        [data-date-selected] {
+          background: green;
+        }
+      </style>
+    `
+
+    this.calendarControls = new CalendarControls('div', { inputDate })
+    this.container.appendChild(this.calendarControls.container)
+
+    this.calendar = new Calendar('div', {
+      inputDate,
+      records: recordsOfInputDateMonth(inputDate) || []
+    })
+    this.container.appendChild(this.calendar.container)
+  }
+
+  addEventListeners() {
+    events.on('operateDate', data => {
+      // ! better: operateMonth
+      const { operation } = data
+      let targetDate = new Date(proxyState.inputDate.getTime())
+      proxyState.inputDate = operateDate(operation, targetDate)
+      this.calendar.render()
+    })
+
+    events.on('calendar created', _ => {
+      console.log('Home on cal created')
+      this.calendar.setDayMarker(Utils.formatDate.rfc3339(proxyState.inputDate)) // vs. // .then(this.setDayMarker(Utils.getTimeZoneAwareIsoString(inputDate)))
+    })
+
+    events.on('dayMarked', data => {
+      proxyState.inputDate = new Date(data.inputDateString.replace(/-/g, '/'))
+      updateDayView.bind(this)()
+    })
+
+    events.on('proxy inputDate change', _ => {
+      console.log(
+        'Home [ proxy inputDate change ] handler, records of month:',
+        recordsOfInputDateMonth(proxyState.inputDate)
+      )
+      this.calendar.state.inputDate = proxyState.inputDate
+
+      // todo: only pass length!
+      this.calendar.state.records = recordsOfInputDateMonth(proxyState.inputDate)
+
+      // // todo: set state without render
+      // this.calendar.state = Object.assign(
+      //   { ...this.calendarControls.state },
+      //   {
+      //     inputDate: proxyState.inputDate,
+      //     records: recordsOfInputDateMonth(proxyState.inputDate)
+      //   }
+      // )
+    })
+
+    function updateDayView() {
+      console.log('updateDayView Fn')
+
+      this.dayView.container.remove()
+      // find records of date
+      // ! Move To Store
+      const recordsOfDate = store
+        .get('records')
+        .return()
+        .filter(filterByDate(proxyState.inputDate))
+
+      // display dayview
+      if (recordsOfDate.length) {
+        this.dayView.state = { records: recordsOfDate }
+        this.container.appendChild(this.dayView.container)
+      }
     }
   }
 
@@ -27,6 +108,8 @@ class Home extends BaseComponent {
     let freshness = true
 
     if (this.state.records.length != proxyState.records.length) {
+      console.log('records differ')
+
       // records were updated, set  freshness to false
       freshness = false
     } else {
@@ -34,6 +117,7 @@ class Home extends BaseComponent {
     }
 
     if (this.inputDate != proxyState.inputDate) {
+      console.log('inputDate differ')
       freshness = false
       this.inputDate = proxyState.inputDate
     }
@@ -51,129 +135,6 @@ class Home extends BaseComponent {
     }
   }
 
-  render() {
-    // this.inputDate = proxyState.inputDate
-
-    this.container.innerHTML = `
-      <style>
-        [data-calendar-controls] button {
-          touch-action: manipulation;
-        }
-        [data-date-selected] {
-          background: green;
-        }
-      </style>
-      
-      <!--<div data-calendar-controls>
-        <button data-month-decrease>prev</button>
-        <button data-month-increase>next</button>
-        <button data-month-reset>today</button>
-      </div>-->
-
-    `
-
-    const inputDate = this.inputDate
-
-    this.calendarControls = new CalendarControls('div', { inputDate })
-    this.calendar = new Calendar('div', {
-      inputDate,
-      records: this.getRecordsOfMonth(inputDate) || []
-    })
-
-    this.container.appendChild(this.calendarControls.container)
-    this.container.appendChild(this.calendar.container)
-    this.addEventListeners()
-  }
-
-  // ! Move To Store
-  getRecordsOfMonth(date) {
-    if (this.state.records) {
-      return this.state.records.filter(record => {
-        return new Date(record.begin).getMonth() == date.getMonth()
-      })
-    } else {
-      return false
-    }
-  }
-
-  addEventListeners() {
-    events.on('proxy inputDate change', _ => {
-      console.log('proxy inputDate change', proxyState.inputDate)
-
-      //  this.calendar.state = {}
-      // this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
-      updateDayView.bind(this)()
-      setDayMarker.bind(this)()
-    })
-
-    function setDayMarker() {
-      const inputDate = proxyState.inputDate
-      const dateItems = this.calendar.dateItemsRegistry
-
-      // unselect current selected day
-      dateItems.forEach(el => delete el.dataset.dateSelected)
-      // clear day view
-
-      // find dateToBeSelected
-      const dateToBeSelected = Array.from(dateItems).find(dateItem => {
-        return dateItem.dataset.dateString == Utils.getTimeZoneAwareIsoString(inputDate)
-      })
-
-      // add attribute to visually highlight day
-      dateToBeSelected.dataset.dateSelected = ''
-    }
-
-    function updateDayView() {
-      const date = proxyState.inputDate
-      this.dayView.container.remove()
-      // find records of date
-      // ! Move To Store
-      const recordsOfDate = store
-        .get('records')
-        .return()
-        .filter(filterByDate(proxyState.inputDate))
-
-      function filterByDate(date) {
-        return function matchDate(record) {
-          const dateBegin = new Date(record.begin)
-          return (
-            dateBegin.getFullYear() == date.getFullYear() &&
-            dateBegin.getMonth() == date.getMonth() &&
-            dateBegin.getDate() == date.getDate()
-          )
-        }
-      }
-
-      // display dayview
-      if (recordsOfDate.length) {
-        this.dayView.state = { records: recordsOfDate }
-        this.container.appendChild(this.dayView.container)
-      }
-    }
-
-    /*
-    this.container.querySelector('[data-calendar-controls]').addEventListener('click', event => {
-      this.dayView.container.remove()
-      let inputDate = this.calendar.state.inputDate
-
-      // if inputDate = current Month set day to today
-
-      if ('monthDecrease' in event.target.dataset) {
-        inputDate = changeMonth(inputDate, -1)
-        inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
-      } else if ('monthIncrease' in event.target.dataset) {
-        inputDate = changeMonth(inputDate, 1)
-        inputDate = isCurrentMonth(inputDate) ? new Date() : inputDate
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(inputDate) }
-      } else if ('monthReset' in event.target.dataset) {
-        inputDate = new Date()
-        this.calendar.state = { ...this.calendar.state, inputDate, records: this.getRecordsOfMonth(new Date()) }
-      }
-    })
-    */
-  }
-
   constructor(tag, state) {
     super(tag, state)
   }
@@ -181,8 +142,47 @@ class Home extends BaseComponent {
 
 export default Home
 
+function recordsOfInputDateMonth(date) {
+  return store
+    .get('records')
+    .filter(record => {
+      return (
+        new Date(record.begin).getMonth() == date.getMonth() &&
+        new Date(record.begin).getFullYear() == date.getFullYear()
+      )
+    })
+    .return()
+}
+
 function changeMonth(date, num) {
-  var newDate = new Date(date.setMonth(date.getMonth() + num))
-  newDate.setDate(1)
-  return newDate
+  var now = new Date()
+  var newDate = new Date(date.getTime())
+  newDate.setMonth(date.getMonth() + num, 1)
+
+  if (now.getMonth() == newDate.getMonth() && now.getFullYear() == newDate.getFullYear()) {
+    return now
+  } else {
+    return newDate
+  }
+}
+
+function operateDate(operation, targetDate) {
+  if ('month-decrease' == operation) {
+    return changeMonth(targetDate, -1)
+  } else if ('month-increase' == operation) {
+    return changeMonth(targetDate, 1)
+  } else if ('today' == operation) {
+    return new Date()
+  }
+}
+
+function filterByDate(date) {
+  return function matchDate(record) {
+    const dateBegin = new Date(record.begin)
+    return (
+      dateBegin.getFullYear() == date.getFullYear() &&
+      dateBegin.getMonth() == date.getMonth() &&
+      dateBegin.getDate() == date.getDate()
+    )
+  }
 }

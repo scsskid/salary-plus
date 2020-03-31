@@ -25,6 +25,7 @@ class RecordForm extends BaseComponent {
     this.state = { ...state }
     this.formData = {}
     this.mode
+    this.addEventListeners()
   }
 
   populateForm() {
@@ -52,7 +53,6 @@ class RecordForm extends BaseComponent {
     this.inputSickLeave = this.container.querySelector('#entry-sick-leave')
 
     this.populateForm()
-    this.addEventListeners()
 
     // flush state, to ensure rerender every time
   }
@@ -210,8 +210,13 @@ class RecordForm extends BaseComponent {
   }
 
   connectedCallback() {
-    console.log('FORM RE-CONNECTED ')
+    this.prepareForm()
+    this.populateForm()
+    this.addEventListeners() // todo: remove listeners on disconnect
+    console.log('FORM RE-CONNECTED ', this.state)
     console.log(window.location.pathname)
+
+    // this.render()
   }
 
   constructor(tag, state) {
