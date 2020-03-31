@@ -54,19 +54,6 @@ class App {
       data => (this.viewTitle.innerHTML = typeof data !== 'undefined' ? data.title : 'Untitled View')
     )
 
-    events.on('select-date', data => {
-      proxyState.inputDate = data.date
-      // if form exists in registry: set state = input date
-
-      // const recordFormInstance = this.moduleRegistry.find(el => {
-      //   return el.module.id == 'RecordForm'
-      // })
-
-      // if (!isEmpty(recordFormInstance)) {
-      //   recordFormInstance.module.state = { inputDate: data.date }
-      // }
-    })
-
     // Process Form Data
     events.on('record-submitted', data => {
       // MapFormData then pass to Store and State

@@ -63,7 +63,7 @@ class Calendar extends BaseComponent {
     })
 
     events.on('proxy inputDate change', data => {
-      this.render()
+      // this.render()
     })
   }
 

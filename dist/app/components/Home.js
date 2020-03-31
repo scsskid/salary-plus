@@ -16,7 +16,7 @@ class Home extends BaseComponent {
     this.content = {
       title: 'Overview'
     }
-    this.state = { ...proxyState }
+    this.state = { records: [...proxyState.records], jobs: [...proxyState.jobs] }
   }
 
   render() {
@@ -28,20 +28,16 @@ class Home extends BaseComponent {
       </style>
     `
 
-    const inputDate = this.inputDate
-    const recordsOfInputDateMonth = store
-      .get('records')
-      .filter(record => {
-        return new Date(record.begin).getMonth() == inputDate.getMonth()
-      })
-      .return()
+    const inputDate = proxyState.inputDate
+
+    console.log(recordsOfInputDateMonth(inputDate))
 
     this.calendarControls = new CalendarControls('div', { inputDate })
     this.container.appendChild(this.calendarControls.container)
 
     this.calendar = new Calendar('div', {
       inputDate,
-      records: recordsOfInputDateMonth || []
+      records: recordsOfInputDateMonth(inputDate) || []
     })
     this.container.appendChild(this.calendar.container)
 
@@ -49,7 +45,31 @@ class Home extends BaseComponent {
   }
 
   addEventListeners() {
-    events.on('date-select', updateDayView.bind(this))
+    events.on('operateDate', data => {
+      const { operation } = data
+      let targetDate = new Date(proxyState.inputDate.getTime())
+      proxyState.inputDate = operateDate(operation, targetDate)
+    })
+
+    events.on('date-select', _ => {
+      console.log('on date Select')
+
+      updateDayView.bind(this)
+    })
+
+    events.on('proxy inputDate change', _ => {
+      console.log('Home proxy date change handler', recordsOfInputDateMonth(proxyState.inputDate))
+      this.calendar.state.inputDate = proxyState.inputDate
+      this.calendar.state.records = recordsOfInputDateMonth(proxyState.inputDate)
+
+      this.calendar.state = Object.assign(
+        { ...this.calendarControls.state },
+        {
+          inputDate: proxyState.inputDate,
+          records: recordsOfInputDateMonth(proxyState.inputDate)
+        }
+      )
+    })
 
     function updateDayView() {
       const date = proxyState.inputDate
@@ -118,3 +138,37 @@ class Home extends BaseComponent {
 }
 
 export default Home
+
+function recordsOfInputDateMonth(date) {
+  return store
+    .get('records')
+    .filter(record => {
+      return (
+        new Date(record.begin).getMonth() == date.getMonth() &&
+        new Date(record.begin).getFullYear() == date.getFullYear()
+      )
+    })
+    .return()
+}
+
+function changeMonth(date, num) {
+  var now = new Date()
+  var newDate = new Date(date.getTime())
+  newDate.setMonth(date.getMonth() + num, 1)
+
+  if (now.getMonth() == newDate.getMonth() && now.getFullYear() == newDate.getFullYear()) {
+    return now
+  } else {
+    return newDate
+  }
+}
+
+function operateDate(operation, targetDate) {
+  if ('month-decrease' == operation) {
+    return changeMonth(targetDate, -1)
+  } else if ('month-increase' == operation) {
+    return changeMonth(targetDate, 1)
+  } else if ('today' == operation) {
+    return new Date()
+  }
+}
