@@ -190,15 +190,9 @@ class App {
 
       // Set Module Name as id, so if can be checked if already instanciated later
       module.id = route.moduleName
-      proxyState.mainViewComponent = route.moduleName
+      // proxyState.mainViewComponent = route.moduleName
       module.container.dataset.mainViewComponent = route.moduleName
-
-      // Dont Register Record Form
-      // if (route.moduleName != 'RecordForm') {
       this.moduleRegistry.push({ module, status: 'connected' })
-      // }
-
-      // updateViewTitle(module)
 
       return module
     }
@@ -262,10 +256,6 @@ function connectModule(module) {
   events.publish('update-view-title', module.content)
   proxyState.mainViewComponent = module.id
 }
-
-// function updateViewTitle(module) {
-//   events.publish('update-view-title', module.content)
-// }
 
 function getRegistryEl(moduleName, registry) {
   return registry.find(el => {
