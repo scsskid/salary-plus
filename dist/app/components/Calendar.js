@@ -12,7 +12,7 @@ class Calendar extends BaseComponent {
   }
 
   render() {
-    console.log('CALENDAR Render')
+    console.log('CALENDAR render()')
 
     this.createCalendar = createCalendar.bind(this)
     this.createRecordsMap()

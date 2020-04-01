@@ -18,6 +18,8 @@ class Home extends BaseComponent {
   }
 
   render() {
+    console.log('HOME render()')
+
     const inputDate = proxyState.inputDate
     this.container.innerHTML = `
       <style>
@@ -82,7 +84,7 @@ class Home extends BaseComponent {
   disconnectedCallback() {}
 
   connectedCallback() {
-    console.log('Home ConnectedCallback --------------')
+    console.log('HOME connectedCallback()')
 
     let freshness = true
 

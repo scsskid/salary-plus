@@ -105,7 +105,7 @@ class App {
 
     if (typeof route.moduleName === 'undefined') {
       importAndConnectModule.bind(this)('404')
-      this.viewTitle.innerHTML = 'Not Found'
+      updateTitle.bind(this)('Not Found')
       return
     }
 
@@ -177,7 +177,7 @@ class App {
       import(`./components/${moduleName}.js`)
         .then(handleModuleImport.bind(this))
         .then(_ => {
-          this.viewTitle.innerHTML = typeof routeTitle !== 'undefined' ? routeTitle : 'Untitled View'
+          updateTitle.bind(this)(routeTitle)
         })
     }
 
@@ -253,7 +253,7 @@ function connectModule(module) {
 
   this.mainViewContainer.appendChild(module.container)
   module.connectedCallback()
-  events.publish('update-view-title', module.content)
+
   proxyState.mainViewComponent = module.id
 }
 
@@ -261,4 +261,8 @@ function getRegistryEl(moduleName, registry) {
   return registry.find(el => {
     return el.module.id == moduleName
   })
+}
+
+function updateTitle(title) {
+  this.viewTitle.innerHTML = typeof title !== 'undefined' ? title : 'Untitled View'
 }
