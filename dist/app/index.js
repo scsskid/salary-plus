@@ -96,99 +96,78 @@ class App {
   }
 
   onRouteLoad(data) {
-    const route = data.route
-    this.route = data.route
+    this.requestedRoute = data.route
+    const route = this.requestedRoute
+    this.requestedRouteParams = { ...data.params, ...data.props, ...route.params }
 
-    const params = { ...data.params, ...data.props, ...route.params }
-    this.params = { ...data.params, ...data.props, ...route.params }
+    const params = this.requestedRouteParams
 
-    // Get connected module from registry
     const connectedEl = this.moduleRegistry.find(el => el.status == 'connected')
+    const cachedEl = this.moduleRegistry.find(el => el.module.id == route.moduleName)
 
-    // Check if requested  module was loaded before and pushed to registry
-    const requestedRegistryEl = getRegistryEl(route.moduleName, this.moduleRegistry)
-
-    // if no connected el found, or
-    // maybe check directly for id in registry
-    if (!connectedEl) {
-      importAndConnectModule.call(this, this.route.moduleName)
-      return
-    }
-
+    // Route not Found
     if (typeof route.moduleName === 'undefined') {
       importAndConnectModule.bind(this)('404')
       updateTitle.bind(this)('Not Found')
       return
     }
 
-    // check if connect module is requested again
-    console.log(
-      'is connected module is the requested',
-      connectedEl == requestedRegistryEl,
-      connectedEl,
-      requestedRegistryEl
-    )
-    if (connectedEl != requestedRegistryEl) {
+    // Found
+    // Intial page Load
+    if (!connectedEl) {
+      importAndConnectModule.call(this, this.requestedRoute.moduleName)
+      return
     }
 
-    // subsequent page load
-    //  requested module is found in registry
-    if (typeof requestedRegistryEl !== 'undefined') {
-      console.log(`Requesting [ ${requestedRegistryEl.module.id} ] from Registry`)
+    // check if connect module is requested again
+    // console.log('is connected module is the requested', connectedEl == cachedEl, connectedEl, cachedEl)
+    // if (connectedEl != cachedEl) {
+    // }
+
+    if (typeof cachedEl !== 'undefined') {
+      // requested module is found in registry
+      console.log(`Requesting [ ${cachedEl.module.id} ] from Registry`)
       // Handle: The Requested Module IS PRESENT in registry
       // needs to refresh?
       let stateHasChanged = false
       if (!isEmpty(params)) {
-        stateHasChanged = !isEmpty(diffObjects(requestedRegistryEl.module.state, params))
+        stateHasChanged = !isEmpty(diffObjects(cachedEl.module.state, params))
       }
-      // ! DIFF STATE HERE
       // ? move diff to component?
       // DIff State of existing instance with requested props
-      console.warn(
-        `[ ${requestedRegistryEl.module.id} ] stateHasChanged?`,
-        stateHasChanged,
-        requestedRegistryEl.module.state,
-        params
-      )
+      console.warn(`[ ${cachedEl.module.id} ] stateHasChanged?`, stateHasChanged, cachedEl.module.state, params)
       if (stateHasChanged) {
         // Trigger Setter Fn of Module
-        requestedRegistryEl.module.state = params
-      } else if (requestedRegistryEl.module.id == 'RecordForm') {
+        cachedEl.module.state = params
+      } else if (cachedEl.module.id == 'RecordForm') {
         // ! Exception: Rerender Form every Time, because there is no check when it's used for 'new' entry after state was 'edit' before
         // console.log('Form exception handler', requestedRegistryEl.module.state)
         // if state.recordId (and)but pathname records/new, flush state to trigger rerender
-        if (requestedRegistryEl.module.state.recordId !== undefined && window.location.pathname == '/records/new') {
-          requestedRegistryEl.module.state = {}
+        if (cachedEl.module.state.recordId !== undefined && window.location.pathname == '/records/new') {
+          cachedEl.module.state = {}
           //! Input Date Remains == proyyState InputDate
         }
       }
 
       // but is it already in dom?
-      if (connectedEl.module == requestedRegistryEl.module) {
+      if (connectedEl.module == cachedEl.module) {
         console.log('already in dom', params)
         // always refresh form when displayed
-      } else if (connectedEl.module != requestedRegistryEl.module) {
+      } else if (connectedEl.module != cachedEl.module) {
         console.log('the requested is not the one in the dom')
-        // todo: refactor to fn
-        connectedEl.status = 'disconnected'
-        connectedEl.module.disconnectedCallback()
-        connectedEl.module.container.remove()
-        requestedRegistryEl.status = 'connected'
-        connectModule.bind(this)(requestedRegistryEl.module)
+
+        disconnectModule(connectedEl)
+        connectModule.call(this, cachedEl)
       }
-    } else if (typeof requestedRegistryEl === 'undefined') {
+    } else if (typeof cachedEl === 'undefined') {
       // Handle: The Requested Module IS NOT PRESENT in registry
       console.log('req not in registry, importing...')
-      connectedEl.status = 'disconnect'
-      connectedEl.module.container.remove()
-      importAndConnectModule.bind(this)(route.moduleName)
+
+      disconnectModule(connectedEl)
+      importAndConnectModule.call(this, route.moduleName)
     } else {
       console.error('EXCEPTION')
     }
-
-    // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
-
-    //
   }
 
   onNavigate(data) {
@@ -241,30 +220,30 @@ window.events = events
 
 //
 
-function getRegistryEl(moduleName, registry) {
-  return registry.find(el => {
-    return el.module.id == moduleName
-  })
-}
-
 function updateTitle(title) {
   this.viewTitle.innerHTML = typeof title !== 'undefined' ? title : 'Untitled View'
 }
 
-function connectModule(module) {
-  console.log('connect Module Fn', module)
-  this.mainViewContainer.appendChild(module.container)
-  module.connectedCallback()
+function disconnectModule(moduleEl) {
+  moduleEl.status = 'disconnected'
+  moduleEl.module.disconnectedCallback()
+  moduleEl.module.container.remove()
+}
 
-  proxyState.connectedMainViewComponent = module.id
-  updateTitle.bind(this)(module.id)
+function connectModule(moduleEl) {
+  console.log('connectModule()', moduleEl)
+  this.mainViewContainer.appendChild(moduleEl.module.container)
+  moduleEl.module.connectedCallback()
+  moduleEl.status = 'connected'
+  proxyState.connectedMainViewComponent = moduleEl.module.id
+  updateTitle.bind(this)(moduleEl.module.id)
 }
 
 function importAndConnectModule(moduleName) {
   import(`./components/${moduleName}.js`)
     .then(handleModuleImport.bind(this))
     .then(_ => {
-      updateTitle.bind(this)(this.route.title)
+      updateTitle.bind(this)(this.requestedRoute.title)
     })
 }
 
