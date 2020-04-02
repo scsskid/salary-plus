@@ -17,9 +17,9 @@ class Home extends BaseComponent {
     this.addEventListeners()
   }
 
-  static getClassName() {
-    return 'Home'
-  }
+  // static getClassName() {
+  //   return 'Home'
+  // }
 
   render() {
     console.log('HOME render()')

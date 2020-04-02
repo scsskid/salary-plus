@@ -1,12 +1,12 @@
 import BaseComponent from './BaseComponent.js'
 import { dispatchEvent } from './../utils.js'
-class Calendar extends BaseComponent {
+class Settings extends BaseComponent {
   init(tag, state) {
     this.container = document.createElement(tag)
     this.state = state
   }
   render() {
-    this.container.innerHTML = '...Settings'
+    this.container.innerHTML = `🤔 Not yet implemented`
   }
 
   constructor(container) {
@@ -14,4 +14,4 @@ class Calendar extends BaseComponent {
   }
 }
 
-export default Calendar
+export default Settings

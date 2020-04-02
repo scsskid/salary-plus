@@ -112,20 +112,30 @@ class App {
       return
     }
 
-    // Found
-    // Intial page Load
+    // Is Module present in DOM
     if (!connectedEl) {
-      importAndConnectModule.call(this, this.requestedRoute.moduleName)
+      // import and connect
+      importAndConnectModule.call(this, this.requestedRoute.moduleName) // todo: split fn in import and connect, or inline import here
       return
     }
 
-    // check if connect module is requested again
-    // console.log('is connected module is the requested', connectedEl == cachedEl, connectedEl, cachedEl)
-    // if (connectedEl != cachedEl) {
-    // }
+    // is req Module already present in Dom
+    if (connectedEl.module.id == route.moduleName) {
+      console.log('idle (req module is present in the DOM)')
+      for (const el of this.moduleRegistry) console.log(el)
+      return
+    }
 
-    if (typeof cachedEl !== 'undefined') {
-      // requested module is found in registry
+    console.log('Requested El in Cache?', cachedEl)
+
+    if (typeof cachedEl === 'undefined') {
+      // Requested Module not in reigstry
+      console.log('req not in registry, importing...')
+
+      disconnectModule(connectedEl)
+      importAndConnectModule.call(this, route.moduleName)
+    } else if (typeof cachedEl !== 'undefined') {
+      // ! requested module is found in registry
       console.log(`Requesting [ ${cachedEl.module.id} ] from Registry`)
       // Handle: The Requested Module IS PRESENT in registry
       // needs to refresh?
@@ -149,22 +159,12 @@ class App {
         }
       }
 
-      // but is it already in dom?
-      if (connectedEl.module == cachedEl.module) {
-        console.log('already in dom', params)
-        // always refresh form when displayed
-      } else if (connectedEl.module != cachedEl.module) {
+      if (connectedEl.module != cachedEl.module) {
         console.log('the requested is not the one in the dom')
 
         disconnectModule(connectedEl)
         connectModule.call(this, cachedEl)
       }
-    } else if (typeof cachedEl === 'undefined') {
-      // Handle: The Requested Module IS NOT PRESENT in registry
-      console.log('req not in registry, importing...')
-
-      disconnectModule(connectedEl)
-      importAndConnectModule.call(this, route.moduleName)
     } else {
       console.error('EXCEPTION')
     }
