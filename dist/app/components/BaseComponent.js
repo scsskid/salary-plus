@@ -20,9 +20,10 @@ export default class BaseComponent {
     console.warn('No connect() func provided by Component', this.__proto__)
   }
 
-  disconnectCallback() {
+  disconnectedCallback() {
     // todo
-    this.deleteEventListeners()
+    // this.deleteEventListeners()
+    console.log('Base Disconnected Callback()')
   }
 
   addEventListeners() {}

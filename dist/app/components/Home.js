@@ -85,7 +85,9 @@ class Home extends BaseComponent {
     }
   }
 
-  disconnectedCallback() {}
+  disconnectedCallback() {
+    console.log('HOME disconnectedCallback()')
+  }
 
   connectedCallback() {
     console.log('HOME connectedCallback()')

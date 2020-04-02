@@ -51,6 +51,7 @@ class App {
 
     // Process Form Data
     events.on('record-submitted', data => {
+      console.log('record-sumitted Handler')
       // MapFormData then pass to Store and State
       let records = store.get('records').return()
       const record = Utils.mapFormDataToStorageObject(data.formData)
@@ -107,17 +108,27 @@ class App {
     // Check if requested  module was loaded before and pushed to registry
     const requestedRegistryEl = getRegistryEl(route.moduleName, this.moduleRegistry)
 
+    // if no connected el found, or
+    // maybe check directly for id in registry
+    if (!connectedEl) {
+      importAndConnectModule.call(this, this.route.moduleName)
+      return
+    }
+
     if (typeof route.moduleName === 'undefined') {
       importAndConnectModule.bind(this)('404')
       updateTitle.bind(this)('Not Found')
       return
     }
 
-    // if no connected el found, or
-    // maybe check directly for id in registry
-    if (!connectedEl) {
-      importAndConnectModule.call(this, this.route.moduleName)
-      return
+    // check if connect module is requested again
+    console.log(
+      'is connected module is the requested',
+      connectedEl == requestedRegistryEl,
+      connectedEl,
+      requestedRegistryEl
+    )
+    if (connectedEl != requestedRegistryEl) {
     }
 
     // subsequent page load
@@ -154,18 +165,20 @@ class App {
 
       // but is it already in dom?
       if (connectedEl.module == requestedRegistryEl.module) {
-        // console.log('already in dom', params)
+        console.log('already in dom', params)
         // always refresh form when displayed
       } else if (connectedEl.module != requestedRegistryEl.module) {
-        // console.log('the requested is not the one in the dom')
+        console.log('the requested is not the one in the dom')
+        // todo: refactor to fn
         connectedEl.status = 'disconnected'
+        connectedEl.module.disconnectedCallback()
         connectedEl.module.container.remove()
         requestedRegistryEl.status = 'connected'
         connectModule.bind(this)(requestedRegistryEl.module)
       }
     } else if (typeof requestedRegistryEl === 'undefined') {
       // Handle: The Requested Module IS NOT PRESENT in registry
-      // console.log('req not in registry, importing...')
+      console.log('req not in registry, importing...')
       connectedEl.status = 'disconnect'
       connectedEl.module.container.remove()
       importAndConnectModule.bind(this)(route.moduleName)
