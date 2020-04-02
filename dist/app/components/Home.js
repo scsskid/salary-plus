@@ -17,6 +17,10 @@ class Home extends BaseComponent {
     this.addEventListeners()
   }
 
+  static getClassName() {
+    return 'Home'
+  }
+
   render() {
     console.log('HOME render()')
 
@@ -89,16 +93,17 @@ class Home extends BaseComponent {
     let freshness = true
 
     if (this.state.records.length != proxyState.records.length) {
-      console.log('records differ')
+      console.log('records.length changed')
 
       // records were updated, set  freshness to false
       freshness = false
     } else {
       // records unchanged
+      console.log('records.length unchanged')
     }
 
-    if (this.inputDate != proxyState.inputDate) {
-      console.log('inputDate differ')
+    if (this.inputDate.getTime() != proxyState.inputDate.getTime()) {
+      console.log('inputDate differ', this.inputDate.getTime(), proxyState.inputDate.getTime())
       freshness = false
       this.inputDate = proxyState.inputDate
     }

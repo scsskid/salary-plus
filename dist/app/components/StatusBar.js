@@ -13,15 +13,14 @@ class StatusBar extends BaseComponent {
 
   render() {
     const countRecords = typeof proxyState.records !== 'undefined' ? proxyState.records.length : 0
-    const mainViewComponent = proxyState.mainViewComponent
+    const mainViewComponent = proxyState.connectedMainViewComponent
     const inputDate = proxyState.inputDate || new Date()
     this.container.style.marginTop = '-4rem'
     this.container.innerHTML = `
-      <small style="line-height: 1.2; display: block; text-align: right">
-        Records: ${countRecords} <br>
-        MainViewComponent: ${mainViewComponent}<br>
-        inputDate: ${Utils.formatDate.rfc3339(inputDate)}<br>
-        <span><a data-href="/debug" href="/debug">Debug</a></span>
+      <small style="font-size: .7rem; line-height: 1.2; display: block; text-align: right">
+        Records: ${countRecords} <span> <a data-href="/debug" href="/debug">Debug</a> </span><br>
+        connectedMainViewComponent: ${mainViewComponent}<br>
+        inputDate: ${Utils.formatDate.rfc3339(inputDate)} ${Utils.formatTime(inputDate)}<br>
         
         </small>`
   }

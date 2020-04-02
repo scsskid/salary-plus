@@ -42,7 +42,7 @@ Store.prototype.return = function() {
 }
 
 Store.prototype.set = function(key, value) {
-  console.log(`--- STORE SET ${key}`, value)
+  // console.log(`--- STORE SET ${key}`, value)
 
   return localStorage.setItem(`${settings.localStoragePrefix}${key}`, JSON.stringify(value)) || undefined
 }

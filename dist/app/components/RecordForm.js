@@ -183,14 +183,7 @@ class RecordForm extends BaseComponent {
       }
 
       // Dispatch Event /w attached unaltered formData
-
-      console.log(formData)
-
       events.publish('record-submitted', { formData, origin: window.location.origin })
-
-      // ! trying to reconstruct Form (not working)
-
-      // this.init('div', { record: this.defaultFormValues })
     })
 
     this.container.addEventListener('click', event => {

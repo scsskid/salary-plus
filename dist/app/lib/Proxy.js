@@ -2,8 +2,10 @@ import { events } from '../utils.js'
 import Store from '../store.js'
 
 const store = new Store()
+const now = new Date()
+now.setHours(0, 0, 0, 0)
 
-let defaultState = { ...store.getAll(), inputDate: new Date() }
+let defaultState = { ...store.getAll(), inputDate: now }
 
 const proxyState = new Proxy(typeof defaultState !== 'undefined' ? defaultState : {}, {
   set(obj, prop, value) {

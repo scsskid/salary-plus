@@ -57,14 +57,17 @@ class App {
       // Mutate Array
       records = mutateArray(record, [...records])
       this.commit('records', records)
+      proxyState.records = records
       proxyState.inputDate = new Date(data.formData.dateBegin)
 
-      // this.moduleRegistry.find(module => module.id == 'Home').state =
+      // console.log(this.moduleRegistry.find(module => module.id == 'Home'))
 
       events.publish('navigate', { pathname: '/' })
     })
 
     events.on('record-delete', data => {
+      console.log('record-delete Handler')
+
       let records = store.get('records').return()
       records = deleteObjInArrayById(data.id, [...records])
       this.commit('records', records)
@@ -93,9 +96,10 @@ class App {
 
   onRouteLoad(data) {
     const route = data.route
-    let routeTitle = route.title
+    this.route = data.route
 
     const params = { ...data.params, ...data.props, ...route.params }
+    this.params = { ...data.params, ...data.props, ...route.params }
 
     // Get connected module from registry
     const connectedEl = this.moduleRegistry.find(el => el.status == 'connected')
@@ -112,7 +116,7 @@ class App {
     // if no connected el found, or
     // maybe check directly for id in registry
     if (!connectedEl) {
-      importAndConnectModule.bind(this)(route.moduleName)
+      importAndConnectModule.call(this, this.route.moduleName)
       return
     }
 
@@ -172,30 +176,6 @@ class App {
     // todo: promise render, then emmit event, then (in index.js listener) title innerhtml change
 
     //
-
-    function importAndConnectModule(moduleName) {
-      import(`./components/${moduleName}.js`)
-        .then(handleModuleImport.bind(this))
-        .then(_ => {
-          updateTitle.bind(this)(routeTitle)
-        })
-    }
-
-    function handleModuleImport(moduleClass) {
-      // dont pass parameters?
-      const module = new moduleClass.default('div', { ...params })
-
-      // connect
-      this.mainViewContainer.appendChild(module.container)
-
-      // Set Module Name as id, so if can be checked if already instanciated later
-      module.id = route.moduleName
-      // proxyState.mainViewComponent = route.moduleName
-      module.container.dataset.mainViewComponent = route.moduleName
-      this.moduleRegistry.push({ module, status: 'connected' })
-
-      return module
-    }
   }
 
   onNavigate(data) {
@@ -248,15 +228,6 @@ window.events = events
 
 //
 
-function connectModule(module) {
-  console.log('connect Module Fn', module)
-
-  this.mainViewContainer.appendChild(module.container)
-  module.connectedCallback()
-
-  proxyState.mainViewComponent = module.id
-}
-
 function getRegistryEl(moduleName, registry) {
   return registry.find(el => {
     return el.module.id == moduleName
@@ -265,4 +236,40 @@ function getRegistryEl(moduleName, registry) {
 
 function updateTitle(title) {
   this.viewTitle.innerHTML = typeof title !== 'undefined' ? title : 'Untitled View'
+}
+
+function connectModule(module) {
+  console.log('connect Module Fn', module)
+  this.mainViewContainer.appendChild(module.container)
+  module.connectedCallback()
+
+  proxyState.connectedMainViewComponent = module.id
+  updateTitle.bind(this)(module.id)
+}
+
+function importAndConnectModule(moduleName) {
+  import(`./components/${moduleName}.js`)
+    .then(handleModuleImport.bind(this))
+    .then(_ => {
+      updateTitle.bind(this)(this.route.title)
+    })
+}
+
+function handleModuleImport(moduleClass) {
+  const name = moduleClass.default.name
+  // const name = moduleClass.default.getClassName() // if minifier changes function names
+
+  // dont pass parameters?
+  const module = new moduleClass.default('div', { ...this.params })
+
+  // connect
+  this.mainViewContainer.appendChild(module.container)
+
+  // Set Module Name as id, so if can be checked if already instanciated later
+  module.id = name
+  proxyState.connectedMainViewComponent = name
+  module.container.dataset.mainViewComponent = name
+  this.moduleRegistry.push({ module, status: 'connected' })
+
+  return module
 }
